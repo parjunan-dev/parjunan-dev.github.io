@@ -1,0 +1,135 @@
+/* FAQ Section Styles */
+.faq-section {
+  padding: 60px 20px;
+  background: url('../images/ai-survey-gradient.webp') no-repeat center center;
+  background-size: cover;
+  color: white;
+}
+
+.faq-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: auto;
+  gap: 40px;
+}
+
+.faq-left {
+  flex: 1 1 30%;
+  padding: 20px;
+}
+
+.eyebrow {
+  color: #8b8ffe;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+}
+
+.faq-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.faq-cta {
+  color: #8b8ffe;
+  text-decoration: none;
+  border-bottom: 1px solid #8b8ffe;
+  padding-bottom: 2px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.faq-cta:hover {
+  color: #a5a7ff;
+  border-bottom-color: #a5a7ff;
+}
+
+.faq-right {
+  flex: 1 1 65%;
+  padding: 20px;
+}
+
+.faq-item {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 0;
+  transition: all 0.3s ease;
+}
+
+.faq-item:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.faq-question {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.faq-question h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.faq-question .chevron {
+  transition: transform 0.3s ease;
+}
+
+.faq-item.is-active .chevron {
+  transform: rotate(90deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  opacity: 0.8;
+  padding: 0 10px;
+}
+
+.faq-item.is-active .faq-answer {
+  max-height: 300px;
+  margin-top: 10px;
+}
+
+.faq-answer p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .faq-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .faq-left,
+  .faq-right {
+    flex: 1 1 100%;
+    padding: 10px;
+  }
+
+  .faq-title {
+    font-size: 1.5rem;
+  }
+
+  .faq-question h4 {
+    font-size: 1rem;
+  }
+}

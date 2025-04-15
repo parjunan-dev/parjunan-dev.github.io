@@ -1,0 +1,138 @@
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden;
+  background-color: #000;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.demo-section {
+  padding: 0rem 2rem;
+  background-color: var(--background-color);
+  margin-bottom: 4rem;
+}
+
+.demo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.demo-description {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.demo-title {
+  color: var(--primary-color);
+  font-size: 2rem;
+  margin: 0;
+  text-align: right;
+  padding-right: 2rem;
+  border-right: 2px solid var(--primary-color);
+}
+
+.demo-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  margin: 0;
+  text-align: left;
+}
+
+.demo-video {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden;
+}
+
+.carousel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-item.active {
+  opacity: 1;
+}
+
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-control:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-control.prev {
+  left: 1rem;
+}
+
+.carousel-control.next {
+  right: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .demo-section {
+    padding: 2rem 1rem;
+  }
+  
+  .demo-container {
+    gap: 2rem;
+  }
+  
+  .demo-description {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .demo-title {
+    text-align: center;
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 1rem;
+  }
+  
+  .demo-text {
+    text-align: center;
+  }
+}

@@ -1,0 +1,956 @@
+/* Variables and Base Styles */
+:root {
+    --webex-purple: #5200FF;
+    --webex-dark-purple: #3A00B6;
+    --webex-light-purple: #EEE5FF;
+    --webex-text: #FFFFFF;
+    --webex-text-light: #CCCCCC;
+    --webex-border: #333333;
+    --webex-background: #000000;
+    --webex-card-bg: #000000;
+    --webex-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    --transition: all 0.2s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: var(--webex-text-light);
+    background-color: #000000;
+    overflow-x: hidden;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--webex-card-bg);
+    padding: 0.8rem 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1001;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 45px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.webex-logo {
+    height: 32px;
+    width: auto;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    z-index: 10000;
+}
+
+.hamburger span {
+    width: 20px;
+    height: 2px;
+    background-color: var(--webex-text);
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.hamburger.active span:first-child {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:last-child {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255);
+    color: white;
+    z-index: 9999;
+    padding: 2rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.mobile-menu-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.mobile-menu-overlay .close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: black;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.mobile-menu-overlay .close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 100px;
+    width: 100%;
+}
+
+.mobile-menu-list li {
+    margin: 1rem 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+}
+
+.mobile-menu-overlay.active .mobile-menu-list li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mobile-menu-list a {
+    font-size: 1.5rem;
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(58, 58, 58, 0.2);
+}
+
+.mobile-menu-list a:hover {
+    color: #00b6e3;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 80.2vh;
+    background-image: url('images/webexone-customer-experience-neon.jpg');
+    background-size: cover;
+    background-position: center 40%;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--webex-text);
+    filter: brightness(1.2);
+    padding: 100px 0;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.hero-flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.hero-text {
+    flex: 0 1 400px;
+    max-width: 400px;
+    margin: 0;
+    text-align: left;
+}
+
+.hero-text h2 {
+    font-size: 2.1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+.hero-text p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 1.7rem;
+    color: var(--webex-text-light);
+    max-width: 100%;
+}
+
+.hero-video {
+    flex: 0 1 550px;
+    max-width: 550px;
+    aspect-ratio: 16/9;
+    position: relative;
+    background: transparent;
+}
+
+.hero-video .video-js {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background: transparent;
+}
+
+/* Benefits Section */
+.benefits {
+    padding: 80px 0;
+    background-color: var(--webex-card-bg);
+    position: relative;
+}
+
+.benefits::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    z-index: 1;
+}
+
+.grid-padding-new {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.benefit__benefitdetails {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+.benefit__title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--webex-text);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.benefit__description {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--webex-text-light);
+}
+
+.benefit__cards {
+    display: flex;
+    gap: 30px;
+    padding: 0 20px;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+}
+
+.benefit__cards::before,
+.benefit__cards::after {
+    content: '';
+    flex: 0 0 20px;
+    min-width: 20px;
+}
+
+.benefit__cards::-webkit-scrollbar {
+    display: none;
+}
+
+.benefit__card {
+    flex: 0 0 calc(33.333% - 20px);
+    min-width: calc(33.333% - 20px);
+    scroll-snap-align: center;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    height: 100%;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+    color: #fff;
+}
+
+.benefit__card-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    filter: brightness(1.2);
+}
+
+.benefit__card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+    z-index: 2;
+}
+
+.benefit__card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: #fff;
+}
+
+.benefit__card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.benefit__card-description {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    font-size: 1rem;
+}
+
+.benefit__card-cta {
+    text-align: left;
+}
+
+.benefit__card:hover {
+    transform: translateY(-5px);
+}
+
+.benefit__card:hover .benefit__card-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+}
+
+.btn--tertiary--black {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: transparent;
+    color: var(--webex-text);
+    border: 2px solid var(--webex-text);
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    gap: 8px;
+}
+
+.btn--tertiary--black:hover {
+    background-color: var(--webex-text);
+    color: var(--webex-card-bg);
+}
+
+.btn--secondary--dark-black {
+    background-color: #ffffff;
+    color: #333333;
+    border: none;
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+.btn--secondary--dark-black:hover {
+    background-color: #f0f0f0;
+}
+
+.btn--secondary--dark-black:focus {
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        padding: 0 16px;
+        height: 40px;
+    }
+
+    .webex-logo {
+        height: 28px;
+    }
+
+    .hamburger {
+        padding: 5px;
+    }
+    
+    .hamburger span {
+        width: 18px;
+        height: 1.5px;
+    }
+
+    .benefit__title {
+        font-size: 2rem;
+    }
+    
+    .benefit__description {
+        font-size: 1.1rem;
+    }
+    
+    .benefit__cards {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-flex-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem 1rem;
+    }
+
+    .hero-text {
+        flex: 0 1 auto;
+        max-width: 100%;
+        margin: 0;
+        padding: 0 1rem;
+        text-align: center;
+        gap: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero-text h2 {
+        font-size: 1.6rem;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .hero-text p {
+        padding-top: 10px;
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+        
+    }
+
+    .hero-buttons {
+        margin: 0;
+        padding: 0;
+    }
+
+    .hero-video {
+        flex: 0 1 auto;
+        max-width: 100%;
+        width: 100%;
+        margin: 10px 0 0 0;
+        padding: 0 1rem;
+        aspect-ratio: 16/9;
+    }
+
+    .hero-section {
+        margin-top: 20px;
+        padding: 50px 0;
+    }
+
+    .benefit__card {
+        flex: 0 0 calc(100% - 40px);
+        min-width: calc(100% - 40px);
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .header-container {
+        padding: 0 18px;
+    }
+
+    .webex-logo {
+        height: 30px;
+    }
+
+    .hero-flex-container {
+        gap: 1.8rem;
+        padding: 0 1.5rem;
+    }
+
+    .hero-text {
+        flex: 0 1 350px;
+        max-width: 350px;
+    }
+
+    .hero-video {
+        flex: 0 1 450px;
+        max-width: 450px;
+        background: transparent;
+    }
+
+    .hero-text h2 {
+        font-size: 1.9rem;
+    }
+
+    .hero-section {
+        margin-top: 35px;
+    }
+
+    .benefit__card {
+        flex: 0 0 calc(50% - 15px);
+        min-width: calc(50% - 15px);
+    }
+}
+
+/* Footer Section */
+footer {
+    background-color: var(--webex-card-bg);
+    padding: 40px 0;
+    border-top: 1px solid var(--webex-border);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer p {
+    color: var(--webex-text-light);
+}
+
+footer ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+}
+
+footer a {
+    color: var(--webex-text-light);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+footer a:hover {
+    color: var(--webex-purple);
+}
+
+.services-container {
+    width: 100%;
+    background: url('../images/green.png') no-repeat center center, linear-gradient(90deg, #0c0e26, #1d2042);
+    background-size: cover, cover;
+    position: relative;
+    transform: rotate(180deg);
+}
+
+.services-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    transform: rotate(180deg);
+}
+
+.services {
+    padding: 10px 0;
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+    z-index: 2;
+    transform: rotate(180deg);
+}
+
+.services-description {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--webex-text-light);
+}
+
+.services-grid {
+    display: flex;
+    gap: 30px;
+    padding: 0 30px;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+}
+
+.services-grid::before,
+.services-grid::after {
+    content: '';
+    flex: 0 0 20px;
+    min-width: 20px;
+}
+
+.services-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.service-card {
+    flex: 0 0 calc(33.333% - 20px);
+    min-width: calc(33.333% - 20px);
+    scroll-snap-align: center;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    height: 100%;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+    color: #fff;
+}
+
+.service-card-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    filter: brightness(1.2);
+}
+
+.service-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(75,75,75, 0.1);
+    z-index: 2;
+}
+
+.service-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    padding: 2rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: #fff;
+}
+
+.service-card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #fff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+.service-card-description {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.service-card-cta {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.service-card-cta .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-card:hover .service-card-content {
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%);
+}
+
+@media (max-width: 1024px) {
+    .service-card {
+        flex: 0 0 calc(50% - 15px);
+        min-width: calc(50% - 15px);
+    }
+}
+
+@media (max-width: 768px) {
+    .service-card {
+        flex: 0 0 calc(100% - 40px);
+        min-width: calc(100% - 40px);
+    }
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 6rem;
+    position: relative;
+    z-index: 10;
+}
+
+.carousel-control {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--webex-text);
+}
+
+.carousel-control:hover {
+    background: rgba(128, 128, 128, 0.1);
+    border-color: rgba(128, 128, 128, 0.8);
+}
+
+.carousel-control:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: rgba(128, 128, 128, 0.3);
+}
+
+/* Form Section Styles */
+.form-container {
+    width: 100%;
+    background-color: var(--webex-card-bg);
+    padding: 80px 0;
+    position: relative;
+}
+
+.form-content {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.form-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--webex-text);
+    margin-bottom: 1rem;
+}
+
+.form-description {
+    font-size: 1.25rem;
+    color: var(--webex-text-light);
+    margin-bottom: 2rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 1rem;
+    color: var(--webex-text);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px 16px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--webex-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.contact-form .btn--primary {
+    margin-top: 1rem;
+    align-self: center;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    background-color: var(--webex-purple);
+    color: var(--webex-text);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contact-form .btn--primary:hover {
+    background-color: var(--webex-dark-purple);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .form-title {
+        font-size: 2rem;
+    }
+    
+    .form-description {
+        font-size: 1.1rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 10px 14px;
+    }
+    
+    .contact-form {
+        padding: 1.5rem;
+    }
+}
+
+.services-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--webex-text);
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 80px;
+}
+
+main {
+  padding-top: 80px; /* Adjust this value as needed to ensure content is visible */
+}
