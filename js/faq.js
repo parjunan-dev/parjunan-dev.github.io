@@ -2,6 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Select all FAQ questions
     const faqQuestions = document.querySelectorAll('.faq-question');
     
+    // Remove is-active class from all FAQ items initially
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('is-active');
+    });
+    
     // Add click event to each question
     faqQuestions.forEach(btn => {
         btn.addEventListener('click', () => {
