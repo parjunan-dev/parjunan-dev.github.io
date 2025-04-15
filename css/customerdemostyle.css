@@ -1,0 +1,273 @@
+/* Reset */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Background image styles */
+.cds-bg-image {
+    background-image: url('../images/SingaporePools.png');
+    background-position: top center; /* Align top edge to top, center horizontally */
+    background-repeat: no-repeat;
+    background-attachment: scroll; /* Allows the background to scroll */
+    background-size: cover;
+    /* Ensure the body takes at least the full viewport height */
+    min-height: 100vh;
+    overflow: auto; /* Explicitly allow scrolling if content overflows */
+    padding-top: 60px; /* Add padding to account for fixed header */
+}
+
+/* Header styles */
+.cds-header {
+    background: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.cds-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cds-header-left {
+    display: flex;
+    align-items: center;
+}
+
+.cds-header-right {
+    display: flex;
+    align-items: center;
+    margin-top:100px;
+    margin-right: -250px;
+}
+
+.cds-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.cds-hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.cds-hamburger-line {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: black;
+    margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+    .cds-header-container {
+        padding: 0 16px;
+        height: 40px;
+    }
+    .cds-bg-image {
+        background-position: top 40px center; /* Adjust for smaller header on mobile */
+        padding-top: 40px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .cds-header-container {
+        padding: 0 18px;
+    }
+}
+
+/* Mobile Menu Overlay */
+.cds-mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 1000;
+    display: none;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.cds-mobile-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 60px 0 0 0;
+}
+
+.cds-mobile-menu-list li {
+    margin-bottom: 20px;
+}
+
+.cds-mobile-menu-list a {
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: black;
+}
+
+/* Show mobile menu when active */
+.cds-mobile-menu-overlay.active {
+    display: block;
+}
+
+/* Desktop-specific width adjustment */
+@media (min-width: 769px) {
+    .cds-mobile-menu-overlay {
+        width: 400px;
+        left: auto;
+        right: 0px;
+        transform: none;
+        background: white;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+}
+
+.cds-mobile-menu-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 100px;
+    width: 100%;
+}
+
+.cds-mobile-menu-list li {
+    margin: 1rem 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+}
+
+.cds-mobile-menu-overlay.active .cds-mobile-menu-list li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cds-mobile-menu-list a {
+    font-size: 1.5rem;
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(58, 58, 58, 0.2);
+}
+
+.cds-mobile-menu-list a:hover {
+    color: #00b6e3;
+}
+
+/* Off-canvas Menu Styles */
+.off-canvas-menu {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    transition: right 0.3s ease;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.off-canvas-menu.active {
+    right: 0;
+}
+
+.off-canvas-menu-header {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.off-canvas-menu-content {
+    padding: 1rem;
+}
+
+.off-canvas-menu-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.off-canvas-menu-content li {
+    margin-bottom: 1rem;
+}
+
+.off-canvas-menu-content a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1rem;
+    display: block;
+    padding: 0.5rem 0;
+}
+
+.off-canvas-menu-content a:hover {
+    color: #007bff;
+}
+
+/* Custom Modal Styles */
+.custom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-close:hover {
+    color: #333;
+}
