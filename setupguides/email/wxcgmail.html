@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Configuration Guide</title>
+    <link rel="stylesheet" href="emailstyles.css" />
+  </head>
+
+  <body id="preview">
+    <header>
+      <h1>Email Channel Configuration - Gmail</h1>
+      <p class="has-line-data" data-line-start="22" data-line-end="23">
+        This guide walks you through the step-by-step process of configuring
+        Gmail as an Email Channel in Webex Contact Center using OAuth 2.0. The
+        setup process includes configuring your
+        <strong>Gmail</strong> account, creating Email Assets, setting up the
+        Entry Point, and designing the associated workflows. These steps are
+        essential to successfully connect your support email account with the
+        Webex Contact Center platform.
+      </p>
+    </header>
+    <nav>
+      <h2>Table of Contents</h2>
+      <ul>
+        <li>
+          <a href="#step-1-create-a-gmail-account"
+            >Step 1: Create a Gmail Account</a
+          >
+        </li>
+        <li>
+          <a href="#step-2-setup-google-cloud-oauth"
+            >Step 2: Setup Google Cloud OAuth</a
+          >
+        </li>
+        <li>
+          <a href="#step-3-configure-email-app-in-webex-connect"
+            >Step 3: Configure Email App in Webex Connect</a
+          >
+        </li>
+        <li>
+          <a href="#step-4-verify-gmail-forwarding"
+            >Step 4: Verify Gmail Forwarding</a
+          >
+        </li>
+        <li>
+          <a href="#step-5-email-channel-and-queue-creation"
+            >Step 5: Email Channel and Queue Creation</a
+          >
+        </li>
+        <li>
+          <a href="#step-6-assign-queue-to-channel"
+            >Step 6: Create/Upload Email flow</a
+          >
+        </li>
+        <li>
+          <a href="#step-7-test-email-channel"
+            >Step 7: Test Email Channel</a
+          >
+        </li>
+        <li>
+          <a href="#things-to-note">Things to note</a>
+        </li>
+      </ul>
+    </nav>
+    <h4 class="code-line" data-line-start="24" data-line-end="25">
+      <a id="Prerequisite_24"></a>Pre-requisites
+    </h4>
+    <ol>
+      <li class="has-line-data" data-line-start="26" data-line-end="27">
+        You have admin credentials to configure in Control Hub, Management
+        Portal and Webex Connect.
+      </li>
+      <li class="has-line-data" data-line-start="27" data-line-end="28">
+        You have your Gmail account credentials.
+      </li>
+      <li class="has-line-data" data-line-start="28" data-line-end="30">
+        You have set up basic configuration for Webex Contact Center to use
+        agent desktop and build and delpoy digigal workflows.
+      </li>
+    </ol>
+    <h4 class="code-line" data-line-start="30" data-line-end="31">
+      <a id="Quick_Links_30"></a>Quick Links
+    </h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Control Hub</td>
+          <td>
+            <a href="https://admin.webex.com/">https://admin.webex.com</a>
+          </td>
+        </tr>
+        <tr>
+          <td>US Portal</td>
+          <td>
+            <a href="https://portal.wxcc-us1.cisco.com/portal"
+              >https://portal.wxcc-us1.cisco.com/portal</a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>US Agent Desktop</td>
+          <td>
+            <a href="https://desktop.wxcc-us1.cisco.com/"
+              >https://desktop.wxcc-us1.cisco.com</a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>Singapore Portal</td>
+          <td>
+            <a href="https://portal.wxcc-sg1.cisco.com/portal"
+              >https://portal.wxcc-sg1.cisco.com/portal</a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>Singapore Agent Desktop</td>
+          <td>
+            <a href="https://desktop.wxcc-sg1.cisco.com/"
+              >https://desktop.wxcc-sg1.cisco.com</a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>ANZ Portal</td>
+          <td>
+            <a href="https://portal.wxcc-anz1.cisco.com/portal"
+              >https://portal.wxcc-anz1.cisco.com/portal</a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>ANZ Agent Desktop</td>
+          <td>
+            <a href="https://desktop.wxcc-anz1.cisco.com/"
+              >https://desktop.wxcc-anz1.cisco.com</a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>Webex Connect Documentation</td>
+          <td>
+            <a href="https://help.imiconnect.io/"
+              >https://help.imiconnect.io/</a
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <main>
+      <section id="step-1-create-a-gmail-account">
+        <h2>Step 1: Create a Gmail Account</h2>
+        <p class="has-line-data" data-line-start="50" data-line-end="51">
+          Google has disabled the "Less Secure Apps" feature for all accounts.
+          Previously, this setting allowed sending emails through Gmail SMTP. In
+          this lab, we will use OAuth 2.0 authentication to enable outbound
+          email functionality.
+        </p>
+        <blockquote>
+          <p class="has-line-data" data-line-start="52" data-line-end="53">
+            <strong>Note</strong>: The steps in this section apply only to Gmail
+            accounts. The interface and the steps to configure the account and
+            credentials may vary from time to time as Google updates their
+            interface. But the goals of the section are the same. Please refer
+            to the latest documentation from the section are the same. Please
+            refer to the latest documentation from Google to understand the
+            interface changes (if any).
+          </p>
+        </blockquote>
+        <ol>
+          <li>
+            Use or create a Gmail account you want to use for handling incoming
+            support emails.
+          </li>
+          <li>
+            This will be referred to as the
+            <strong>support email address</strong> in this guide.
+          </li>
+          <li class="has-line-data" data-line-start="63" data-line-end="64">
+            Login to the Gmail account with your credentials (ref:
+            <a href="https://mail.google.com">https://mail.google.com</a>).
+          </li>
+          <li class="has-line-data" data-line-start="63" data-line-end="64">
+            Turn off smart features in Gmail. Navigate to Settings > See all
+            settings > General. Then, scroll down to the "Smart features"
+            section and uncheck the box next to "Smart features in Gmail, Chat,
+            and Meet".
+          </li>
+          <li class="has-line-data" data-line-start="64" data-line-end="66">
+            Enable POP3/IMAP setting by clicking on settings icon on top right
+            corner and selecting <strong>See all settings</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="66" data-line-end="67">
+            <img
+              src="/setupguides/email/email-images/02_Gmail_account_configuration_1.png"
+              alt="02_Gmail_account_configuration_1"
+            />
+          </p>
+          <li class="has-line-data" data-line-start="68" data-line-end="70">
+            Now Click on <strong>Forwarding and POP/IMAP</strong>, enable the
+            <code>POP Download</code> and <code>Auto-Expunge on</code> then
+            click <strong>Save Changes</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="70" data-line-end="71">
+            <img
+              src="/setupguides/email/email-images/03_Gmail_account_configuration_2.png"
+              alt="03_Gmail_account_configuration_2"
+            />
+          </p>
+        </ol>
+        <blockquote>
+          <p class="has-line-data" data-line-start="52" data-line-end="53">
+            Starting January 2025, Google has turned off the option to choose
+            "Enable IMAP" or "Disable IMAP". With this change, IMAP access is
+            always turned on in Gmail, and your integrations aren't affected.
+            You don't need to take any action.
+          </p>
+        </blockquote>
+      </section>
+
+      <section id="step-2-setup-google-cloud-oauth">
+        <h2>Step 2: Setup Google Cloud OAuth</h2>
+        <ol>
+          <li>
+            Log in to
+            <a href="https://console.cloud.google.com" target="_blank"
+              >Google Cloud Console</a
+            >.
+          </li>
+          <li>Create a new project or select an existing one.</li>
+          <li>
+            Navigate to
+            <strong>APIs & Services &gt; OAuth Consent Screen</strong>.
+          </li>
+          <li>
+            If this is the first time you are setting up OAuth for Gmail, you
+            will need to configure Google Auth Platform:
+            <blockquote>
+              <p>
+                Refer to
+                <a href="https://support.google.com/cloud/answer/15544987?hl=en"
+                  >Get started with the Google Auth Platform</a
+                >
+                for details on configuring Google Auth Platform and for future
+                changes if any.
+              </p>
+            </blockquote>
+            <ul>
+              <li>
+                Fill in APP Information details such as App name, User support
+                email, and click Next.
+              </li>
+              <li>
+                Choose <strong>External</strong> under Audience and click
+                <strong>Next</strong>.
+              </li>
+              <li>Fill in developer contact email and click Next.</li>
+              <li>Agree to the Terms of Service and click Continue.</li>
+              <li>Click Create.</li>
+            </ul>
+          </li>
+          <li>
+            Click <strong>Audience</strong> in the left sidebar and add
+            <strong>Test Users</strong> by clicking on
+            <strong>Add users</strong>.
+          </li>
+          <li>
+            Add any of your Gmail addresses you prefer to use for testing as a
+            Test User.
+          </li>
+          <li>
+            Click <strong>Publish App</strong> in the same
+            <strong>Audience</strong> page to make it live.
+          </li>
+          <li>
+            Now click <strong>Clients</strong> in the left sidebar and click
+            <strong>Create client</strong> and select
+            <strong>Web Application</strong> under OAuth Client ID Application
+            type.
+          </li>
+          <li>
+            Now go to <strong>Credentials</strong> &gt;
+            <strong>Create Credentials</strong> &gt;
+            <strong>OAuth Client ID</strong>.
+          </li>
+          <li>
+            In the Create OAuth client ID page that opens, add:
+            <ul>
+              <li>A name for the application, example: Webex Connect</li>
+              <li>
+                Authorized JavaScript Origin:
+                <code>https://your-webex-connect-domain</code>
+              </li>
+              <li>
+                Authorized Redirect URI:
+                <code>https://your-webex-connect-domain/callback</code>
+              </li>
+            </ul>
+          </li>
+          <li>
+            Click <strong>Create</strong> and download the credentials JSON
+            file.
+          </li>
+        </ol>
+      </section>
+
+      <section id="step-3-configure-email-app-in-webex-connect">
+        <h2>Step 3: Configure Email App in Webex Connect</h2>
+        <ol>
+          <li>Log in to Webex Connect.</li>
+          <li>Navigate to <strong>Assets → Apps</strong>.</li>
+          <li>
+            Click <strong>Configure New App</strong> → <strong>Email</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="144" data-line-end="145">
+            <img
+              src="/setupguides/email/email-images/17_Create_Email_Asset_and_Register_to_WebexCC_1.gif"
+              alt="17_Create_Email_Asset_and_Register_to_WebexCC"
+            />
+          </p>
+          <li>
+            Enter a friendly name and your
+            <strong>support email address</strong> (from Step 1).
+          </li>
+          <li>
+            In Webex Connect, choose <strong>OAuth 2.0</strong> as the
+            Authentication method.
+          </li>
+          <li>
+            Fill the fields using the credentials JSON file:
+            <ul>
+              <li>Client ID, Client Secret</li>
+              <li>
+                SMTP Server:
+                <code>smtp.gmail.com</code>
+              </li>
+              <li>
+                SMTP Port:
+                <code>587</code>
+              </li>
+              <li>
+                SMTP Encryption:
+                <code>STARTTLS</code>
+              </li>
+              <li>
+                Username:
+                <code>support email address</code>
+              </li>
+              <li>
+                Authorization URL:
+                <code>https://accounts.google.com/o/oauth2/auth</code>
+              </li>
+              <li>
+                Token URL: <code>https://oauth2.googleapis.com/token</code>
+              </li>
+              <li>
+                Refresh Token URL:
+                <code>https://oauth2.googleapis.com/token</code>
+              </li>
+              <li>Scope: <code>https://mail.google.com/</code></li>
+              <li>Redirect URL from step 2</li>
+            </ul>
+          </li>
+          <li>Click <strong>Generate Token</strong>.</li>
+          <li>
+            If you had checked the
+            <strong
+              >'I would like to explicitly review before providing consent for
+              authentiation'</strong
+            >
+            checkbox, then you will need to login using your Gmail account and
+            provide consent for token generation.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/18_Create_Email_Asset_and_Register_to_WebexCC_2.gif"
+              alt="18_Create_Email_Asset_and_Register_to_WebexCC_2"
+            />
+          </p>
+          <li>Once the token is generated, click <strong>Save</strong>.</li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/Main_Configure Email App in Webex Connect.png"
+              alt="Main_Configure Email App in Webex Connect"
+            />
+          </p>
+          <li>
+            Click on <strong>Register To Webex CC</strong> and select the
+            service you want to register this asset to. Click
+            <strong>Register</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/20_Create_Email_Asset_and_Register_to_WebexCC_3.gif"
+              alt="20_Create_Email_Asset_and_Register_to_WebexCC_3"
+            />
+          </p>
+          <li>
+            Take note of the <strong>Forwarding Address</strong> shown in the
+            page. We will use this later in
+            <a href="#step-4-verify-gmail-forwarding">Step 4</a>.
+          </li>
+        </ol>
+      </section>
+
+      <section id="step-4-verify-gmail-forwarding">
+        <h2>Step 4: Verify Gmail Forwarding</h2>
+        <p>
+          To verify our email forwarding settings in Gmail, we will need to
+          handle the verification email sent by Google and approve the
+          forwarding address.
+        </p>
+        <p>
+          Google has changed how they send verification emails, to handle this
+          let us create a dummy workflow to handle emails and make use of the
+          debug logs to verify the email forwarding.
+        </p>
+        <ol>
+          <li>
+            In Webex Connect, go to <strong>Services</strong> and open your
+            service, example: <strong>My First Service</strong>.
+          </li>
+          <li>
+            Click <strong>View My Flows</strong> and click on
+            <strong>Create Flow</strong>.
+          </li>
+          <li>
+            Enter a flow name such as <strong>Email_Dummy</strong> or anything
+            you prefer, we will not be using the flow after verfication.
+          </li>
+          <li>Click <strong>Create</strong>.</li>
+          <li>Select Email from the channels list.</li>
+          <li>
+            In the <strong>Configure Email Event</strong> page, select
+            <strong>Incoming Message</strong> as the <strong>Event</strong> and
+            click on <strong>Save</strong>.
+          </li>
+          <li>
+            Click and drag the green ball on the
+            <strong>Configure Email Event</strong> node and select
+            <strong>onBegin</strong> as the Node Event and
+            <strong>101 - Successfully completed flow [Success]</strong> as the
+            Flow Result and click on <strong>Save</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/30_Create_a_dummy_email_workflow.gif"
+              alt="30_Create_a_dummy_email_workflow"
+            />
+          </p>
+          <li>
+            In Step 3, we had taken note of the forwarding address from Webex
+            Connect.
+          </li>
+          <li>Copy the <strong>Forwarding Address</strong>.</li>
+          <li>
+            Go to Gmail → Settings → Forwarding and POP/IMAP → Add a forwarding
+            address.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/23_Add_forwarding_Address_3.gif"
+              alt="23_Add_forwarding_Address_3"
+            />
+          </p>
+          <li>
+            Paste the forwarding address from Webex Connect and proceed with the
+            verification steps initiated by Google. This step will send a
+            verification email to the forwarding address.
+          </li>
+          <li>
+            Go back to the dummy workflow and check the
+            <strong>Debug Logs</strong>in the workflow.
+          </li>
+          <li>
+            Open the transcation that was triggered for the verfification email.
+            Click <strong>Decrypt Logs</strong> and take note of the message
+            body.
+          </li>
+          <li>
+            You will need to use the verification url in the message body and
+            open it in your browser to complete verification. You may have to
+            use an online to extract the url or manually remove the extra
+            characters in the url before using it in your browser.
+          </li>
+        </ol>
+      </section>
+
+      <section id="step-5-email-channel-and-queue-creation">
+        <h2>Step 5: Email Channel and Queue Creation</h2>
+        <h3>Create Email Channel (Entry Point) in Control Hub</h3>
+        <ol>
+          <li>
+            Login to Control Hub and navigate to
+            <strong>Contact Center</strong> under
+            <strong>Services</strong> section in the side bar.
+          </li>
+          <li>
+            Click on <strong>Channels</strong> under
+            <strong>Customer Experience</strong> in the side bar.
+          </li>
+          <li>Click on <strong>Create Channel</strong>.</li>
+          <li>
+            Input <strong>Name</strong> & <strong>Descripton</strong>as per your
+            preference.
+          </li>
+          <li>
+            Select <strong>Email</strong> in the
+            <strong>Channel Type</strong> dropdown.
+          </li>
+          <li>
+            Click on the drop down button under <strong>Asset Name</strong> and
+            select the <strong>Email Asset</strong> created in
+            <a href="#step-3-configure-email-app-in-webex-connect">Step 3</a>.
+          </li>
+          <li>
+            Set <strong>Service Level Threshold</strong> to
+            <strong>2</strong> hours.
+          </li>
+          <li>Select your preferred <strong>Time Zone</strong>.</li>
+          <li>Click on <strong>Save</strong>.</li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/30_Email_Entry_Point_and_Queue_creation_1.png"
+              alt="30_Email_Entry_Point_and_Queue_creation_1"
+            />
+          </p>
+        </ol>
+        <h3>Create Two Queues in Management Portal</h3>
+        <ol>
+          <li>
+            Navigate to <strong>Queues</strong> under
+            <strong>Customer Experience</strong> section in the side bar.
+          </li>
+          <li>Click on <strong>Create Queue</strong>.</li>
+          <li>
+            Input <strong>Name</strong> & <strong>Descripton</strong>as per your
+            preference.
+          </li>
+          <li>
+            Select<strong>Inbound Queue</strong> from the dropdown for Queue
+            Type.
+          </li>
+          <li>
+            Select <strong>Email</strong> from the dropdown for Channel Type.
+          </li>
+          <li>
+            Leave the Queue Routing Type to
+            <strong>Longest Available Agent</strong>.
+          </li>
+          <li>
+            Click on <strong>Create Group</strong> under Email Distribution and
+            select your <strong>Team</strong>.
+          </li>
+          <li>
+            Set <strong>Service Level Threshold</strong> to
+            <strong>2</strong> hours.
+          </li>
+          <li>
+            Set <strong>Maximum Time in Queue</strong> to
+            <strong>3</strong> hours.
+          </li>
+          <li>Select your preferred <strong>Time Zone</strong>.</li>
+          <li>Click on <strong>Create</strong>.</li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/33_Email_Entry_Point_and_Queue_creation_2.png"
+              alt="33_Email_Entry_Point_and_Queue_creation_2"
+            />
+          </p>
+        </ol>
+      </section>
+
+      <section id="step-6-assign-queue-to-channel">
+        <h2>Step 6: Create/Upload Email flow</h2>
+        <ol>
+          <li>
+            Download the email flow from the
+            <a
+              href="https://github.com/CiscoDevNet/webexcc-digital-channels/tree/main"
+              target="_blank"
+              rel="noopener noreferrer"
+              >GitHub page</a
+            >.
+          </li>
+          <li>
+            Navigate to <strong>Webex Connect Flows</strong> ->
+            <strong>v3.3</strong> -> <strong>Template</strong> ->
+            <strong>Media Specific</strong> -> <strong>Workflows</strong> ->
+            <strong>EmailInboundFlow.workflow.zip,</strong> click and select the
+            zip file and download.
+          </li>
+          <li>Unzip the downloaded file.</li>
+          <li>
+            Go to Webex Connect, click on <strong>Services</strong> and select
+            the service in which the Asset is created in
+            <a href="#step-3-configure-email-app-in-webex-connect">Step 3</a>.
+          </li>
+          <li>
+            In the service, click <strong>View My Flows</strong> and
+            <strong>Create Flow</strong>..
+          </li>
+          <li>
+            Input your preferred name for the flow under
+            <strong>Flow Name</strong> & select Upload a flow from the
+            <strong>Method</strong> dropdown.
+          </li>
+          <li>
+            Select the <strong>EmailInboundFlow.workflow</strong> file and click
+            on <strong>Create</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/34_Create-Upload_Email_flow_1.png"
+              alt="34_Create-Upload_Email_flow_1"
+            />
+          </p>
+          <li>
+            Open the <strong>Queue Task</strong> node and select the
+            <strong>Queue Name</strong> as the one you created in
+            <a href="#step-5-email-channel-and-queue-creation">Step 5</a>. Click <strong>SAVE</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/35_Create-Upload_Email_flow_2.png"
+              alt="35_Create-Upload_Email_flow_2"
+            />
+          </p>
+          <li>
+            Click <strong>Settings</strong> on top right corner and switch to
+            <strong>Custom variables</strong> tab. Here in the
+            <strong>bizemailid</strong> row, update the default value with your
+            email address of the Gmail account. Click <strong>SAVE</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/36_Create-Upload_Email_flow_3.png"
+              alt="36_Create-Upload_Email_flow_3"
+            />
+          </p>
+          <li>
+            Go to <strong>Resolve Conversation</strong> node and fill in
+            <strong>Flow Id</strong> field with
+            <strong>flowId</strong> value copied from the address bar of web
+            browser. Then click <strong>SAVE</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/37_Create-Upload_Email_flow_flowid.png"
+              alt="37_Create-Upload_Email_flow_flowid"
+            />
+          </p>
+          <li>
+            Finally click on <strong>Make Live</strong> on top right corner ->
+            Select the Application/Asset that we have created and click
+            <strong>Make Live</strong>.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/38_Create-Upload_Email_flow_4.png"
+              alt="38_Create-Upload_Email_flow_4"
+            />
+          </p>
+        </ol>
+      </section>
+      <section id="step-7-test-email-channel">
+        <h2>Step 7: Test Email Channel</h2>
+        <ol>
+          <li>
+            Go to one of your email accounts and send an email to the support
+            email address that was initially configured in the Email Asset.
+          </li>
+          <li>
+            Go to the Agent Desktop and make the agent Available.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/39_Verification_-_Send_an_Email_and_accept_the_task_1.png"
+              alt="39_Verification_-_Send_an_Email_and_accept_the_task_1"
+            />
+          </p>
+          <li>
+            The Email will be offered to the agent. Click <strong>Accept</strong> to handle the email. Click "Reply" or <strong>Reply All</strong> to the email and hit send button.
+          </li>
+          <p class="has-line-data" data-line-start="172" data-line-end="173">
+            <img
+              src="/setupguides/email/email-images/40_Verification_-_Send_an_Email_and_accept_the_task_2.png"
+              alt="40_Verification_-_Send_an_Email_and_accept_the_task_2"
+            />
+          </p>
+          <li>
+            Add wrap up and close the task.
+          </li>
+        </ol>
+      </section>
+      <section id="things-to-note">
+        <h2>Things to note</h2>
+        <ul>
+          <li>
+            Please note that you'd need to mandatorily configure an
+            auto-forwarding rule to forward the emails received on the email
+            address configured in <strong>EMAIL ID</strong> field to the email
+            address available in the <strong>FORWARDING ADDRESS</strong> field.
+            Webex Connect won't receive the inbound emails unless this step is
+            completed. Please note that Email via SMTP has a 25MB size
+            limitation on the inbound email attachments. Due to this limitation,
+            if an inbound Email fails, customer gets a delivery failure email
+            and is expected to resend the email with smaller attachment.
+          </li>
+          <li>
+            In the case of Gmail, you must verify the email forwarding address
+            by either confirming through the URL provided or entering the OTP
+            sent to the provided address as applicable. You can retrieve the URL
+            or OTP as applicable by decrypting the
+            <strong>Debug Logs</strong> for the <strong>Email Asset</strong> or
+            the <strong>Email Workflow</strong> in the
+            <strong>Email Workflow</strong> configuration. It is found in the
+            full email body of the logs. Earlier, the OTP was found in the
+            subject of the email in the downloaded Export Logs.
+          </li>
+          <li>
+            If an inbound email contains inline images, they will be received as
+            attachments on the agent's desktop. If PCI scan is enabled, the
+            images will be blocked.
+          </li>
+          <li>
+            A Shared Mailbox is simply a mailbox that doesn't have login
+            credentials of its own and requires a user's (who can access the
+            shared mailbox, mainly 'Send As' access) credentials to generate
+            tokens. The user need not have Admin access. In a typical enterprise
+            setup, a user (user1@domain.tld) can have access to multiple shared
+            mailboxes such as sales@domain.tld, operations@domain.tld, etc. They
+            can access these mailboxes using their own credentials
+            (user1@domain.tld). Also, while sending or replying to emails, they
+            can choose to 'Send As' any of these email addresses.
+          </li>
+          <li>
+            Avoid deleting Email Assets after registration—they can't be
+            restored.
+          </li>
+          <li>
+            Use Google OAuth Playground to experiment and get tokens manually if
+            needed:
+            <a
+              href="https://developers.google.com/oauthplayground/"
+              target="_blank"
+              >OAuth Playground</a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        © 2025 | Cisco Systems Ltd. | Webex Contact Center | Email Setup Guide |
+        All rights reserved
+      </p>
+    </footer>
+  </body>
+</html>
