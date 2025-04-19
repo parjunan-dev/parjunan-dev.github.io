@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Email Configuration Guide</title>
+  <title>Email Configuration Guide</title>
     <link rel="stylesheet" href="emailstyles.css" />
-  </head>
+</head>
 
   <body id="preview">
     <header>
@@ -83,14 +83,14 @@
       <a id="Quick_Links_30"></a>Quick Links
     </h4>
     <table>
-      <thead>
+    <thead>
         <tr>
           <th>Service</th>
           <th>URL</th>
         </tr>
-      </thead>
-      <tbody>
-        <tr>
+    </thead>
+    <tbody>
+      <tr>
           <td>Control Hub</td>
           <td>
             <a href="https://admin.webex.com/">https://admin.webex.com</a>
@@ -117,43 +117,43 @@
           <td>
             <a href="https://portal.wxcc-sg1.cisco.com/portal"
               >https://portal.wxcc-sg1.cisco.com/portal</a
-            >
-          </td>
-        </tr>
-        <tr>
+          >
+        </td>
+      </tr>
+      <tr>
           <td>Singapore Agent Desktop</td>
-          <td>
+        <td>
             <a href="https://desktop.wxcc-sg1.cisco.com/"
               >https://desktop.wxcc-sg1.cisco.com</a
-            >
-          </td>
-        </tr>
-        <tr>
+          >
+        </td>
+      </tr>
+      <tr>
           <td>ANZ Portal</td>
-          <td>
+        <td>
             <a href="https://portal.wxcc-anz1.cisco.com/portal"
               >https://portal.wxcc-anz1.cisco.com/portal</a
-            >
-          </td>
-        </tr>
-        <tr>
+          >
+        </td>
+      </tr>
+      <tr>
           <td>ANZ Agent Desktop</td>
-          <td>
+        <td>
             <a href="https://desktop.wxcc-anz1.cisco.com/"
               >https://desktop.wxcc-anz1.cisco.com</a
             >
-          </td>
-        </tr>
-        <tr>
+        </td>
+      </tr>
+      <tr>
           <td>Webex Connect Documentation</td>
-          <td>
+        <td>
             <a href="https://help.imiconnect.io/"
               >https://help.imiconnect.io/</a
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          >
+        </td>
+      </tr>
+    </tbody>
+  </table>
     <main>
       <section id="step-1-create-a-gmail-account">
         <h2>Step 1: Create a Gmail Account</h2>
@@ -252,21 +252,21 @@
                 changes if any.
               </p>
             </blockquote>
-            <ul>
-              <li>
+      <ul>
+        <li>
                 Fill in APP Information details such as App name, User support
                 email, and click Next.
               </li>
               <li>
                 Choose <strong>External</strong> under Audience and click
                 <strong>Next</strong>.
-              </li>
+        </li>
               <li>Fill in developer contact email and click Next.</li>
               <li>Agree to the Terms of Service and click Continue.</li>
               <li>Click Create.</li>
-            </ul>
-          </li>
-          <li>
+      </ul>
+    </li>
+    <li>
             Click <strong>Audience</strong> in the left sidebar and add
             <strong>Test Users</strong> by clicking on
             <strong>Add users</strong>.
@@ -302,9 +302,9 @@
                 Authorized Redirect URI:
                 <code>https://your-webex-connect-domain/callback</code>
               </li>
-            </ul>
-          </li>
-          <li>
+      </ul>
+    </li>
+    <li>
             Click <strong>Create</strong> and download the credentials JSON
             file.
           </li>
@@ -359,15 +359,15 @@
               </li>
               <li>
                 Token URL: <code>https://oauth2.googleapis.com/token</code>
-              </li>
-              <li>
+    </li>
+    <li>
                 Refresh Token URL:
                 <code>https://oauth2.googleapis.com/token</code>
               </li>
               <li>Scope: <code>https://mail.google.com/</code></li>
               <li>Redirect URL from step 2</li>
-            </ul>
-          </li>
+      </ul>
+    </li>
           <li>Click <strong>Generate Token</strong>.</li>
           <li>
             If you had checked the
@@ -483,14 +483,14 @@
             Open the transcation that was triggered for the verfification email.
             Click <strong>Decrypt Logs</strong> and take note of the message
             body.
-          </li>
-          <li>
+    </li>
+    <li>
             You will need to use the verification url in the message body and
             open it in your browser to complete verification. You may have to
             use an online to extract the url or manually remove the extra
             characters in the url before using it in your browser.
-          </li>
-        </ol>
+    </li>
+  </ol>
       </section>
 
       <section id="step-5-email-channel-and-queue-creation">
@@ -519,8 +519,8 @@
             Click on the drop down button under <strong>Asset Name</strong> and
             select the <strong>Email Asset</strong> created in
             <a href="#step-3-configure-email-app-in-webex-connect">Step 3</a>.
-          </li>
-          <li>
+    </li>
+    <li>
             Set <strong>Service Level Threshold</strong> to
             <strong>2</strong> hours.
           </li>
@@ -538,35 +538,35 @@
           <li>
             Navigate to <strong>Queues</strong> under
             <strong>Customer Experience</strong> section in the side bar.
-          </li>
+        </li>
           <li>Click on <strong>Create Queue</strong>.</li>
           <li>
             Input <strong>Name</strong> & <strong>Descripton</strong>as per your
             preference.
-          </li>
-          <li>
+    </li>
+    <li>
             Select<strong>Inbound Queue</strong> from the dropdown for Queue
             Type.
           </li>
           <li>
             Select <strong>Email</strong> from the dropdown for Channel Type.
-          </li>
+        </li>
           <li>
             Leave the Queue Routing Type to
             <strong>Longest Available Agent</strong>.
-          </li>
-          <li>
+    </li>
+    <li>
             Click on <strong>Create Group</strong> under Email Distribution and
             select your <strong>Team</strong>.
           </li>
           <li>
             Set <strong>Service Level Threshold</strong> to
             <strong>2</strong> hours.
-          </li>
+        </li>
           <li>
             Set <strong>Maximum Time in Queue</strong> to
             <strong>3</strong> hours.
-          </li>
+    </li>
           <li>Select your preferred <strong>Time Zone</strong>.</li>
           <li>Click on <strong>Create</strong>.</li>
           <p class="has-line-data" data-line-start="172" data-line-end="173">
@@ -611,8 +611,8 @@
             Input your preferred name for the flow under
             <strong>Flow Name</strong> & select Upload a flow from the
             <strong>Method</strong> dropdown.
-          </li>
-          <li>
+    </li>
+    <li>
             Select the <strong>EmailInboundFlow.workflow</strong> file and click
             on <strong>Create</strong>.
           </li>
@@ -676,8 +676,8 @@
           <li>
             Go to one of your email accounts and send an email to the support
             email address that was initially configured in the Email Asset.
-          </li>
-          <li>
+    </li>
+    <li>
             Go to the Agent Desktop and make the agent Available.
           </li>
           <p class="has-line-data" data-line-start="172" data-line-end="173">
@@ -724,12 +724,12 @@
             <strong>Email Workflow</strong> configuration. It is found in the
             full email body of the logs. Earlier, the OTP was found in the
             subject of the email in the downloaded Export Logs.
-          </li>
+        </li>
           <li>
             If an inbound email contains inline images, they will be received as
             attachments on the agent's desktop. If PCI scan is enabled, the
             images will be blocked.
-          </li>
+            </li>
           <li>
             A Shared Mailbox is simply a mailbox that doesn't have login
             credentials of its own and requires a user's (who can access the
@@ -740,12 +740,12 @@
             can access these mailboxes using their own credentials
             (user1@domain.tld). Also, while sending or replying to emails, they
             can choose to 'Send As' any of these email addresses.
-          </li>
+        </li>
           <li>
             Avoid deleting Email Assets after registration—they can't be
             restored.
-          </li>
-          <li>
+    </li>
+    <li>
             Use Google OAuth Playground to experiment and get tokens manually if
             needed:
             <a
@@ -753,8 +753,8 @@
               target="_blank"
               >OAuth Playground</a
             >
-          </li>
-        </ul>
+    </li>
+  </ul>
       </section>
     </main>
 
@@ -764,5 +764,5 @@
         All rights reserved
       </p>
     </footer>
-  </body>
+</body>
 </html>

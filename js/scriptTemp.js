@@ -6,6 +6,8 @@ const CUSTOMER_IMAGE = "images/SingaporePools.png";
 const WXCC_TELEPHONE_NUMBER = "+6582004000";
 const IMI_SMS_WEBHOOK = "";
 const IMI_CALLBACK_WEBHOOK = "";
+const PROXY_SERVER_URL = "http://localhost:3000/submit-form"; // Local development
+// const PROXY_SERVER_URL = "https://your-glitch-app.glitch.me/submit-form"; // When deployed to Glitch
 const demoToolboxUserId = "";
 const AGENT_IMAGE =
   "https://cdn.glitch.global/e39bce96-4dfa-4058-9775-199788361cb8/agent.png?v=1730959586778";
@@ -26,8 +28,158 @@ function formatPhoneNumber(phoneNumber) {
   return `+65 ${match[1]} ${match[2]}`;
 }
 
+// Helper functions
+function toggleMobileMenu() {
+  const mobileMenu = document.querySelector('.mobile-menu');
+  if (mobileMenu) {
+    mobileMenu.classList.toggle('active');
+  }
+}
+
+function bsToggle(bsComponent) {
+  if (bsComponent) {
+    bsComponent.toggle();
+  }
+}
+
+function getCallbackDelay() {
+  return Math.floor(Math.random() * 5) + 1;
+}
+
+async function fetchWithTimeout(resource, options = {}) {
+  const { timeout = 5000 } = options;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal
+  });
+  clearTimeout(id);
+  return response;
+}
+
+async function sendCallback(formValues) {
+  try {
+    const response = await fetchWithTimeout(IMI_CALLBACK_WEBHOOK, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: formValues.name,
+        number: formValues.number,
+        department: formValues.department,
+        reason: formValues.reason,
+        userId: demoToolboxUserId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error sending callback:', error);
+    return false;
+  }
+}
+
+async function sendEmail(formData) {
+  try {
+    console.log('Starting email submission...', formData);
+    console.log('Proxy server URL:', PROXY_SERVER_URL);
+    
+    const requestBody = {
+      name: formData.name,
+      email: formData.email,
+      subject: formData.subject,
+      message: formData.message,
+      userId: demoToolboxUserId
+    };
+    
+    console.log('Request body:', requestBody);
+    
+    const response = await fetchWithTimeout(PROXY_SERVER_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    console.log('Response status:', response.status);
+    console.log('Response headers:', response.headers);
+    
+    const responseData = await response.json();
+    console.log('Response data:', responseData);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return responseData.success;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return false;
+  }
+}
+
+async function sendSMS() {
+  try {
+    const response = await fetchWithTimeout(IMI_SMS_WEBHOOK, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: smsName.value,
+        number: smsNumber.value,
+        userId: demoToolboxUserId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error sending SMS:', error);
+    return false;
+  }
+}
+
+function displaySearchResults(results) {
+  const resultsContainer = document.getElementById('search-results');
+  if (resultsContainer) {
+    resultsContainer.innerHTML = results.map(result => `
+      <div class="search-result">
+        <h3>${result.title}</h3>
+        <p>${result.description}</p>
+        <a href="${result.url}">Read more</a>
+      </div>
+    `).join('');
+  }
+}
+
 // Initialize everything when the DOM is loaded
 document.addEventListener("DOMContentLoaded", function() {
+  // Query all DOM elements once
+  const testimonialSlider = document.querySelector(".testimonial-slider");
+  const testimonialSlides = testimonialSlider ? testimonialSlider.querySelectorAll(".testimonial-slide") : [];
+  const prevButton = document.querySelector(".testimonial-controls button:first-child");
+  const nextButton = document.querySelector(".testimonial-controls button:last-child");
+  const searchForm = document.getElementById("search-form");
+  const helpSearchInput = document.getElementById("search-input");
+  const helpCancelIcon = document.querySelector(".cancel-icon");
+  const stats = document.querySelectorAll(".stat-number");
+  const statsSection = document.querySelector(".stats");
+  const scrollToTopBtn = document.createElement("button");
+  scrollToTopBtn.innerHTML = "↑";
+  scrollToTopBtn.className = "scroll-to-top";
+  document.body.appendChild(scrollToTopBtn);
+
   // First, set all images
   const agentImage = document.getElementById("agent");
   if (agentImage) {
@@ -65,15 +217,72 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Initialize Bootstrap components
   const bsContactMenu = new bootstrap.Offcanvas("#contactMenu");
-  const bsCallModal = new bootstrap.Modal("#callModal");
-  const bsCallbackModal = new bootstrap.Modal("#callbackModal");
-  const bsEmailModal = new bootstrap.Modal("#emailModal");
-  const bsSmsModal = new bootstrap.Modal("#smsModal");
-  const bsWhatsappModal = new bootstrap.Modal("#whatsappModal");
-  const bsAmbModal = new bootstrap.Modal("#ambModal");
-  const bsCoffeeDemoModal = new bootstrap.Modal("#coffeeDemoModal");
-  const bsFailureModal = new bootstrap.Modal("#failureModal");
-  const bsSuccessModal = new bootstrap.Modal("#successModal");
+  const bsCallModal = new bootstrap.Modal("#callModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsCallbackModal = new bootstrap.Modal("#callbackModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsEmailModal = new bootstrap.Modal("#emailModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsSmsModal = new bootstrap.Modal("#smsModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsWhatsappModal = new bootstrap.Modal("#whatsappModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsAmbModal = new bootstrap.Modal("#ambModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsCoffeeDemoModal = new bootstrap.Modal("#coffeeDemoModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsFailureModal = new bootstrap.Modal("#failureModal", {
+    focus: true,
+    keyboard: true
+  });
+  const bsSuccessModal = new bootstrap.Modal("#successModal", {
+    backdrop: 'static',
+    keyboard: true,
+    focus: true
+  });
+
+  // Store the element that had focus before the modal was opened
+  let lastFocusedElement = null;
+
+  // Function to show success modal with proper focus management
+  function showSuccessModal() {
+    // Store the current focused element
+    lastFocusedElement = document.activeElement;
+    
+    // Show the modal
+    bsSuccessModal.show();
+    
+    // Set focus to the close button after modal is shown
+    const modal = document.getElementById('successModal');
+    const closeButton = modal.querySelector('.btn-close');
+    if (closeButton) {
+      setTimeout(() => closeButton.focus(), 100);
+    }
+    
+    // Add event listener for when modal is hidden
+    modal.addEventListener('hidden.bs.modal', function onHidden() {
+      // Restore focus to the previously focused element
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+      }
+      // Remove the event listener to prevent memory leaks
+      modal.removeEventListener('hidden.bs.modal', onHidden);
+    });
+  }
 
   // Get reference to HTML elements
   const successMessage = document.getElementById("successMessage");
@@ -90,6 +299,14 @@ document.addEventListener("DOMContentLoaded", function() {
   const callbackForm = document.getElementById("callbackForm");
   const emailForm = document.getElementById("emailForm");
   const smsForm = document.getElementById("smsForm");
+
+  console.log('Email form elements:', {
+    emailForm,
+    emailName,
+    emailAddress,
+    emailSubject,
+    emailMessage
+  });
 
   // Get reference to IMI Web Chat div
   const imiWebChat = document.getElementById("divicw");
@@ -164,7 +381,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Dropdown functionality - only initialize if elements exist
+  // Dropdown functionality
   const dropbtn = document.querySelector('.dropbtn');
   const dropdown = document.getElementById('myDropdown');
   if (dropbtn && dropdown) {
@@ -182,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Service Cards Carousel - only initialize if elements exist
+  // Service Cards Carousel
   const servicesGrid = document.querySelector(".services-grid");
   const servicesCards = servicesGrid ? servicesGrid.querySelectorAll(".service-card") : [];
   const carouselPrev = document.querySelector(".carousel-prev");
@@ -195,13 +412,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const totalCards = servicesCards.length;
     const visibleCards = 3; // Number of cards visible at once
 
-    // Function to update carousel position
     function updateCarousel() {
       const offset = -(currentIndex * (cardWidth + gap));
       servicesGrid.style.transform = `translateX(${offset}px)`;
     }
 
-    // Previous button click handler
     carouselPrev.addEventListener("click", () => {
       if (currentIndex > 0) {
         currentIndex--;
@@ -209,7 +424,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
 
-    // Next button click handler
     carouselNext.addEventListener("click", () => {
       if (currentIndex < totalCards - visibleCards) {
         currentIndex++;
@@ -217,18 +431,14 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
 
-    // Initialize carousel
     updateCarousel();
 
-    // Add click handlers to service cards
     servicesCards.forEach(card => {
       card.addEventListener('click', (e) => {
-        // Don't trigger if clicking on a button or link
         if (e.target.closest('button') || e.target.closest('a')) {
           return;
         }
         
-        // Get the card's title and description
         const title = card.querySelector('.service-card-title').textContent;
         const description = card.querySelector('.service-card-description').textContent;
         
@@ -245,707 +455,70 @@ document.addEventListener("DOMContentLoaded", function() {
         
         document.body.appendChild(modal);
         
-        // Add styles for the modal
-        const style = document.createElement('style');
-        style.textContent = `
-            .service-modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-            }
-            .service-modal-content {
-                background: white;
-                padding: 2rem;
-                border-radius: 8px;
-                max-width: 600px;
-                width: 90%;
-                position: relative;
-            }
-            .service-modal h2 {
-                color: var(--webex-text);
-                margin-bottom: 1rem;
-            }
-            .service-modal p {
-                color: var(--webex-text-light);
-                line-height: 1.6;
-            }
-            .close-modal {
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                cursor: pointer;
-                color: var(--webex-text);
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Close modal when clicking the close button
-        modal.querySelector('.close-modal').addEventListener('click', () => {
-          modal.remove();
-          style.remove();
-        });
-        
-        // Close modal when clicking outside
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            modal.remove();
-            style.remove();
-          }
+        const closeButton = modal.querySelector('.close-modal');
+        closeButton.addEventListener('click', () => {
+          document.body.removeChild(modal);
         });
       });
     });
   }
 
-  // Testimonial slider
-  let currentSlide = 0;
-  const testimonialSlider = document.querySelector(".testimonial-slider");
-  const testimonialSlides = testimonialSlider ? testimonialSlider.querySelectorAll(".testimonial-slide") : [];
-  const prevButton = document.querySelector(".testimonial-controls button:first-child");
-  const nextButton = document.querySelector(".testimonial-controls button:last-child");
-
+  // Testimonial slider logic
   if (testimonialSlider && testimonialSlides.length > 0 && prevButton && nextButton) {
+    let currentIndex = 0;
+    const totalTestimonials = testimonialSlides.length;
+
     function showSlide(index) {
+      if (index < 0) {
+        currentIndex = totalTestimonials - 1;
+      } else if (index >= totalTestimonials) {
+        currentIndex = 0;
+      } else {
+        currentIndex = index;
+      }
       testimonialSlides.forEach((slide, i) => {
-        if (slide) {
-          slide.style.transform = `translateX(${100 * (i - index)}%)`;
-        }
+        slide.style.transform = `translateX(${100 * (i - currentIndex)}%)`;
       });
     }
 
-    function nextSlide() {
-      if (testimonialSlides.length > 0) {
-        currentSlide = (currentSlide + 1) % testimonialSlides.length;
-        showSlide(currentSlide);
-      }
-    }
-
-    function prevSlide() {
-      if (testimonialSlides.length > 0) {
-        currentSlide = (currentSlide - 1 + testimonialSlides.length) % testimonialSlides.length;
-        showSlide(currentSlide);
-      }
-    }
-
-    // Previous button click handler
-    if (prevButton) {
-      prevButton.addEventListener("click", prevSlide);
-    }
-
-    // Next button click handler
-    if (nextButton) {
-      nextButton.addEventListener("click", nextSlide);
-    }
-
-    // Initialize slider
-    showSlide(currentSlide);
-
-    // Auto-advance testimonials
-    if (testimonialSlides.length > 0) {
-      setInterval(nextSlide, 5000);
-    }
-  }
-
-  // Add event listener for Email Modal Submit button
-  const sendEmailBtn = document.getElementById("sendEmailBtn");
-  const emailModal = document.getElementById("emailModal");
-  const successModal = document.getElementById("successModal");
-  const failureModal = document.getElementById("failureModal");
-
-  if (sendEmailBtn && emailForm && emailModal) {
-    sendEmailBtn.addEventListener("click", async () => {
-      console.log("Send email button clicked");
-      
-      // Get form values directly from inputs
-      const formValues = {
-        name: document.getElementById("emailName")?.value || "",
-        email: document.getElementById("emailAddress")?.value || "",
-        subject: document.getElementById("emailSubject")?.value || "",
-        message: document.getElementById("emailMessage")?.value || ""
-      };
-
-      // Basic validation
-      let isValid = true;
-      Object.entries(formValues).forEach(([key, value]) => {
-        if (!value) {
-          const input = document.getElementById(`email${key.charAt(0).toUpperCase() + key.slice(1)}`);
-          if (input) {
-            input.classList.add("error");
-            isValid = false;
-          }
-        }
-      });
-
-      if (isValid) {
-        console.log("Form is valid, proceeding with submission");
-        try {
-          await sendEmail(formValues);
-          
-          // Hide email modal
-          const bsEmailModal = bootstrap.Modal.getInstance(emailModal);
-          if (bsEmailModal) {
-            bsEmailModal.hide();
-          }
-          
-          // Show success modal
-          if (successModal) {
-            const bsSuccessModal = new bootstrap.Modal(successModal);
-            bsSuccessModal.show();
-          }
-          
-          emailForm.reset();
-        } catch (error) {
-          console.error("Email submission error:", error);
-          // Show failure modal
-          if (failureModal) {
-            const bsFailureModal = new bootstrap.Modal(failureModal);
-            bsFailureModal.show();
-          }
-        }
-      } else {
-        console.log("Form is invalid, showing validation errors");
-        emailForm.classList.add("was-validated");
-      }
-    });
-  }
-
-  // Add event listener for Callback Modal Submit button
-  const sendCallbackBtn = document.getElementById("sendCallbackBtn");
-  if (sendCallbackBtn && callbackForm) {
-    sendCallbackBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      console.log("Callback form submitted");
-
-      const formData = new FormData(callbackForm);
-      const formValues = Object.fromEntries(formData.entries());
-
-      // Basic validation
-      let isValid = true;
-      const requiredFields = ["name", "number", "department", "reason"];
-
-      requiredFields.forEach((field) => {
-        const input = callbackForm.querySelector(`[name="${field}"]`);
-        if (input && !formValues[field]) {
-          input.classList.add("error");
-          isValid = false;
-        } else if (input) {
-          input.classList.remove("error");
-        }
-      });
-
-      if (isValid) {
-        console.log("Form is valid, proceeding with submission");
-        try {
-          await sendCallback(formValues);
-          
-          // Hide callback modal
-          const bsCallbackModal = bootstrap.Modal.getInstance(callbackModal);
-          if (bsCallbackModal) {
-            bsCallbackModal.hide();
-          }
-          
-          // Show success modal
-          if (successModal) {
-            const bsSuccessModal = new bootstrap.Modal(successModal);
-            bsSuccessModal.show();
-          }
-          
-          callbackForm.reset();
-        } catch (error) {
-          console.error("Callback submission error:", error);
-          // Show failure modal
-          if (failureModal) {
-            const bsFailureModal = new bootstrap.Modal(failureModal);
-            bsFailureModal.show();
-          }
-        }
-      } else {
-        console.log("Form is invalid, showing validation errors");
-        callbackForm.classList.add("was-validated");
-      }
-    });
-  }
-
-  // Add event listener for SMS Modal Submit button
-  const sendSmsBtn = document.getElementById("sendSmsBtn");
-  if (sendSmsBtn && smsForm) {
-    sendSmsBtn.addEventListener("click", () => {
-      if (smsForm.checkValidity()) {
-        smsForm.classList.remove("was-validated");
-        bsSmsModal.hide();
-        sendSMS();
-      } else smsForm.classList.add("was-validated");
-    });
-  }
-
-  // Form validation
-  const contactForm = document.getElementById("contactForm");
-  if (contactForm) {
-    const formInputs = contactForm.querySelectorAll("input, textarea");
+    prevButton.addEventListener('click', () => showSlide(currentIndex - 1));
+    nextButton.addEventListener('click', () => showSlide(currentIndex + 1));
     
-    if (formInputs.length > 0) {
-      // Form submission handler
-      contactForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(contactForm);
-        const formValues = Object.fromEntries(formData.entries());
-
-        // Basic validation
-        let isValid = true;
-        const requiredFields = ["name", "email", "message"];
-
-        requiredFields.forEach((field) => {
-          const input = contactForm.querySelector(`[name="${field}"]`);
-          if (input && !formValues[field]) {
-            input.classList.add("error");
-            isValid = false;
-          } else if (input) {
-            input.classList.remove("error");
-          }
-        });
-
-        if (isValid) {
-          // Here you would typically send the form data to a server
-          console.log("Form submitted:", formValues);
-          contactForm.reset();
-          alert("Thank you for your message! We will get back to you soon.");
-        }
-      });
-
-      // Remove error class on input
-      formInputs.forEach((input) => {
-        if (input) {
-          input.addEventListener("input", () => {
-            input.classList.remove("error");
-          });
-        }
-      });
-    }
+    showSlide(currentIndex);
   }
-
-  // Chat functionality
-  const chatForm = document.getElementById("chatForm");
-  const sendChatBtn = document.getElementById("sendChatBtn");
-  const chatModal = document.getElementById("chatModal");
-
-  if (chatForm && sendChatBtn && chatModal) {
-    const handleChatSubmit = async (e) => {
-      e.preventDefault();
-      console.log("Chat form submitted");
-
-      const formData = new FormData(chatForm);
-      const formValues = Object.fromEntries(formData.entries());
-
-      // Basic validation
-      let isValid = true;
-      const requiredFields = ["name", "email", "department", "message"];
-
-      requiredFields.forEach((field) => {
-        const input = chatForm.querySelector(`[name="${field}"]`);
-        if (input && !formValues[field]) {
-          input.classList.add("error");
-          isValid = false;
-        } else if (input) {
-          input.classList.remove("error");
-        }
-      });
-
-      if (isValid) {
-        console.log("Form is valid, proceeding with submission");
-        try {
-          await sendChat(formValues);
-          
-          // Hide chat modal
-          const bsChatModal = bootstrap.Modal.getInstance(chatModal);
-          if (bsChatModal) {
-            bsChatModal.hide();
-          }
-          
-          // Show success modal
-          if (successModal) {
-            const bsSuccessModal = new bootstrap.Modal(successModal);
-            bsSuccessModal.show();
-          }
-          
-          chatForm.reset();
-        } catch (error) {
-          console.error("Chat submission error:", error);
-          // Show failure modal
-          if (failureModal) {
-            const bsFailureModal = new bootstrap.Modal(failureModal);
-            bsFailureModal.show();
-          }
-        }
-      } else {
-        console.log("Form is invalid, showing validation errors");
-        chatForm.classList.add("was-validated");
-      }
-    };
-
-    chatForm.addEventListener("submit", handleChatSubmit);
-  }
-});
-
-// Toggles a bootstrap component
-function bsToggle(bsComponent) {
-  bsComponent.toggle();
-}
-
-// Gets the callback delay from the callback modal
-function getCallbackDelay() {
-  const immediateCallback = document.getElementById("immediateCallback");
-  const delayCallbackMinutes = document.getElementById("delayCallbackMinutes");
-
-  if (immediateCallback.checked) {
-    return 0;
-  } else {
-    return delayCallbackMinutes.value * 60;
-  }
-}
-
-// Improved version of fetch() with a configurable timeout
-async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 6000 } = options;
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
-  });
-  clearTimeout(id);
-  return response;
-}
-
-// Send callback to imi
-async function sendCallback(formValues) {
-  try {
-    const delay = getCallbackDelay();
-
-    const response = await fetchWithTimeout(IMI_CALLBACK_WEBHOOK, {
-      timeout: 6000,
-      method: "POST",
-      body: JSON.stringify({
-        name: formValues.name,
-        number: formValues.number,
-        department: formValues.department,
-        reason: formValues.reason,
-        delay: delay,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    console.log("Callback Status Code:", response.status);
-    console.log("callback Response Data:", data);
-
-    const number = formValues.number;
-    formValues.name = "";
-    formValues.number = "";
-    formValues.department = "";
-    formValues.reason = "";
-
-    if (data.response[0].code == 1002) {
-      successMessage.innerHTML = `We will call you at ${formatPhoneNumber(
-        number
-      )} shortly.`;
-      bsToggle(bsSuccessModal);
-    } else {
-      bsToggle(bsFailureModal);
-    }
-  } catch (error) {
-    bsToggle(bsFailureModal);
-    console.log("Callback something went wrong!");
-    console.log("Callback Error:", error);
-  }
-}
-
-// Function to send email data to webhook
-async function sendEmail(formData) {
-    try {
-        console.log('Starting email submission...');
-        const webhookUrls = [
-            'https://webhook.site/d604bbf2-bac1-41ee-a5ea-63f966c8febe',
-            'https://hooks.sg.webexconnect.io/events/ODGVAWIT0L'
-        ];
-        const proxyUrl = 'https://api.allorigins.win/raw?url=';
-        
-        console.log('Sending data to webhooks:', formData);
-
-        // Send to both webhooks simultaneously
-        const responses = await Promise.all(webhookUrls.map(async (webhookUrl) => {
-            const targetUrl = proxyUrl + encodeURIComponent(webhookUrl);
-            console.log('Sending to webhook URL:', targetUrl);
-            
-            const response = await fetchWithTimeout(targetUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status} for URL: ${webhookUrl}`);
-            }
-
-            return response.json();
-        }));
-
-        console.log('Email submission successful to all webhooks:', responses);
-        return { success: true, data: responses };
-    } catch (error) {
-        console.error('Email submission error:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-// Send SMS to imi
-async function sendSMS() {
-  try {
-    const response = await fetchWithTimeout(IMI_SMS_WEBHOOK, {
-      timeout: 6000,
-      method: "POST",
-      body: JSON.stringify({
-        name: smsName.value,
-        number: smsNumber.value,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    console.log("SMS Status Code:", response.status);
-    console.log("SMS Response Data:", data);
-
-    const number = smsNumber.value;
-    smsName.value = "";
-    smsNumber.value = "";
-
-    if (data.response[0].code == 1002) {
-      successMessage.innerHTML = `We sent a SMS to your ${formatPhoneNumber(
-        number
-      )} number.`;
-      bsToggle(bsSuccessModal);
-    } else {
-      bsToggle(bsFailureModal);
-    }
-  } catch (error) {
-    bsToggle(bsFailureModal);
-    console.log("SMS something went wrong!");
-    console.log("SMS Error:", error);
-  }
-}
-
-// Help Center Search Functionality
-const searchBar = document.querySelector(".search-bar input");
-const searchButton = document.querySelector(".search-bar button");
-
-// Only initialize search functionality if elements exist
-if (searchBar && searchButton) {
-  // Sample help articles data
-  const helpArticles = [
-    {
-      title: "Getting Started Guide",
-      category: "Getting Started",
-      content: "Learn how to get started with our platform...",
-    },
-    {
-      title: "Common Issues",
-      category: "Troubleshooting",
-      content: "Solutions to common problems...",
-    },
-    {
-      title: "Advanced Features",
-      category: "Advanced Features",
-      content: "Learn about our advanced features...",
-    },
-  ];
 
   // Search functionality
-  searchButton.addEventListener("click", () => {
-    const searchTerm = searchBar.value.toLowerCase();
-    if (searchTerm) {
-      const results = helpArticles.filter(
-        (article) =>
-          article.title.toLowerCase().includes(searchTerm) ||
-          article.content.toLowerCase().includes(searchTerm)
-      );
-      displaySearchResults(results);
-    }
-  });
-
-  // Display search results
-  function displaySearchResults(results) {
-    const resultsContainer = document.createElement("div");
-    resultsContainer.className = "search-results";
-
-    if (results.length === 0) {
-      resultsContainer.innerHTML =
-        "<p>No results found. Try a different search term.</p>";
-    } else {
-      resultsContainer.innerHTML = results
-        .map(
-          (article) => `
-            <div class="search-result-item">
-                <h3>${article.title}</h3>
-                <p>${article.content}</p>
-                <span class="category">${article.category}</span>
-            </div>
-        `
-        )
-        .join("");
-    }
-
-    // Remove existing results if any
-    const existingResults = document.querySelector(".search-results");
-    if (existingResults) {
-      existingResults.remove();
-    }
-
-    // Add new results
-    const helpContainer = document.querySelector(".help-container");
-    if (helpContainer) {
-      helpContainer.appendChild(resultsContainer);
-    }
-  }
-
-  // Category navigation
-  const categoryLinks = document.querySelectorAll(".category-item a");
-  if (categoryLinks.length > 0) {
-    categoryLinks.forEach((link) => {
-      link.addEventListener("click", (e) => {
+  if (searchForm && helpSearchInput && helpCancelIcon) {
+    searchForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const category = e.target
-          .closest(".category-item")
-          .querySelector("h3").textContent;
-        const categoryArticles = helpArticles.filter(
-          (article) => article.category === category
-        );
-        displaySearchResults(categoryArticles);
-      });
-    });
-  }
-}
-
-// Navigation and UI Elements
-const navbar = document.querySelector(".navbar");
-const hamburger = document.querySelector(".hamburger");
-const navLinks = document.querySelector(".nav-links");
-const contactForm = document.getElementById("contact-form");
-const filterButtons = document.querySelectorAll(".filter-btn");
-const portfolioItems = document.querySelectorAll(".portfolio-item");
-const testimonialSlider = document.querySelector(".testimonial-slider");
-const testimonialSlides = testimonialSlider ? testimonialSlider.querySelectorAll(".testimonial-slide") : [];
-const prevButton = document.querySelector(".testimonial-controls button:first-child");
-const nextButton = document.querySelector(".testimonial-controls button:last-child");
-const stats = document.querySelectorAll(".stat-number");
-const statsSection = document.querySelector(".stats");
-
-// Navbar scroll effect
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 50) {
-    navbar.classList.add("scrolled");
-  } else {
-    navbar.classList.remove("scrolled");
-  }
-});
-
-// Mobile menu toggle
-hamburger.addEventListener("click", () => {
-  hamburger.classList.toggle("active");
-  navLinks.classList.toggle("active");
-});
-
-// Close mobile menu when clicking a link
-document.querySelectorAll(".nav-links a").forEach((link) => {
-  link.addEventListener("click", () => {
-    hamburger.classList.remove("active");
-    navLinks.classList.remove("active");
-  });
-});
-
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  });
-});
-
-// Service cards animation
-const observerOptions = {
-  threshold: 0.1,
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-    }
-  });
-}, observerOptions);
-
-servicesCards.forEach((card) => {
-  observer.observe(card);
-});
-
-// Portfolio filtering
-filterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    // Remove active class from all buttons
-    filterButtons.forEach((btn) => btn.classList.remove("active"));
-    // Add active class to clicked button
-    button.classList.add("active");
-
-    const filterValue = button.getAttribute("data-filter");
-
-    portfolioItems.forEach((item) => {
-      if (
-        filterValue === "all" ||
-        item.getAttribute("data-category") === filterValue
-      ) {
-        item.style.display = "block";
-        setTimeout(() => {
-          item.style.opacity = "1";
-          item.style.transform = "scale(1)";
-        }, 100);
-      } else {
-        item.style.opacity = "0";
-        item.style.transform = "scale(0.8)";
-        setTimeout(() => {
-          item.style.display = "none";
-        }, 300);
+      const searchQuery = helpSearchInput.value.trim();
+      if (searchQuery) {
+        const encodedQuery = encodeURIComponent(searchQuery);
+        window.location.href = `https://help.webex.com/en-us/result/${encodedQuery}?tab=support&offset=10`;
       }
     });
-  });
-});
+
+    helpSearchInput.addEventListener("input", function () {
+      helpCancelIcon.style.display = this.value ? "block" : "none";
+    });
+
+    helpCancelIcon.addEventListener("click", function () {
+      helpSearchInput.value = "";
+      this.style.display = "none";
+      helpSearchInput.focus();
+    });
+  }
 
 // Stats counter animation
+  if (statsSection && stats.length > 0) {
 const statsObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         stats.forEach((stat) => {
           const target = parseInt(stat.getAttribute("data-target"));
-          const duration = 2000; // 2 seconds
-          const step = target / (duration / 16); // 60fps
+              const duration = 2000;
+              const step = target / (duration / 16);
           let current = 0;
 
           const updateCounter = () => {
@@ -968,39 +541,9 @@ const statsObserver = new IntersectionObserver(
 );
 
 statsObserver.observe(statsSection);
+  }
 
-// Scroll to Top Button
-const scrollToTopBtn = document.createElement("button");
-scrollToTopBtn.innerHTML = "↑";
-scrollToTopBtn.className = "scroll-to-top";
-document.body.appendChild(scrollToTopBtn);
-
-// Style the scroll to top button
-const style = document.createElement("style");
-style.textContent = `
-    .scroll-to-top {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: #0066ff;
-        color: white;
-        border: none;
-        cursor: pointer;
-        display: none;
-        font-size: 20px;
-        transition: opacity 0.3s;
-    }
-    
-    .scroll-to-top:hover {
-        opacity: 0.8;
-    }
-`;
-document.head.appendChild(style);
-
-// Show/hide scroll to top button
+  // Scroll to top functionality
 window.addEventListener("scroll", () => {
   if (window.pageYOffset > 300) {
     scrollToTopBtn.style.display = "block";
@@ -1009,7 +552,6 @@ window.addEventListener("scroll", () => {
   }
 });
 
-// Scroll to top functionality
 scrollToTopBtn.addEventListener("click", () => {
   window.scrollTo({
     top: 0,
@@ -1017,44 +559,101 @@ scrollToTopBtn.addEventListener("click", () => {
   });
 });
 
-// Search functionality
-const searchForm = document.getElementById("search-form");
-const helpSearchInput = document.getElementById("search-input");
-const helpCancelIcon = document.querySelector(".cancel-icon");
+  // Form submission handlers
+  if (callbackForm) {
+    callbackForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const formValues = {
+        name: callbackName.value,
+        number: callbackNumber.value,
+        department: callbackDepartment.value,
+        reason: callbackReason.value
+      };
 
-// Handle form submission
-searchForm.addEventListener("submit", function (e) {
-  e.preventDefault(); // Prevent default form submission
-
-  const searchQuery = helpSearchInput.value.trim();
-  if (searchQuery) {
-    // Encode the search query for URL
-    const encodedQuery = encodeURIComponent(searchQuery);
-    // Redirect to help.webex.com with the search query
-    window.location.href = `https://help.webex.com/en-us/result/${encodedQuery}?tab=support&offset=10`;
+      const success = await sendCallback(formValues);
+      if (success) {
+        bsCallbackModal.hide();
+        showSuccessModal();
+        successMessage.textContent = `We'll call you back in ${getCallbackDelay()} minutes`;
+      } else {
+        bsFailureModal.show();
+      }
+    });
   }
+
+  if (emailForm) {
+    console.log('Adding email form submit listener');
+    const sendEmailBtn = document.getElementById('sendEmailBtn');
+    
+    if (sendEmailBtn) {
+      console.log('Found send email button');
+      sendEmailBtn.addEventListener('click', async function(e) {
+        console.log('Send email button clicked');
+        e.preventDefault();
+        
+        const formData = {
+          name: emailName.value,
+          email: emailAddress.value,
+          subject: emailSubject.value,
+          message: emailMessage.value
+        };
+
+        console.log('Form data:', formData);
+        
+        try {
+          const success = await sendEmail(formData);
+          console.log('Email submission result:', success);
+          
+          if (success) {
+            bsEmailModal.hide();
+            showSuccessModal();
+            successMessage.textContent = "Your email has been sent successfully";
+            
+            // Clear the form
+            emailName.value = '';
+            emailAddress.value = '';
+            emailSubject.value = '';
+            emailMessage.value = '';
+          } else {
+            bsFailureModal.show();
+          }
+        } catch (error) {
+          console.error('Error in email form submission:', error);
+          bsFailureModal.show();
+        }
+      });
+    } else {
+      console.error('Send email button not found');
+    }
+  } else {
+    console.error('Email form not found in the DOM');
+  }
+
+  if (smsForm) {
+    smsForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const success = await sendSMS();
+      if (success) {
+        bsSmsModal.hide();
+        showSuccessModal();
+        successMessage.textContent = "Your SMS has been sent successfully";
+      } else {
+        bsFailureModal.show();
+      }
+    });
+  }
+
+  // Add event listeners for modal show/hide
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach(modal => {
+    modal.addEventListener('show.bs.modal', () => {
+      modal.removeAttribute('aria-hidden');
+      modal.setAttribute('aria-modal', 'true');
+    });
+
+    modal.addEventListener('hide.bs.modal', () => {
+      modal.setAttribute('aria-hidden', 'true');
+      modal.removeAttribute('aria-modal');
+    });
+  });
 });
-
-// Show/hide cancel icon based on input
-helpSearchInput.addEventListener("input", function () {
-  helpCancelIcon.style.display = this.value ? "block" : "none";
-});
-
-// Clear search on cancel icon click
-helpCancelIcon.addEventListener("click", function () {
-  helpSearchInput.value = "";
-  this.style.display = "none";
-  helpSearchInput.focus();
-});
-
-function toggleMobileMenu() {
-  const menu = document.getElementById("mobileMenu");
-  const hamburger = document.querySelector(".hamburger");
-  menu.classList.toggle("active");
-  hamburger.classList.toggle("active");
-
-  // Prevent body scroll when menu is open
-  document.body.style.overflow = menu.classList.contains("active")
-    ? "hidden"
-    : "";
-}

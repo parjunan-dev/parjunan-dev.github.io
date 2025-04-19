@@ -679,8 +679,8 @@
     </div>
 
     <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-modal="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header bg-success">
             <div class="container">
@@ -689,6 +689,7 @@
                   type="button"
                   class="col-auto btn-close"
                   data-bs-dismiss="modal"
+                  aria-label="Close"
                 ></button>
               </div>
               <div class="row">
@@ -697,6 +698,7 @@
                   src="images/success.svg"
                   width="100"
                   height="100"
+                  alt="Success icon"
                 />
               </div>
             </div>
@@ -710,6 +712,7 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              aria-label="Close modal"
             >
               OK
             </button>
