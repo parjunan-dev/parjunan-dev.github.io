@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Webex Contact Center - Transform customer experiences with AI-powered contact center solutions"
+    />
+    <title>Webex Contact Center | Home</title>
+    <link rel="stylesheet" href="videos.css" />
+    <link rel="stylesheet" href="style.css" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://cdn.glitch.global/bf7674a1-79cc-40d4-9699-fc07039fa7f6/webex-favicon.png?v=1744370927971"
+    />
+  </head>
+  
+  <link rel="icon" type="image/x-icon" href="/images/favico.png" />
+  <body>
+    <div class="page-container">
+      <!-- Header -->
+      <header>
+        <div class="header-inner">
+          <div class="cxhacks-logo">
+            <img
+              src="https://cdn.glitch.global/2d94eea5-40ec-43ed-834c-cf15879e5dce/CiscoWebex-Logo_black.png?v=1747712620552"
+              alt="Home"
+              class="blog-logo"
+            />
+          </div>
+
+          <nav class="main-nav">
+            <a href="/index.html">Home</a>
+            <a href="/videos.html">Videos</a>
+            <a href="#">Docs</a>
+          </nav>
+          <div class="header-right-logo-container">
+            <img src="https://cdn.glitch.global/2d94eea5-40ec-43ed-834c-cf15879e5dce/sportshub.png?v=1750917311725" alt="Right Logo" class="header-right-logo-img" />
+          </div>
+          <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobileNavMenuVideos">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+        <div class="mobile-nav-menu" id="mobileNavMenuVideos">
+          <a href="/index.html">Home</a>
+          <a href="/videos.html">Videos</a>
+          <a href="#">Docs</a>
+        </div>
+      </header>
+
+      <!-- Moved Search Dropdown -->
+      <div class="search-dropdown" id="searchDropdown">
+        <div class="search-dropdown-inner">
+          <div id="quickLinksContainer">
+            <!-- Quick links will be populated here -->
+          </div>
+          <div class="live-search-results" id="liveSearchResults">
+            <!-- Live search results will be populated here -->
+          </div>
+        </div>
+      </div>
+      <!-- End Moved Search Dropdown -->
+
+      <main>
+        <!-- NEW: Video Page Container -->
+        <div class="video-page-container">
+          <!-- Tabs -->
+          <div class="video-tabs">
+            <button class="tab-button active" data-tab="youtube">Webex AI</button>
+            <button class="tab-button" data-tab="vidcast">Webex Contact Center</button>
+            <button class="tab-button" data-tab="customerref">Customer References</button>
+          </div>
+
+          <!-- Flex container for player and playlist -->
+          <div class="video-layout-container">
+            <!-- Left: Main Video Player -->
+            <div class="video-player-section"> 
+              <iframe
+                id="mainVideoPlayer" /* Keep ID */
+                src="https://www.youtube.com/embed/YOUTUBE_VIDEO_ID" /* Default to first YouTube video */
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+              <div class="video-description" id="mainVideoDescription"> 
+                <!-- JS will populate this -->
+                <h2>Welcome</h2>
+                <p>Select a video from the playlist.</p>
+              </div>
+            </div>
+            <!-- Right: Playlist / Video List -->
+            <div class="video-playlist-section">
+                <h3>Playlists</h3>
+                <div id="playlistGroups">
+                  <!-- JS will populate playlist groups & videos here -->
+                </div>
+            </div>
+          </div> <!-- End of video-layout-container -->
+        </div> <!-- End of video-page-container -->
+      </main>
+
+      <!-- Footer Section -->
+      <footer>
+        <div class="footer-container">
+          <p>© 2025 cxhacks.cc. All rights reserved.
+            <a href="../pages/disclaimer.html">Disclaimer</a>
+          </p>
+        </div>
+      </footer>
+    </div>
+    <script src="videos.js"></script>
+  </body>
+</html>

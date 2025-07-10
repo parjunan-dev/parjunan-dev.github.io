@@ -1,0 +1,62 @@
+{
+  "Track Order": {
+    "name": "check-circle-bold",
+    "color": "blue",
+    "iconSet": "momentumDesign"
+  },
+  "Make Order Changes": {
+    "name": "edit-bold",
+    "color": "gold",
+    "iconSet": "momentumDesign"
+  },
+  "Report Issue": {
+    "name": "warning-bold",
+    "color": "red",
+    "iconSet": "momentumDesign"
+  },
+  "Email": {
+    "name": "email-bold",
+    "color": "violet",
+    "iconSet": "momentumDesign"
+  },
+  "Chat": {
+    "name": "chat-bold",
+    "color": "cobalt",
+    "iconSet": "momentumDesign"
+  },
+  "Voice": {
+    "name": "call-bold",
+    "color": "green",
+    "iconSet": "momentumDesign"
+  },
+  "Callback Request": {
+    "name": "callback-bold",
+    "color": "darkmint",
+    "iconSet": "momentumDesign"
+  },
+  "Form Filled": {
+    "name": "form-bold",
+    "color": "blue",
+    "iconSet": "momentumDesign"
+  },
+  "Account Validated": {
+    "name": "user-check-bold",
+    "color": "mint",
+    "iconSet": "momentumDesign"
+  },
+  "Booking": {
+    "name": "calendar-add-bold",
+    "color": "cobalt",
+    "iconSet": "momentumDesign"
+  },
+  "Payment": {
+    "name": "credit-card-bold",
+    "color": "darkmint",
+    "iconSet": "momentumDesign"
+  },
+  "Dispatch": {
+    "name": "launch-bold",
+    "color": "cyan",
+    "iconSet": "momentumDesign"
+  }
+}
