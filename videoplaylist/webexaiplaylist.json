@@ -1,0 +1,44 @@
+[
+  {
+    "group": "Introduction",
+    "videos": [
+      {
+        "title": "Unlock the new Webex AI Agent",
+        "subtitle": "Agentic AI for every interaction",
+        "description": "✅ Deliver human-like conversations\n✅ Easily design and deploy agents\n✅ Fully resolve customer issues\n\nLearn more about Webex AI Agent and get started today: http://cs.co/6042NG8Ta",
+        "videoId": "Fh1D25AqEfw",
+        "videoUrl": "https://www.youtube.com/embed/Fh1D25AqEfw",
+        "thumbnail": "https://img.youtube.com/vi/Fh1D25AqEfw/0.jpg"
+      },
+      {
+        "title": "Webex AI Agent | Personlize Every Interaction",
+        "subtitle": "Autonomous | Personalized | Conversational",
+        "description": "✅ Enjoy human-like conversations\n✅ Intuitively design and deploy AI agents\n✅ Increase overall customer satisfaction\n✅ Serve wide range of use cases across industries\n\nWelcome to the new era of customer experience with Webex AI Agent. http://cs.co/6045FU6NW",
+        "videoId": "3Q9AMnIUwcg",
+        "videoUrl": "https://www.youtube.com/embed/3Q9AMnIUwcg",
+        "thumbnail": "https://img.youtube.com/vi/3Q9AMnIUwcg/0.jpg"
+      },
+      {
+        "title": "Meet the all new Webex AI Agent",
+        "subtitle": "AI that works for you across channels",
+        "description": "Webex AI Agent is an intelligent solution that can answer inquiries and fulfill customer intents across a wide range of channels, all while delivering personalized, conversational interactions.\nLearn more about the Webex AI Agent here: https://www.webex.ai/ai-agent.html",
+        "videoId": "ncGZWqCKWrE",
+        "videoUrl": "https://www.youtube.com/embed/ncGZWqCKWrE",
+        "thumbnail": "https://img.youtube.com/vi/ncGZWqCKWrE/0.jpg"
+      }
+    ]
+  },
+  {
+    "group": "AI Agent Demos",
+    "videos": [
+      {
+        "title": "Demo - AI Agent for HR | Webex Contact Center",
+        "subtitle": "Conversational AI Agent for HR",
+        "description": "Not just for your customers, Webex AI Agent can be built at speed to server your enterprise needs ranging from  HR, internal KBs and more.Streamline engagements, helpdesk requests and provide fast, effective service that leave your internal teams happy.\n\nLearn more at: https://www.webex.ai/ai-agent.html",
+        "videoId": "vqOcSCuR_xU",
+        "videoUrl": "https://www.youtube.com/embed/vqOcSCuR_xU",
+        "thumbnail": "https://img.youtube.com/vi/vqOcSCuR_xU/0.jpg"
+      }
+    ]
+  }
+]

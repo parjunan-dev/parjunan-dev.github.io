@@ -1,0 +1,28 @@
+[
+  {
+    "group": "Introduction",
+    "videos": [
+      {
+        "title": "Webex Contact Center",
+        "subtitle": "Intelligent | Flexible | Delightful.",
+        "description": "\nCisco Webex Contact Center is a next-generation cloud contact center solution inspired by customers and architected for business. Designed and built from its foundation as a Software-as-a-Service (SaaS) cloud solution, Webex Contact Center's best-of-breed platform architecture brings your business the innovation, flexibility, scalability, and agility of the cloud without sacrificing security.\n\nAs a cloud-based subscription, Webex Contact Center enables rapid time to market and time to new revenue while minimizing upfront capital investment.",
+        "videoId": "qEgQj83osos",
+        "videoUrl": "https://www.youtube.com/embed/qEgQj83osos",
+        "thumbnail": "https://img.youtube.com/vi/qEgQj83osos/0.jpg"
+      }
+    ]
+  },
+  {
+    "group": "Features",
+    "videos": [
+      {
+        "title": "Journey Data Service",
+        "subtitle": "API First | Personalized | Insights | Agent Desktop",
+        "description": "Journey Data Service is part of the Webex Contact Center licenses. It collects and unifies first-party customer data—from multiple sources— to build a single, coherent, complete view of each customer.",
+        "videoId": "OS1buTmHsDo",
+        "videoUrl": "https://www.youtube.com/embed/OS1buTmHsDo",
+        "thumbnail": "https://img.youtube.com/vi/OS1buTmHsDo/0.jpg"
+      }
+    ]
+  }
+]
