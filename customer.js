@@ -1,5 +1,5 @@
 // Set these for each customer demo...
-const CUSTOMER_NAME = "Contact Us | Singapore Sports Hub";
+const CUSTOMER_NAME = "Webex AI";
 const CUSTOMER_IMAGE = "https://cdn.glitch.global/2d94eea5-40ec-43ed-834c-cf15879e5dce/Screenshot%202025-06-26%20at%2013-57-24%20Contact%20us%20Singapore%20Sports%20Hub%20Sports%20Entertainment%20Lifestyle.png?v=1750917482979";
 
 // Set this stuff once and forget about it...
