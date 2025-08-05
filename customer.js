@@ -1,6 +1,6 @@
 // Set these for each customer demo...
 const CUSTOMER_NAME = "Webex AI";
-const CUSTOMER_IMAGE = "/images/webex-developers.png";
+const CUSTOMER_IMAGE = "images/webex-developers.png";
 
 // Set this stuff once and forget about it...
 const WXCC_TELEPHONE_NUMBER = "+6582004000";
