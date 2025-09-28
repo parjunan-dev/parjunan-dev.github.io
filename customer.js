@@ -3,9 +3,9 @@ const CUSTOMER_NAME = "Webex AI";
 const CUSTOMER_IMAGE = "https://storage.googleapis.com/public_sgwxcc/Cisco/webex-developers.png";
 
 // Set this stuff once and forget about it...
-const WXCC_TELEPHONE_NUMBER = "+6582004000";
+const WXCC_TELEPHONE_NUMBER = "+6560478480";
 const IMI_SMS_WEBHOOK = "";
-const IMI_CALLBACK_WEBHOOK = "";
+const IMI_CALLBACK_WEBHOOK = "https://hooks.sg.webexconnect.io/events/I4WVTJ9F2A";
 const demoToolboxUserId = "";
 const AGENT_IMAGE =
   "https://cdn.glitch.global/e39bce96-4dfa-4058-9775-199788361cb8/agent.png?v=1730959586778";
