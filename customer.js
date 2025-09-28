@@ -1,11 +1,13 @@
 // Set these for each customer demo...
 const CUSTOMER_NAME = "Webex AI";
-const CUSTOMER_IMAGE = "https://storage.googleapis.com/public_sgwxcc/Cisco/webex-developers.png";
+const CUSTOMER_IMAGE =
+  "https://storage.googleapis.com/public_sgwxcc/Cisco/webex-developers.png";
 
 // Set this stuff once and forget about it...
 const WXCC_TELEPHONE_NUMBER = "+6560478480";
 const IMI_SMS_WEBHOOK = "";
-const IMI_CALLBACK_WEBHOOK = "https://hooks.sg.webexconnect.io/events/I4WVTJ9F2A";
+const IMI_CALLBACK_WEBHOOK =
+  "https://hooks.sg.webexconnect.io/events/I4WVTJ9F2A";
 const demoToolboxUserId = "";
 const AGENT_IMAGE =
   "https://cdn.glitch.global/e39bce96-4dfa-4058-9775-199788361cb8/agent.png?v=1730959586778";
@@ -16,18 +18,37 @@ const AMB_IMAGE =
 const COFFEE_IMAGE =
   "https://cdn.glitch.global/ac617fcb-2ab9-466a-84f5-08c5ecb0af5b/coffeeDemo.png?v=1732251295694";
 
-// Format phone to +E164
+// Global variables for Bootstrap modals and form elements
+let bsSuccessModal, bsFailureModal;
+let successMessage,
+  callbackName,
+  callbackNumber,
+  callbackDepartment,
+  callbackReason;
+let emailName, emailAddress, emailSubject, emailMessage;
+let smsName, smsNumber;
+
+// Format phone number for display
 function formatPhoneNumber(phoneNumber) {
   const phoneNumberString = phoneNumber.toString();
-  const match = phoneNumberString.match(/^(\d{4})(\d{4})$/);
-  if (!match) {
-    return phoneNumberString; // Return original if the format is unexpected
+
+  // If it already starts with +, return as is (international format)
+  if (phoneNumberString.startsWith("+")) {
+    return phoneNumberString;
   }
-  return `+65 ${match[1]} ${match[2]}`;
+
+  // Legacy support: if it's 8 digits, assume Singapore number
+  const match = phoneNumberString.match(/^(\d{4})(\d{4})$/);
+  if (match) {
+    return `+65 ${match[1]} ${match[2]}`;
+  }
+
+  // Return original if format is unexpected
+  return phoneNumberString;
 }
 
 // Initialize everything when the DOM is loaded
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // First, set all images
   const agentImage = document.getElementById("agent");
   if (agentImage) {
@@ -72,21 +93,21 @@ document.addEventListener("DOMContentLoaded", function() {
   const bsWhatsappModal = new bootstrap.Modal("#whatsappModal");
   const bsAmbModal = new bootstrap.Modal("#ambModal");
   const bsCoffeeDemoModal = new bootstrap.Modal("#coffeeDemoModal");
-  const bsFailureModal = new bootstrap.Modal("#failureModal");
-  const bsSuccessModal = new bootstrap.Modal("#successModal");
+  bsFailureModal = new bootstrap.Modal("#failureModal");
+  bsSuccessModal = new bootstrap.Modal("#successModal");
 
   // Get reference to HTML elements
-  const successMessage = document.getElementById("successMessage");
-  const smsName = document.getElementById("smsName");
-  const smsNumber = document.getElementById("smsNumber");
-  const callbackName = document.getElementById("callbackName");
-  const callbackNumber = document.getElementById("callbackNumber");
-  const callbackDepartment = document.getElementById("callbackDepartment");
-  const callbackReason = document.getElementById("callbackReason");
-  const emailName = document.getElementById("emailName");
-  const emailAddress = document.getElementById("emailAddress");
-  const emailSubject = document.getElementById("emailSubject");
-  const emailMessage = document.getElementById("emailMessage");
+  successMessage = document.getElementById("successMessage");
+  smsName = document.getElementById("smsName");
+  smsNumber = document.getElementById("smsNumber");
+  callbackName = document.getElementById("callbackName");
+  callbackNumber = document.getElementById("callbackNumber");
+  callbackDepartment = document.getElementById("callbackDepartment");
+  callbackReason = document.getElementById("callbackReason");
+  emailName = document.getElementById("emailName");
+  emailAddress = document.getElementById("emailAddress");
+  emailSubject = document.getElementById("emailSubject");
+  emailMessage = document.getElementById("emailMessage");
   const callbackForm = document.getElementById("callbackForm");
   const emailForm = document.getElementById("emailForm");
   const smsForm = document.getElementById("smsForm");
@@ -163,6 +184,33 @@ document.addEventListener("DOMContentLoaded", function() {
       if (imiWebChat) imiWebChat.hidden = false;
     });
   }
+
+  // Add event listener for Callback Modal Submit button
+  document.getElementById("sendCallbackBtn").addEventListener("click", () => {
+    if (callbackForm.checkValidity()) {
+      callbackForm.classList.remove("was-validated");
+      bsCallbackModal.hide();
+      sendCallback();
+    } else callbackForm.classList.add("was-validated");
+  });
+
+  // Add event listener for Email Modal Submit button
+  document.getElementById("sendEmailBtn").addEventListener("click", () => {
+    if (emailForm.checkValidity()) {
+      emailForm.classList.remove("was-validated");
+      bsEmailModal.hide();
+      sendEmail();
+    } else emailForm.classList.add("was-validated");
+  });
+
+  // Add event listener for SMS Modal Submit button
+  document.getElementById("sendSmsBtn").addEventListener("click", () => {
+    if (smsForm.checkValidity()) {
+      smsForm.classList.remove("was-validated");
+      bsSmsModal.hide();
+      sendSMS();
+    } else smsForm.classList.add("was-validated");
+  });
 });
 
 // Toggles a bootstrap component
@@ -321,33 +369,6 @@ async function sendSMS() {
     console.log("SMS Error:", error);
   }
 }
-
-// Add event listener for Callback Modal Submit button
-document.getElementById("sendCallbackBtn").addEventListener("click", () => {
-  if (callbackForm.checkValidity()) {
-    callbackForm.classList.remove("was-validated");
-    bsCallbackModal.hide();
-    sendCallback();
-  } else callbackForm.classList.add("was-validated");
-});
-
-// Add event listener for Email Modal Submit button
-document.getElementById("sendEmailBtn").addEventListener("click", () => {
-  if (emailForm.checkValidity()) {
-    emailForm.classList.remove("was-validated");
-    bsEmailModal.hide();
-    sendEmail();
-  } else emailForm.classList.add("was-validated");
-});
-
-// Add event listener for SMS Modal Submit button
-document.getElementById("sendSmsBtn").addEventListener("click", () => {
-  if (smsForm.checkValidity()) {
-    smsForm.classList.remove("was-validated");
-    bsSmsModal.hide();
-    sendSMS();
-  } else smsForm.classList.add("was-validated");
-});
 
 // Help Center Search Functionality
 const searchBar = document.querySelector(".search-bar input");
