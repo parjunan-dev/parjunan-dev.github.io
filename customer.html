@@ -793,5 +793,39 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="customer.js"></script>
+
+    <!-- Surfly Screen Sharing Script -->
+    <script>
+      (function (s, u, r, f, l, y) {
+        s[f] = s[f] || {
+          init: function () {
+            s[f].q = arguments;
+          },
+        };
+        l = u.createElement(r);
+        y = u.getElementsByTagName(r)[0];
+        l.async = 1;
+        l.src = "https://surfly.com/surfly.js";
+        y.parentNode.insertBefore(l, y);
+      })(window, document, "script", "Surfly");
+
+      var settings = {
+        // Surfly session options can be set here, or at the Company/Plan levels.
+        widget_key: "b2ecec0c7bf34ac69c972562a35cb554",
+        private_session: true, // to make sure only logged in agents can join the call
+        require_password: false,
+      };
+
+      Surfly.init(settings, function (initResult) {
+        if (initResult.success) {
+          // API calls can now be made!
+          if (!Surfly.isInsideSession) {
+            Surfly.button();
+          }
+        } else {
+          console.log("Surfly was unable to initialize properly.");
+        }
+      });
+    </script>
   </body>
 </html>
