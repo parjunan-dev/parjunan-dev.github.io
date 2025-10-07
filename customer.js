@@ -8,7 +8,7 @@ const WXCC_TELEPHONE_NUMBER = "+6560478480";
 const IMI_SMS_WEBHOOK = "";
 const IMI_CALLBACK_WEBHOOK =
   "https://hooks.sg.webexconnect.io/events/I4WVTJ9F2A";
-const demoToolboxUserId = "";
+const demoToolboxUserId = "8822";
 const AGENT_IMAGE =
   "https://cdn.glitch.global/e39bce96-4dfa-4058-9775-199788361cb8/agent.png?v=1730959586778";
 const WHATSAPP_IMAGE =
