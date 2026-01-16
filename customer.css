@@ -181,7 +181,7 @@ nav a:hover::after {
   position: relative;
   width: 100%;
   min-height: 51.2vh;
-  background-image: url("images/webexone-customer-experience-neon.jpg");
+  background-image: url("images/background.png");
   background-size: cover;
   background-position: center 40%;
   background-repeat: no-repeat;
