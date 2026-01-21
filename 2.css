@@ -1378,7 +1378,7 @@ footer a:hover {
 /* Contact Button */
 #contactButton {
   position: fixed;
-  top: 25%;
+  top: 22%;
   right: 0;
   transform: rotate(-90deg);
   transform-origin: 100% 100%;
@@ -1641,7 +1641,7 @@ nav ul li a.active {
   width: 24px;
   height: 24px;
   object-fit: contain;
-  margin-top: -5px;
+  margin-top: -8px;
 }
 
 /* Custom Modal Styles */
