@@ -1641,7 +1641,8 @@ nav ul li a.active {
   width: 24px;
   height: 24px;
   object-fit: contain;
-  margin-top: -8px;
+  margin-top: -5px;
+  top: 19%;
 }
 
 /* Custom Modal Styles */
