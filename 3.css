@@ -1617,7 +1617,7 @@ nav ul li a.active {
   align-items: center;
   justify-content: flex-end;
   margin-right: -20px;
-  margin-top: 25px;
+  margin-top: 0;
 }
 
 .demo-header .logo {
@@ -1642,7 +1642,6 @@ nav ul li a.active {
   height: 24px;
   object-fit: contain;
   margin-top: -5px;
-  top: 19%;
 }
 
 /* Custom Modal Styles */
