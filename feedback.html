@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help and Support | OCBC Singapore</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="feedback.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://cdn.glitch.global/2d94eea5-40ec-43ed-834c-cf15879e5dce/download.jpeg?v=1750917307788"
+    />
+  </head>
+  <body>
+    <!-- OCBC-style Header -->
+    <header class="ocbc-header">
+      <div class="ocbc-header-inner">
+        <div class="ocbc-logo">
+          <a href="index.html">
+            <img
+              src="logo_ocbc.png"
+              alt="Home"
+              class="ocbc-logo-img"
+            />
+          </a>
+        </div>
+        <nav class="ocbc-nav">
+          <a href="3.html">Contact Us</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="ocbc-breadcrumb" aria-label="Breadcrumb">
+      <div class="ocbc-breadcrumb-inner">
+        <a href="index.html">Personal Banking</a>
+        <span class="ocbc-breadcrumb-sep">›</span>
+        <span aria-current="page">Help and Support</span>
+      </div>
+    </nav>
+
+    <main class="ocbc-main">
+      <div class="ocbc-container">
+        <div class="ocbc-page-nav">
+          <a href="#faq" class="ocbc-page-nav-link active"
+            >Frequently asked questions</a
+          >
+          <a href="#form" class="ocbc-page-nav-link"
+            >Send feedback / Contact form</a
+          >
+        </div>
+
+        <h1 class="ocbc-title">Help and Support</h1>
+        <p class="ocbc-intro">
+          Find answers in our frequently asked questions, or use the form below
+          to reach out to us.
+        </p>
+
+        <section id="form" class="ocbc-section ocbc-card">
+          <h2 class="ocbc-section-title">Send feedback or get help</h2>
+          <p class="ocbc-section-desc">
+            To personally serve you better and faster, complete the steps below.
+          </p>
+
+          <!-- Step 1 & 2: Dropdowns -->
+          <section id="step-dropdowns" class="feedback-section">
+            <div class="form-group">
+              <label for="helpWith">1. What can we help you with?</label>
+              <select class="form-select ocbc-select" id="helpWith" required>
+                <option value="">Please select a service</option>
+                <option value="accounts">Accounts</option>
+                <option value="cards">Cards</option>
+                <option value="loans">Loans</option>
+                <option value="insurance">Insurance</option>
+                <option value="investments">Investments</option>
+                <option value="onlinebanking">Online Banking</option>
+                <option value="payments">Payments &amp; Transactions</option>
+                <option value="security">Safety &amp; Security</option>
+                <option value="general">General</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="topic">2. Select a topic</label>
+              <select class="form-select ocbc-select" id="topic" required>
+                <option value="">Please select a topic</option>
+                <!-- Options populated by JS based on helpWith -->
+              </select>
+            </div>
+          </section>
+
+          <!-- Step 3: How can we help + Next -->
+          <section
+            id="step-how-can-we-help"
+            class="feedback-section"
+            style="display: none"
+          >
+            <div class="form-group">
+              <label for="comments">3. How can we help?</label>
+              <p class="form-hint">Comments on topic *</p>
+              <textarea
+                class="form-control ocbc-input"
+                id="comments"
+                rows="4"
+                placeholder="Please enter your comments."
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <button type="button" id="nextBtn" class="btn ocbc-btn-primary">
+                Next
+              </button>
+            </div>
+          </section>
+
+          <!-- Step 4: AI Answer + Resolve question -->
+          <section
+            id="step-answer"
+            class="feedback-section"
+            style="display: none"
+          >
+            <div class="form-group">
+              <label>Answer</label>
+              <div
+                id="answerLoading"
+                class="answer-loading"
+                style="display: none"
+              >
+                <span class="spinner"></span> Working on your request
+              </div>
+              <textarea
+                class="form-control ocbc-input"
+                id="answerBox"
+                rows="6"
+                readonly
+                placeholder="Your answer will appear here."
+                style="display: none"
+              ></textarea>
+            </div>
+            <div id="resolveBlock" class="resolve-block" style="display: none">
+              <p class="resolve-question">
+                Does this resolve your concern? (Please select below to
+                continue)
+              </p>
+              <div class="resolve-options">
+                <button
+                  type="button"
+                  id="resolveYes"
+                  class="btn ocbc-btn-outline resolve-btn"
+                >
+                  Yes, all good
+                </button>
+                <button
+                  type="button"
+                  id="resolveNo"
+                  class="btn ocbc-btn-outline resolve-btn"
+                >
+                  No, continue to next page
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 5: Personal details (email form) - shown when "No, continue to next page" -->
+          <section
+            id="step-personal"
+            class="feedback-section"
+            style="display: none"
+          >
+            <h3 class="ocbc-subsection-title">4. Personal particulars</h3>
+            <p class="form-note">Fields marked with * are mandatory.</p>
+            <form id="personalForm" class="needs-validation" novalidate>
+              <div class="form-group">
+                <label for="salutation">Salutation *</label>
+                <select
+                  class="form-select ocbc-select"
+                  id="salutation"
+                  required
+                >
+                  <option value="">Salutation *</option>
+                  <option value="Dr">Dr</option>
+                  <option value="Mdm">Mdm</option>
+                  <option value="Miss">Miss</option>
+                  <option value="Mr">Mr</option>
+                  <option value="Mrs">Mrs</option>
+                  <option value="Ms">Ms</option>
+                  <option value="Prof">Prof</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="fullName">Name (as in Document ID) *</label>
+                <input
+                  type="text"
+                  class="form-control ocbc-input"
+                  id="fullName"
+                  placeholder="Please enter your name."
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="personalEmail">Email Address *</label>
+                <input
+                  type="email"
+                  class="form-control ocbc-input"
+                  id="personalEmail"
+                  placeholder="Please enter your email address."
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="personalSubject">Subject *</label>
+                <input
+                  type="text"
+                  class="form-control ocbc-input"
+                  id="personalSubject"
+                  placeholder="Enter the subject of your feedback."
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="contactNumber">Contact Number *</label>
+                <input
+                  type="tel"
+                  class="form-control ocbc-input"
+                  id="contactNumber"
+                  placeholder="Please enter a valid contact number."
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="additionalInfo">Additional Information *</label>
+                <textarea
+                  class="form-control ocbc-input"
+                  id="additionalInfo"
+                  rows="3"
+                  placeholder="Please provide the additional information."
+                  required
+                ></textarea>
+              </div>
+              <div class="form-group form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="consentCheck"
+                  required
+                />
+                <label class="form-check-label" for="consentCheck">
+                  By submitting the form, I consent to the collection, use
+                  and/or disclosure of my personal details to contact and assist
+                  me with my queries and/or feedback.
+                </label>
+              </div>
+              <div class="form-group">
+                <button
+                  type="submit"
+                  id="sendFeedbackBtn"
+                  class="btn ocbc-btn-primary"
+                >
+                  Send Feedback
+                </button>
+              </div>
+            </form>
+          </section>
+        </section>
+
+        <!-- Need more help? (OCBC-style CTA) -->
+        <section class="ocbc-section ocbc-need-help">
+          <h2 class="ocbc-need-help-title">Need more help?</h2>
+          <p class="ocbc-need-help-desc">
+            Use our chatbot above, call, write to us, or find a branch near you.
+          </p>
+          <a href="3.html" class="btn ocbc-btn-primary">Contact us</a>
+        </section>
+      </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content ocbc-modal-content">
+          <div class="modal-header ocbc-modal-header ocbc-modal-success">
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-center fs-5">
+              Thank you! We have received your feedback and will respond within
+              1 to 3 business days.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn ocbc-btn-primary"
+              data-bs-dismiss="modal"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Failure Modal -->
+    <div class="modal fade" id="failureModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content ocbc-modal-content">
+          <div class="modal-header ocbc-modal-header ocbc-modal-danger">
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-center fs-5">
+              Something went wrong. Please try again.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn ocbc-btn-outline"
+              data-bs-dismiss="modal"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OCBC-style Footer -->
+    <footer class="ocbc-footer">
+      <div class="ocbc-footer-inner">
+        <p class="ocbc-footer-legal">
+          Conditions of Access · Policies · Notices
+        </p>
+        <p class="ocbc-footer-copy">
+          © OCBC Bank. All rights reserved. Co. Reg. No.: 193200032W
+        </p>
+        <p class="ocbc-footer-contact">
+          <strong>Get in touch</strong><br />
+          <a href="tel:+6563633333">+65 6363 3333</a>
+        </p>
+        <ul class="ocbc-footer-links">
+          <li><a href="index.html">OCBC Online Banking</a></li>
+          <li><a href="#privacy">Help and Support</a></li>
+          <li><a href="3.html">Contact Us</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="feedback.js"></script>
+  </body>
+</html>

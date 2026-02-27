@@ -1,0 +1,518 @@
+/* OCBC Help and Support style – https://www.ocbc.com/personal-banking/help-and-support */
+:root {
+  --ocbc-blue: #0066a1;
+  --ocbc-blue-dark: #004d7a;
+  --ocbc-slate: #495a63;
+  --ocbc-red: #ee2722;
+  --ocbc-bg: #f5f6f7;
+  --ocbc-card-bg: #fff;
+  --ocbc-border: #dce0e4;
+  --ocbc-text: #1a1a1a;
+  --ocbc-text-muted: #6b7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--ocbc-bg);
+  color: var(--ocbc-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----- Header (OCBC-style: light, minimal) ----- */
+.ocbc-header {
+  background-color: var(--ocbc-card-bg);
+  border-bottom: 1px solid var(--ocbc-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.ocbc-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 56px;
+}
+
+.ocbc-logo a {
+  display: flex;
+  align-items: center;
+}
+
+.ocbc-logo-img {
+  height: 28px;
+  width: auto;
+}
+
+.ocbc-nav a {
+  color: var(--ocbc-blue);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.ocbc-nav a:hover {
+  color: var(--ocbc-blue-dark);
+  background: rgba(0, 102, 161, 0.06);
+}
+
+/* ----- Breadcrumb ----- */
+.ocbc-breadcrumb {
+  background: var(--ocbc-card-bg);
+  border-bottom: 1px solid var(--ocbc-border);
+}
+
+.ocbc-breadcrumb-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  font-size: 0.875rem;
+  color: var(--ocbc-text-muted);
+}
+
+.ocbc-breadcrumb-inner a {
+  color: var(--ocbc-blue);
+  text-decoration: none;
+}
+
+.ocbc-breadcrumb-inner a:hover {
+  text-decoration: underline;
+}
+
+.ocbc-breadcrumb-sep {
+  margin: 0 6px;
+  color: var(--ocbc-text-muted);
+}
+
+/* ----- Main ----- */
+.ocbc-main {
+  flex: 1;
+  padding: 2rem 24px 3rem;
+}
+
+.ocbc-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Page nav (FAQ / Forms tabs) */
+.ocbc-page-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--ocbc-border);
+  padding-bottom: 0.5rem;
+}
+
+.ocbc-page-nav-link {
+  color: var(--ocbc-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+}
+
+.ocbc-page-nav-link:hover {
+  color: var(--ocbc-blue);
+}
+
+.ocbc-page-nav-link.active {
+  color: var(--ocbc-blue);
+  font-weight: 600;
+}
+
+/* Title & intro */
+.ocbc-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ocbc-text);
+  margin-bottom: 0.5rem;
+}
+
+.ocbc-intro {
+  font-size: 1rem;
+  color: var(--ocbc-text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Section card (form container) */
+.ocbc-section.ocbc-card {
+  background: var(--ocbc-card-bg);
+  border: 1px solid var(--ocbc-border);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.ocbc-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ocbc-text);
+  margin-bottom: 0.35rem;
+}
+
+.ocbc-section-desc {
+  font-size: 0.9375rem;
+  color: var(--ocbc-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.ocbc-subsection-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ocbc-text);
+  margin-bottom: 0.35rem;
+}
+
+/* Form elements (keep .feedback-section for JS) */
+.feedback-section {
+  margin-bottom: 1.5rem;
+}
+
+.feedback-section .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.feedback-section .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.feedback-section label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--ocbc-text);
+  margin-bottom: 0.35rem;
+}
+
+.feedback-section .form-hint,
+.feedback-section .form-note {
+  font-size: 0.875rem;
+  color: var(--ocbc-text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.ocbc-input,
+.ocbc-select,
+.feedback-section .form-control,
+.feedback-section .form-select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--ocbc-border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ocbc-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ocbc-input:focus,
+.ocbc-select:focus,
+.feedback-section .form-control:focus,
+.feedback-section .form-select:focus {
+  border-color: var(--ocbc-blue);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(0, 102, 161, 0.12);
+}
+
+.feedback-section textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+#answerBox.form-control,
+#answerBox.ocbc-input {
+  background: var(--ocbc-bg);
+  cursor: default;
+}
+
+/* Buttons */
+.ocbc-btn-primary {
+  background-color: var(--ocbc-blue);
+  color: #fff !important;
+  border: none;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ocbc-btn-primary:hover {
+  background-color: var(--ocbc-blue-dark);
+  color: #fff;
+}
+
+.ocbc-btn-outline {
+  background: transparent;
+  color: var(--ocbc-blue);
+  border: 2px solid var(--ocbc-blue);
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.ocbc-btn-outline:hover {
+  background: rgba(0, 102, 161, 0.08);
+  color: var(--ocbc-blue-dark);
+}
+
+#nextBtn:disabled,
+#sendFeedbackBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Answer loading */
+.answer-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--ocbc-bg);
+  border-radius: 6px;
+  color: var(--ocbc-text-muted);
+  font-size: 0.9375rem;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--ocbc-border);
+  border-top-color: var(--ocbc-blue);
+  border-radius: 50%;
+  animation: ocbc-spin 0.8s linear infinite;
+}
+
+@keyframes ocbc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Resolve block */
+.resolve-block {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ocbc-border);
+}
+
+.resolve-question {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 1rem;
+  color: var(--ocbc-text);
+}
+
+.resolve-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.resolve-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Form check */
+.form-check-label {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: var(--ocbc-text);
+}
+
+/* Need more help? block (OCBC CTA) */
+.ocbc-need-help {
+  background: var(--ocbc-card-bg);
+  border: 1px solid var(--ocbc-border);
+  border-radius: 8px;
+  padding: 1.75rem 2rem;
+  text-align: center;
+}
+
+.ocbc-need-help-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ocbc-text);
+  margin-bottom: 0.5rem;
+}
+
+.ocbc-need-help-desc {
+  font-size: 0.9375rem;
+  color: var(--ocbc-text-muted);
+  margin-bottom: 1.25rem;
+}
+
+/* Modals */
+.ocbc-modal-content {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ocbc-modal-header {
+  border-bottom: none;
+  padding: 1rem 1.25rem;
+}
+
+.ocbc-modal-success {
+  background: #0d8050;
+  color: #fff;
+}
+
+.ocbc-modal-danger {
+  background: #c0392b;
+  color: #fff;
+}
+
+.ocbc-modal-content .modal-footer {
+  border-top: 1px solid var(--ocbc-border);
+}
+
+/* Validation */
+.was-validated .form-control:invalid,
+.was-validated .form-select:invalid,
+.was-validated .ocbc-input:invalid,
+.was-validated .ocbc-select:invalid {
+  border-color: #c0392b;
+}
+
+.was-validated .form-control:valid,
+.was-validated .form-select:valid {
+  border-color: #0d8050;
+}
+
+.invalid-feedback {
+  font-size: 0.875rem;
+  color: #c0392b;
+  margin-top: 0.25rem;
+}
+
+/* ----- Footer (OCBC-style) ----- */
+.ocbc-footer {
+  background: var(--ocbc-slate);
+  color: #e5e7eb;
+  padding: 2rem 24px;
+  margin-top: auto;
+  font-size: 0.875rem;
+}
+
+.ocbc-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.ocbc-footer-legal {
+  margin: 0;
+  color: #9ca3af;
+}
+
+.ocbc-footer-copy {
+  margin: 0;
+  color: #9ca3af;
+}
+
+.ocbc-footer-contact {
+  margin: 0;
+}
+
+.ocbc-footer-contact a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.ocbc-footer-contact a:hover {
+  text-decoration: underline;
+}
+
+.ocbc-footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ocbc-footer-links a {
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.ocbc-footer-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (min-width: 600px) {
+  .ocbc-footer-inner {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: start;
+  }
+
+  .ocbc-footer-legal {
+    grid-column: 1;
+  }
+
+  .ocbc-footer-copy {
+    grid-column: 1;
+  }
+
+  .ocbc-footer-contact {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+
+  .ocbc-footer-links {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .ocbc-container {
+    padding: 0;
+  }
+
+  .ocbc-section.ocbc-card {
+    padding: 1.5rem;
+  }
+
+  .ocbc-page-nav {
+    flex-wrap: wrap;
+  }
+
+  .resolve-options {
+    flex-direction: column;
+  }
+
+  .resolve-btn {
+    width: 100%;
+  }
+}
