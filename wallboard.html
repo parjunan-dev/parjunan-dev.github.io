@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Omni-Channel Command Centre</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #050A14; height: 100%; }
+  ::-webkit-scrollbar { width: 4px; } 
+  ::-webkit-scrollbar-track { background: #050A14; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.2); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+const CONFIG = {
+  TOKEN:  "OTUyMjQ4NDctMDRmOC00MTg5LTkzNTEtYTEzOGJiZjhmYzNiNTU1ZTAxOGYtNzJh_PF84_fdaad028-04cb-490c-ac88-01262177cc89",
+  ORG_ID: "fdaad028-04cb-490c-ac88-01262177cc89",
+  // WxCC datacenter - change if needed: wxcc-us1 / wxcc-eu1 / wxcc-anz1 / wxcc-jp1
+  BASE:   "https://api.wxcc-us1.cisco.com",
+  WEBEX:  "https://webexapis.com/v1",
+  REFRESH_MS: 10000,  // poll every 10 seconds
+};
+
+const HEADERS = {
+  "Authorization": `Bearer ${CONFIG.TOKEN}`,
+  "Content-Type": "application/json",
+  "X-Org-Id": CONFIG.ORG_ID,
+};
+
+// ─── API LAYER ───────────────────────────────────────────────────────────────
+const API = {
+  // Verify token + get user info
+  async getMe() {
+    const r = await fetch(`${CONFIG.WEBEX}/people/me`, { headers: HEADERS });
+    if (!r.ok) throw new Error(`Auth failed: ${r.status}`);
+    return r.json();
+  },
+
+  // Get all queues for org
+  async getQueues() {
+    const r = await fetch(`${CONFIG.BASE}/v1/contactCenter/queues?orgId=${CONFIG.ORG_ID}`, { headers: HEADERS });
+    if (!r.ok) throw new Error(`Queues: ${r.status}`);
+    return r.json();
+  },
+
+  // Real-time queue statistics
+  async getQueueStats(queueIds = []) {
+    const body = {
+      orgId: CONFIG.ORG_ID,
+      queueIds: queueIds.length ? queueIds : undefined,
+    };
+    const r = await fetch(`${CONFIG.BASE}/v2/contactCenter/realtime/queue`, {
+      method: "POST", headers: HEADERS, body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error(`QueueStats: ${r.status} ${await r.text()}`);
+    return r.json();
+  },
+
+  // Real-time agent statistics  
+  async getAgentStats() {
+    const body = { orgId: CONFIG.ORG_ID };
+    const r = await fetch(`${CONFIG.BASE}/v2/contactCenter/realtime/agent`, {
+      method: "POST", headers: HEADERS, body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error(`AgentStats: ${r.status} ${await r.text()}`);
+    return r.json();
+  },
+
+  // Fallback: Analyzer task API for snapshot
+  async getAnalyzerSnapshot(module) {
+    const r = await fetch(`${CONFIG.BASE}/v2/contactCenter/analyzer/${module}?orgId=${CONFIG.ORG_ID}`, {
+      headers: HEADERS
+    });
+    if (!r.ok) throw new Error(`Analyzer ${module}: ${r.status}`);
+    return r.json();
+  },
+};
+
+// ─── DATA TRANSFORMER ────────────────────────────────────────────────────────
+// Normalise whatever WxCC returns into our display shape
+// WxCC API shapes vary - this handles common response formats
+const transform = {
+  queueStats(raw) {
+    if (!raw) return [];
+    const items = raw.data || raw.queues || raw.queueStats || (Array.isArray(raw) ? raw : []);
+    return items.map(q => ({
+      id:       q.queueId   || q.id || "?",
+      name:     q.queueName || q.name || q.queueId || "Unknown Queue",
+      channel:  q.channelType || q.mediaType || "telephony",
+      inQueue:  q.contactsInQueue ?? q.queuedContacts ?? q.waiting ?? 0,
+      longest:  q.longestWaitTime ?? q.maxWaitTime ?? 0,           // seconds
+      sla:      Math.round((q.serviceLevelPercent ?? q.sla ?? 0)),  // 0-100
+      aht:      Math.round(q.avgHandleTime ?? q.aht ?? 0),          // seconds
+      abandoned: q.abandonedContacts ?? q.abandoned ?? 0,
+    }));
+  },
+
+  agentStats(raw) {
+    if (!raw) return [];
+    const items = raw.data || raw.agents || raw.agentStats || (Array.isArray(raw) ? raw : []);
+    const states = { Available:0, Connected:0, Wrapup:0, Idle:0, "Not Ready":0 };
+    items.forEach(a => {
+      const s = a.agentState || a.state || a.status || "Idle";
+      if      (s.match(/available/i))              states["Available"]++;
+      else if (s.match(/connected|active|busy/i))  states["Connected"]++;
+      else if (s.match(/wrapup|wrap/i))             states["Wrapup"]++;
+      else if (s.match(/idle/i))                    states["Idle"]++;
+      else                                          states["Not Ready"]++;
+    });
+    return [
+      { state: "Available",  count: states["Available"],  color: "#69FF47" },
+      { state: "Connected",  count: states["Connected"],  color: "#00E5FF" },
+      { state: "Wrapup",     count: states["Wrapup"],     color: "#FFD93D" },
+      { state: "Idle",       count: states["Idle"],       color: "#FF8C42" },
+      { state: "Not Ready",  count: states["Not Ready"],  color: "#FF6B6B" },
+    ];
+  },
+
+  kpis(queueData, agentData) {
+    const qs = queueData || [];
+    const as = agentData  || [];
+    const totalAgents = as.reduce((s, a) => s + a.count, 0);
+    const totalInQueue = qs.reduce((s, q) => s + q.inQueue, 0);
+    const totalAbandoned = qs.reduce((s, q) => s + q.abandoned, 0);
+    const avgSLA = qs.length ? Math.round(qs.reduce((s,q) => s + q.sla, 0) / qs.length) : 0;
+    const avgAHT = qs.length ? Math.round(qs.reduce((s,q) => s + q.aht, 0) / qs.length) : 0;
+    const connected = as.find(a => a.state === "Connected")?.count || 0;
+    return { totalInQueue, totalAbandoned, avgSLA, avgAHT, totalAgents, connected };
+  },
+
+  // Group queues by channel type for channel SLA panel
+  byChannel(queueData) {
+    const channels = { telephony: [], chat: [], email: [] };
+    const labelMap = {
+      telephony: "Voice", chat: "Chat/WA", email: "Email",
+      voice: "Voice", whatsapp: "Chat/WA", webchat: "Chat/WA",
+    };
+    (queueData || []).forEach(q => {
+      const ch = (q.channel || "telephony").toLowerCase();
+      const bucket = ch.match(/chat|whatsapp|web/) ? "chat" : ch.match(/email/) ? "email" : "telephony";
+      channels[bucket].push(q);
+    });
+    const colorMap = { telephony: "#00E5FF", chat: "#69FF47", email: "#FF6B6B" };
+    return Object.entries(channels).map(([key, qs]) => ({
+      channel: labelMap[key] || key,
+      color: colorMap[key],
+      inQueue:   qs.reduce((s,q) => s + q.inQueue, 0),
+      sla:       qs.length ? Math.round(qs.reduce((s,q) => s + q.sla,0)/qs.length) : 0,
+      aht:       qs.length ? Math.round(qs.reduce((s,q) => s + q.aht,0)/qs.length) : 0,
+      abandoned: qs.reduce((s,q) => s + q.abandoned, 0),
+    }));
+  },
+};
+
+// ─── FALLBACK: jitter-based demo data (used when API unavailable) ─────────────
+const jitter = (b, r) => Math.max(0, b + Math.floor((Math.random()-.5)*r));
+const demoData = () => ({
+  queues: [
+    { id:"q1", name:"Credit Card",     channel:"telephony", inQueue:jitter(8,5),  longest:jitter(240,60), sla:jitter(87,10), aht:jitter(380,50), abandoned:jitter(5,3) },
+    { id:"q2", name:"Loans",           channel:"telephony", inQueue:jitter(6,4),  longest:jitter(180,50), sla:jitter(91,8),  aht:jitter(360,40), abandoned:jitter(4,3) },
+    { id:"q3", name:"General Banking", channel:"telephony", inQueue:jitter(12,6), longest:jitter(320,80), sla:jitter(82,12), aht:jitter(410,60), abandoned:jitter(7,4) },
+    { id:"q4", name:"WA Support",      channel:"chat",      inQueue:jitter(9,5),  longest:jitter(120,40), sla:jitter(94,6),  aht:jitter(280,40), abandoned:jitter(3,2) },
+    { id:"q5", name:"Web Chat",        channel:"chat",      inQueue:jitter(5,3),  longest:jitter(80,30),  sla:jitter(96,4),  aht:jitter(260,30), abandoned:jitter(2,2) },
+    { id:"q6", name:"Email",           channel:"email",     inQueue:jitter(7,4),  longest:jitter(900,200),sla:jitter(79,12), aht:jitter(720,80), abandoned:jitter(6,3) },
+  ],
+  agents: [
+    { state:"Available",count:jitter(28,8),  color:"#69FF47" },
+    { state:"Connected", count:jitter(31,10), color:"#00E5FF" },
+    { state:"Wrapup",    count:jitter(12,6),  color:"#FFD93D" },
+    { state:"Idle",      count:jitter(8,4),   color:"#FF8C42" },
+    { state:"Not Ready", count:jitter(5,3),   color:"#FF6B6B" },
+  ],
+  sentiment: { positive:jitter(62,10), neutral:jitter(24,8), negative:jitter(14,8) },
+  bot: { sessions:jitter(82,20), containment:jitter(68,8), latency:jitter(340,60), escalation:jitter(32,8) },
+});
+
+// ─── UTILITIES ───────────────────────────────────────────────────────────────
+const fmtSec = s => { const m=Math.floor(s/60), sec=s%60; return `${m}:${String(sec).padStart(2,"0")}`; };
+const SLAColor = v => v>=90?"#69FF47":v>=80?"#FFD93D":"#FF6B6B";
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ─── ANIMATED NUMBER ─────────────────────────────────────────────────────────
+function AnimNum({ value }) {
+  const [disp, setDisp] = useState(value);
+  const prev = useRef(value);
+  useEffect(() => {
+    if (value === prev.current) return;
+    let start=prev.current, end=value, dur=600, st=null;
+    const step = ts => {
+      if(!st) st=ts;
+      const p=Math.min((ts-st)/dur,1);
+      setDisp(Math.round(start+(end-start)*p));
+      if(p<1) requestAnimationFrame(step); else prev.current=end;
+    };
+    requestAnimationFrame(step);
+  }, [value]);
+  return React.createElement(React.Fragment, null, disp);
+}
+
+// ─── GAUGE ───────────────────────────────────────────────────────────────────
+function Gauge({ value, color, label, size=110 }) {
+  const r=44, cx=55, cy=55, circ=2*Math.PI*r;
+  const pct=Math.min(value/100,1);
+  const dash=pct*circ*0.75;
+  return (
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+      <svg width={size} height={size} viewBox="0 0 110 110">
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10"
+          strokeDasharray={`${circ*0.75} ${circ*0.25}`} transform={`rotate(135 ${cx} ${cy})`} strokeLinecap="round"/>
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth="10"
+          strokeDasharray={`${dash} ${circ-dash+circ*0.25}`} transform={`rotate(135 ${cx} ${cy})`}
+          strokeLinecap="round" style={{filter:`drop-shadow(0 0 6px ${color})`,transition:"stroke-dasharray 0.6s ease"}}/>
+        <text x={cx} y={cy+4} textAnchor="middle" fill="white" style={{fontSize:18,fontWeight:700,fontFamily:"Rajdhani,sans-serif"}}>{value}%</text>
+        <text x={cx} y={cy+18} textAnchor="middle" fill="rgba(255,255,255,0.4)" style={{fontSize:9,fontFamily:"Rajdhani,sans-serif",letterSpacing:1}}>{label}</text>
+      </svg>
+    </div>
+  );
+}
+
+// ─── DONUT ───────────────────────────────────────────────────────────────────
+function Donut({ slices, size=90 }) {
+  const r=36, cx=45, cy=45, circ=2*Math.PI*r;
+  const total=slices.reduce((a,s)=>a+s.value,0)||1;
+  let offset=0;
+  return (
+    <svg width={size} height={size} viewBox="0 0 90 90">
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="13"/>
+      {slices.map((s,i)=>{
+        const dash=(s.value/total)*circ;
+        const el=<circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth="13"
+          strokeDasharray={`${dash} ${circ-dash}`} strokeDashoffset={-offset}
+          transform="rotate(-90 45 45)"
+          style={{filter:`drop-shadow(0 0 4px ${s.color})`,transition:"all 0.6s ease"}}/>;
+        offset+=dash; return el;
+      })}
+      <text x={cx} y={cy+5} textAnchor="middle" fill="white" style={{fontSize:14,fontWeight:700,fontFamily:"Rajdhani,sans-serif"}}>{total}</text>
+    </svg>
+  );
+}
+
+// ─── MINI BAR CHART ──────────────────────────────────────────────────────────
+function MiniBar({ voice, chat, email }) {
+  const max=Math.max(voice,chat,email,1);
+  const h=50, bw=18, gap=10;
+  const bars=[{v:voice,c:"#00E5FF"},{v:chat,c:"#69FF47"},{v:email,c:"#FF6B6B"}];
+  return (
+    <svg width={bars.length*(bw+gap)} height={h}>
+      {bars.map((b,i)=>{
+        const bh=Math.max(2,(b.v/max)*(h-6));
+        return <g key={i}>
+          <rect x={i*(bw+gap)} y={h-bh} width={bw} height={bh} fill={b.c} opacity="0.85" rx="2"
+            style={{filter:`drop-shadow(0 0 4px ${b.c})`,transition:"height 0.5s,y 0.5s"}}/>
+        </g>;
+      })}
+    </svg>
+  );
+}
+
+// ─── STATUS BADGE ────────────────────────────────────────────────────────────
+function StatusBadge({ ok, label }) {
+  const c = ok ? "#69FF47" : "#FF6B6B";
+  return (
+    <span style={{display:"inline-flex",alignItems:"center",gap:4,background:`${c}15`,
+      border:`1px solid ${c}40`,borderRadius:10,padding:"2px 8px",fontSize:11,color:c}}>
+      <span style={{width:6,height:6,borderRadius:"50%",background:c,boxShadow:`0 0 4px ${c}`}}/>
+      {label}
+    </span>
+  );
+}
+
+// ─── MAIN APP ────────────────────────────────────────────────────────────────
+function Wallboard() {
+  const [liveData,  setLiveData]  = useState(null);
+  const [apiStatus, setApiStatus] = useState({ ok: false, msg: "Connecting...", user: null });
+  const [now,       setNow]       = useState(new Date());
+  const [ahtHistory, setAhtHistory] = useState([]);
+
+  // Clock tick
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // ── Data fetch ──
+  const fetchData = useCallback(async () => {
+    try {
+      // Step 1: verify token
+      if (!apiStatus.user) {
+        const me = await API.getMe();
+        setApiStatus(s => ({ ...s, user: me.displayName, ok: true, msg: "Live" }));
+      }
+
+      // Step 2: try real-time queue stats
+      let queues = [];
+      try {
+        const qRaw = await API.getQueueStats();
+        queues = transform.queueStats(qRaw);
+        if (!queues.length) throw new Error("empty");
+      } catch(e) {
+        console.warn("QueueStats API failed:", e.message, "— trying queues list");
+        try {
+          const qList = await API.getQueues();
+          queues = transform.queueStats(qList);
+        } catch(e2) {
+          console.warn("Queues list also failed:", e2.message, "— using demo data");
+          queues = demoData().queues;
+          setApiStatus(s => ({ ...s, msg: "Demo (queue API unavailable)" }));
+        }
+      }
+
+      // Step 3: agent stats
+      let agentStates = [];
+      try {
+        const aRaw = await API.getAgentStats();
+        agentStates = transform.agentStats(aRaw);
+      } catch(e) {
+        console.warn("AgentStats API failed:", e.message, "— using demo");
+        agentStates = demoData().agents;
+      }
+
+      const demo = demoData();
+      const channelSLA = transform.byChannel(queues);
+      const kpis = transform.kpis(channelSLA, agentStates);
+
+      setLiveData({ queues, agentStates, channelSLA, kpis, sentiment: demo.sentiment, bot: demo.bot });
+
+      // AHT history for sparkline
+      setAhtHistory(h => {
+        const point = {
+          voice: channelSLA.find(c=>c.channel==="Voice")?.aht || 0,
+          chat:  channelSLA.find(c=>c.channel==="Chat/WA")?.aht || 0,
+          email: channelSLA.find(c=>c.channel==="Email")?.aht || 0,
+        };
+        return [...h.slice(-11), point];
+      });
+
+    } catch(err) {
+      console.error("Fetch error:", err);
+      setApiStatus(s => ({ ...s, ok: false, msg: `Error: ${err.message}` }));
+      // Fall back to pure demo
+      const demo = demoData();
+      const channelSLA = transform.byChannel(demo.queues);
+      setLiveData({ queues: demo.queues, agentStates: demo.agents,
+        channelSLA, kpis: transform.kpis(channelSLA, demo.agents),
+        sentiment: demo.sentiment, bot: demo.bot });
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+    const id = setInterval(fetchData, CONFIG.REFRESH_MS);
+    return () => clearInterval(id);
+  }, [fetchData]);
+
+  const d = liveData || (() => {
+    const demo = demoData();
+    const channelSLA = transform.byChannel(demo.queues);
+    return { queues:demo.queues, agentStates:demo.agents, channelSLA,
+      kpis:transform.kpis(channelSLA,demo.agents), sentiment:demo.sentiment, bot:demo.bot };
+  })();
+
+  const totalAgents = d.agentStates.reduce((s,a)=>s+a.count,0);
+  const timeStr = now.toLocaleTimeString("en-SG",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  const dateStr = now.toLocaleDateString("en-SG",{weekday:"short",day:"numeric",month:"short",year:"numeric"}).toUpperCase();
+  const slaAlert = d.channelSLA.some(c=>c.sla>0&&c.sla<85);
+
+  const card = (accent, children, style={}) => (
+    <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",
+      borderRadius:12,padding:14,position:"relative",overflow:"hidden",...style}}>
+      <div style={{position:"absolute",top:0,left:0,width:40,height:2,background:accent,boxShadow:`0 0 8px ${accent}`}}/>
+      <div style={{position:"absolute",inset:0,borderRadius:12,background:"linear-gradient(135deg,rgba(255,255,255,0.02) 0%,transparent 60%)",pointerEvents:"none"}}/>
+      {children}
+    </div>
+  );
+
+  const sectionTitle = txt => (
+    <div style={{fontSize:10,letterSpacing:3,textTransform:"uppercase",color:"rgba(255,255,255,0.35)",marginBottom:10}}>{txt}</div>
+  );
+
+  return (
+    <div style={{background:"#050A14",color:"white",fontFamily:"Rajdhani,sans-serif",
+      minHeight:"100vh",padding:16,
+      backgroundImage:"radial-gradient(ellipse at 20% 20%,rgba(0,229,255,0.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(105,255,71,0.03) 0%,transparent 50%)"}}>
+
+      {/* ── HEADER ── */}
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingBottom:12,borderBottom:"1px solid rgba(0,229,255,0.15)",marginBottom:14}}>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <div style={{width:36,height:36,borderRadius:8,background:"linear-gradient(135deg,#00E5FF,#0066FF)",
+            display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:700,
+            boxShadow:"0 0 16px rgba(0,229,255,0.4)"}}>CC</div>
+          <div>
+            <div style={{fontSize:19,fontWeight:700,letterSpacing:2,textTransform:"uppercase"}}>Omni-Channel Command Centre</div>
+            <div style={{fontSize:11,color:"rgba(0,229,255,0.6)",letterSpacing:3,textTransform:"uppercase"}}>Real-Time Operations Wallboard · All Channels</div>
+          </div>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:14}}>
+          <StatusBadge ok={apiStatus.ok} label={apiStatus.ok ? `Live · ${apiStatus.user||""}` : apiStatus.msg}/>
+          <div style={{textAlign:"right"}}>
+            <div style={{fontFamily:"Share Tech Mono,monospace",fontSize:22,color:"#00E5FF"}}>{timeStr}</div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",letterSpacing:2}}>{dateStr}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── ALERT BAND ── */}
+      {slaAlert && (
+        <div style={{background:"rgba(255,107,107,0.08)",border:"1px solid rgba(255,107,107,0.2)",
+          borderRadius:8,padding:"7px 14px",fontSize:12,color:"#FF6B6B",
+          display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
+          <span style={{fontSize:14}}>⚠</span>
+          <strong>SLA ALERT</strong> — {d.channelSLA.filter(c=>c.sla>0&&c.sla<85).map(c=>c.channel).join(", ")} below 85% threshold
+        </div>
+      )}
+
+      {/* ── KPI STRIP ── */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(8,1fr)",gap:10,marginBottom:12}}>
+        {[
+          {label:"In Queue",    val:d.kpis.totalInQueue,  color:"#FF8C42", sub:"waiting now"},
+          {label:"SLA %",       val:d.kpis.avgSLA,        color:SLAColor(d.kpis.avgSLA), sub:"vs 90% target", suffix:"%"},
+          {label:"Avg AHT",     val:fmtSec(d.kpis.avgAHT),color:"#FFD93D", sub:"all channels", raw:true},
+          {label:"Abandoned",   val:d.kpis.totalAbandoned,color:"#FF6B6B", sub:"last 30 min"},
+          {label:"Agents Online",val:d.kpis.totalAgents,  color:"#69FF47", sub:"all states"},
+          {label:"Connected",   val:d.kpis.connected,     color:"#00E5FF", sub:"active interactions"},
+          {label:"Bot Sessions",val:d.bot.sessions,       color:"#B47FFF", sub:"active chatbots"},
+          {label:"Escalations", val:d.bot.escalation,     color:"#FF6B6B", sub:"bot→agent %", suffix:"%"},
+        ].map((k,i)=>(
+          <div key={i} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",
+            borderRadius:10,padding:"10px 12px",position:"relative",overflow:"hidden"}}>
+            <div style={{position:"absolute",top:0,left:0,width:32,height:2,background:k.color,boxShadow:`0 0 6px ${k.color}`}}/>
+            <div style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,0.4)",marginBottom:4}}>{k.label}</div>
+            <div style={{fontSize:28,fontWeight:700,color:k.color,lineHeight:1}}>
+              {k.raw ? k.val : <AnimNum value={typeof k.val==="number"?k.val:0}/>}
+              {k.suffix}
+            </div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",marginTop:3}}>{k.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── MID ROW ── */}
+      <div style={{display:"grid",gridTemplateColumns:"2fr 1.2fr 1fr",gap:12,marginBottom:12}}>
+
+        {/* Channel SLA */}
+        {card("#00E5FF", <>
+          {sectionTitle("Channel SLA & Performance")}
+          <div style={{display:"grid",gridTemplateColumns:"90px 1fr 55px 65px 55px",gap:8,marginBottom:8}}>
+            {["Channel","SLA %","Queue","AHT","Abdn"].map(h=>(
+              <div key={h} style={{fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,0.25)"}}>{h}</div>
+            ))}
+          </div>
+          {d.channelSLA.map(ch=>(
+            <div key={ch.channel} style={{display:"grid",gridTemplateColumns:"90px 1fr 55px 65px 55px",
+              alignItems:"center",gap:8,padding:"8px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+              <div style={{display:"flex",alignItems:"center",gap:5,color:ch.color,fontSize:13,fontWeight:600}}>
+                <span style={{width:7,height:7,borderRadius:"50%",background:ch.color,boxShadow:`0 0 5px ${ch.color}`,flexShrink:0}}/>
+                {ch.channel}
+              </div>
+              <div>
+                <div style={{fontSize:11,color:SLAColor(ch.sla),marginBottom:3}}>{ch.sla}%</div>
+                <div style={{height:6,background:"rgba(255,255,255,0.07)",borderRadius:3,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:`${ch.sla}%`,background:SLAColor(ch.sla),
+                    boxShadow:`0 0 5px ${SLAColor(ch.sla)}`,borderRadius:3,transition:"width 0.6s ease"}}/>
+                </div>
+              </div>
+              <div style={{color:ch.inQueue>15?"#FF8C42":"rgba(255,255,255,0.7)",fontWeight:600,textAlign:"center",fontSize:13}}>{ch.inQueue}</div>
+              <div style={{color:"rgba(255,255,255,0.6)",textAlign:"center",fontSize:12,fontFamily:"Share Tech Mono,monospace"}}>{fmtSec(ch.aht)}</div>
+              <div style={{color:ch.abandoned>8?"#FF6B6B":"rgba(255,255,255,0.5)",textAlign:"center",fontSize:13}}>{ch.abandoned}</div>
+            </div>
+          ))}
+
+          {/* AHT bars by channel */}
+          <div style={{marginTop:14}}>
+            {sectionTitle("AHT by Channel")}
+            <div style={{display:"flex",alignItems:"flex-end",gap:16}}>
+              <MiniBar
+                voice={d.channelSLA.find(c=>c.channel==="Voice")?.aht||0}
+                chat={d.channelSLA.find(c=>c.channel==="Chat/WA")?.aht||0}
+                email={d.channelSLA.find(c=>c.channel==="Email")?.aht||0}/>
+              <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+                {[["#00E5FF","Voice"],["#69FF47","Chat/WA"],["#FF6B6B","Email"]].map(([c,l])=>(
+                  <div key={l} style={{display:"flex",alignItems:"center",gap:4,fontSize:11,color:"rgba(255,255,255,0.5)"}}>
+                    <div style={{width:8,height:8,borderRadius:2,background:c}}/>{l}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>)}
+
+        {/* Agent States */}
+        {card("#69FF47", <>
+          {sectionTitle("Agent State Distribution")}
+          <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:14}}>
+            <Donut slices={d.agentStates.map(s=>({value:s.count,color:s.color}))} size={86}/>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.35)"}}>
+              <div style={{fontSize:24,fontWeight:700,color:"white"}}>{totalAgents}</div>
+              total agents
+            </div>
+          </div>
+          {d.agentStates.map(s=>(
+            <div key={s.state} style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+              <div style={{fontSize:12,width:76,color:s.color}}>{s.state}</div>
+              <div style={{flex:1,height:8,background:"rgba(255,255,255,0.05)",borderRadius:4,overflow:"hidden"}}>
+                <div style={{height:"100%",width:`${totalAgents?(s.count/totalAgents)*100:0}%`,
+                  background:s.color,boxShadow:`0 0 5px ${s.color}`,borderRadius:4,transition:"width 0.6s ease"}}/>
+              </div>
+              <div style={{fontSize:12,fontWeight:600,color:s.color,width:26,textAlign:"right"}}>{s.count}</div>
+            </div>
+          ))}
+        </>)}
+
+        {/* Gauges */}
+        {card("#B47FFF", <>
+          {sectionTitle("Key Gauges")}
+          <div style={{display:"flex",flexDirection:"column",gap:8,alignItems:"center"}}>
+            <Gauge value={d.kpis.avgSLA} color={SLAColor(d.kpis.avgSLA)} label="SLA" size={108}/>
+            <Gauge value={d.bot.containment} color="#B47FFF" label="BOT CONTAIN" size={108}/>
+          </div>
+        </>)}
+      </div>
+
+      {/* ── BOTTOM ROW ── */}
+      <div style={{display:"grid",gridTemplateColumns:"1.6fr 1fr 1fr",gap:12}}>
+
+        {/* Queue deep-dive */}
+        {card("#FF8C42", <>
+          {sectionTitle("Queue Deep-Dive")}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 45px 70px 56px",gap:8,marginBottom:6}}>
+            {["Queue","Wait","Longest","SLA%"].map(h=>(
+              <div key={h} style={{fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,0.25)"}}>{h}</div>
+            ))}
+          </div>
+          {d.queues.slice(0,6).map(q=>(
+            <div key={q.id} style={{display:"grid",gridTemplateColumns:"1fr 45px 70px 56px",
+              alignItems:"center",gap:8,padding:"7px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+              <div style={{fontSize:13}}>{q.name}</div>
+              <div style={{color:q.inQueue>10?"#FF8C42":"rgba(255,255,255,0.7)",fontWeight:600,textAlign:"center"}}>{q.inQueue}</div>
+              <div style={{color:"rgba(255,255,255,0.5)",textAlign:"center",fontFamily:"Share Tech Mono,monospace",fontSize:12}}>{fmtSec(q.longest)}</div>
+              <div style={{padding:"2px 6px",borderRadius:10,fontSize:11,fontWeight:600,textAlign:"center",
+                background:`${SLAColor(q.sla)}18`,color:SLAColor(q.sla),border:`1px solid ${SLAColor(q.sla)}40`}}>{q.sla}%</div>
+            </div>
+          ))}
+        </>)}
+
+        {/* Sentiment */}
+        {card("#FFD93D", <>
+          {sectionTitle("Real-Time Sentiment")}
+          <div style={{display:"flex",justifyContent:"space-around",padding:"8px 0"}}>
+            {[
+              {label:"Positive",pct:d.sentiment.positive,color:"#69FF47"},
+              {label:"Neutral", pct:d.sentiment.neutral, color:"#FFD93D"},
+              {label:"Negative",pct:d.sentiment.negative,color:"#FF6B6B"},
+            ].map(s=>(
+              <div key={s.label} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+                <div style={{fontSize:26,fontWeight:700,color:s.color}}>{s.pct}%</div>
+                <div style={{fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,0.4)"}}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{marginTop:10,padding:8,background:"rgba(255,255,255,0.03)",borderRadius:8}}>
+            <div style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,0.3)",marginBottom:5}}>Threshold Alert</div>
+            {d.sentiment.negative>20
+              ? <div style={{fontSize:12,color:"#FF6B6B"}}>⚠ {d.sentiment.negative}% negative · Supervisor notified</div>
+              : <div style={{fontSize:12,color:"rgba(255,255,255,0.35)"}}>Within normal threshold</div>}
+          </div>
+          <div style={{marginTop:10}}>
+            {sectionTitle("CSAT Today")}
+            <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+              <div style={{fontSize:32,fontWeight:700,color:"#B47FFF"}}>4.2</div>
+              <div style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>/5.0</div>
+            </div>
+          </div>
+        </>)}
+
+        {/* Bot Health */}
+        {card("#00E5FF", <>
+          {sectionTitle("Chatbot Health")}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+            {[
+              {val:d.bot.sessions,          label:"Active Sessions",  color:"#00E5FF"},
+              {val:`${d.bot.containment}%`,  label:"Containment",      color:"#69FF47"},
+              {val:`${d.bot.latency}ms`,     label:"Avg Latency",      color:"#FFD93D"},
+              {val:`${d.bot.escalation}%`,   label:"Escalation Rate",  color:"#FF8C42"},
+            ].map(b=>(
+              <div key={b.label} style={{background:"rgba(255,255,255,0.04)",borderRadius:8,padding:10}}>
+                <div style={{fontSize:24,fontWeight:700,color:b.color}}>{b.val}</div>
+                <div style={{fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,0.35)",marginTop:2}}>{b.label}</div>
+              </div>
+            ))}
+          </div>
+          {sectionTitle("Bot Status")}
+          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+            {["WA Bot","Web Chat","App Bot"].map(b=>(
+              <StatusBadge key={b} ok={true} label={b}/>
+            ))}
+          </div>
+        </>)}
+      </div>
+
+      {/* ── FOOTER ── */}
+      <div style={{marginTop:12,display:"flex",justifyContent:"space-between",
+        fontSize:10,color:"rgba(255,255,255,0.2)",letterSpacing:1.5,textTransform:"uppercase"}}>
+        <span>Webex Contact Center · Omni-Channel Operations</span>
+        <span>Refresh every {CONFIG.REFRESH_MS/1000}s · Org: {CONFIG.ORG_ID.slice(0,8)}...</span>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Wallboard/>);
+</script>
+</body>
+</html>
