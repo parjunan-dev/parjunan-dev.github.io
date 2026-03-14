@@ -201,6 +201,13 @@ main {
   color: #253443;
 }
 
+.field-label-text {
+  min-height: 2.8em;
+  display: flex;
+  align-items: flex-end;
+  line-height: 1.4;
+}
+
 .field-grid input {
   border: 1px solid #cfd8e3;
   border-radius: 10px;
