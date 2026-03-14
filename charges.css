@@ -1,0 +1,289 @@
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  background: #f6f8fb;
+  color: #111;
+}
+
+header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 24px;
+}
+
+.cxhacks-logo {
+  height: 40px;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+
+.blog-logo {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.page-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4f5b67;
+}
+
+main {
+  padding-bottom: 48px;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #f7fbff 0%, #eef4ff 52%, #ffffff 100%);
+  border-bottom: 1px solid #e3e8ef;
+}
+
+.hero-panel,
+.calculator-section,
+.notes-section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.hero-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.9fr);
+  gap: 24px;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  align-items: stretch;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.08;
+  margin: 0 0 16px;
+  max-width: 760px;
+}
+
+.hero-copy p,
+.section-header p,
+.calc-description,
+.summary-note,
+.notes-card li {
+  color: #52606d;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0057b8;
+}
+
+.summary-card,
+.calc-card,
+.notes-card {
+  background: #ffffff;
+  border: 1px solid #dce3eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.summary-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6a7682;
+}
+
+.summary-value {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  margin: 10px 0 12px;
+  color: #0b1f33;
+}
+
+.calculator-section {
+  padding-top: 40px;
+}
+
+.section-header h2,
+.notes-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+}
+
+.section-header {
+  margin-bottom: 24px;
+}
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.calc-card {
+  padding: 24px;
+}
+
+.calc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.calc-header h3 {
+  margin: 6px 0 0;
+  font-size: 1.15rem;
+}
+
+.calc-header i {
+  color: #0057b8;
+  font-size: 1.2rem;
+  margin-top: 4px;
+}
+
+.calc-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0057b8;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.field-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #253443;
+}
+
+.field-grid input {
+  border: 1px solid #cfd8e3;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  color: #111;
+  background: #ffffff;
+}
+
+.field-grid input:focus {
+  outline: none;
+  border-color: #0057b8;
+  box-shadow: 0 0 0 3px rgba(0, 87, 184, 0.12);
+}
+
+.result-row {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e4eaf1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.result-row span {
+  color: #52606d;
+}
+
+.result-row strong {
+  font-size: 1.2rem;
+  color: #0b1f33;
+}
+
+.notes-section {
+  padding-top: 28px;
+}
+
+.notes-card {
+  padding: 24px;
+}
+
+.notes-card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.notes-card li + li {
+  margin-top: 8px;
+}
+
+@media (max-width: 1024px) {
+  .hero-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .calculator-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-inner,
+  .hero-panel,
+  .calculator-section,
+  .notes-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .header-inner {
+    gap: 12px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .summary-card,
+  .calc-card,
+  .notes-card {
+    border-radius: 14px;
+  }
+}
