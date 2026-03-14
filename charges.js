@@ -86,14 +86,10 @@ function syncComputeInputs() {
 
 function syncTranslationInputs() {
   const charValue = getNumericValue("baselineCharacters");
-  const freeChars = getNumericValue("baselineFreeCharacters");
   const mappings = [
     { id: "translateUsage", value: charValue },
     { id: "awsTranslateUsage", value: charValue },
     { id: "azureTranslateUsage", value: charValue },
-    { id: "translateFreeTier", value: freeChars },
-    { id: "awsTranslateFreeTier", value: freeChars },
-    { id: "azureTranslateFreeTier", value: freeChars },
   ];
 
   mappings.forEach(({ id, value }) => {
@@ -322,7 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   });
 
-  ["baselineCharacters", "baselineFreeCharacters"].forEach((id) => {
+  ["baselineCharacters"].forEach((id) => {
     document
       .getElementById(id)
       .addEventListener("input", () => {
