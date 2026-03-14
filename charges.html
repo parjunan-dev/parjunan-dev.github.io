@@ -60,19 +60,29 @@
         <div class="section-header">
           <div class="section-header-top">
             <div>
-              <h2>Online service calculators</h2>
+              <h2>Select the services to estimate</h2>
               <p>
-                Default values are placeholders for discussion. Replace them
-                with your actual contracted rates later.
+                Start by choosing the services relevant to the solution. Only
+                the selected calculators will be shown and included in the total.
               </p>
             </div>
-            <label class="filter-control" for="cspFilter">
-              <span>CSP filter</span>
-              <select id="cspFilter">
-                <option value="all">All providers</option>
-                <option value="google">Google only</option>
-                <option value="aws">AWS only</option>
-              </select>
+          </div>
+          <div class="service-picker" id="servicePicker">
+            <label class="service-option">
+              <input type="checkbox" value="translate" />
+              <span>Google Translate API</span>
+            </label>
+            <label class="service-option">
+              <input type="checkbox" value="cloudrun" />
+              <span>Google Cloud Run</span>
+            </label>
+            <label class="service-option">
+              <input type="checkbox" value="awstranslate" />
+              <span>Amazon Translate</span>
+            </label>
+            <label class="service-option">
+              <input type="checkbox" value="awslambda" />
+              <span>AWS Lambda</span>
             </label>
           </div>
         </div>
@@ -376,6 +386,9 @@
             </div>
           </article>
         </div>
+        <p class="empty-state" id="calculatorEmptyState">
+          Select one or more services above to show the relevant calculators.
+        </p>
       </section>
 
       <section class="notes-section">

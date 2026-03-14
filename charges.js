@@ -25,7 +25,7 @@ const calculators = [
   },
 ];
 
-let activeProviderFilter = "all";
+let activeServices = new Set();
 
 function getNumericValue(id) {
   const value = Number.parseFloat(document.getElementById(id).value);
@@ -132,33 +132,36 @@ function calculateServiceTotal(config) {
 
 function updateTotals() {
   let grandTotal = 0;
+  let visibleCount = 0;
 
   calculators.forEach((config) => {
     const total = calculateServiceTotal(config);
     document.getElementById(config.output).textContent = formatCurrency(total);
 
-    const card = document.querySelector(`[data-service="${config.id}"]`);
-    const provider = card?.dataset.provider || "all";
-    const isVisible =
-      activeProviderFilter === "all" || provider === activeProviderFilter;
+    const isVisible = activeServices.has(config.id);
 
     if (isVisible) {
+      visibleCount += 1;
       grandTotal += total;
     }
   });
 
   document.getElementById("grandTotal").textContent = formatCurrency(grandTotal);
+  document.getElementById("calculatorEmptyState").style.display =
+    visibleCount === 0 ? "block" : "none";
 }
 
-function updateProviderFilter() {
-  activeProviderFilter = document.getElementById("cspFilter").value;
+function updateServiceSelection() {
+  activeServices = new Set(
+    Array.from(
+      document.querySelectorAll('#servicePicker input[type="checkbox"]:checked'),
+      (input) => input.value,
+    ),
+  );
 
   document.querySelectorAll(".calc-card").forEach((card) => {
-    const provider = card.dataset.provider || "all";
-    const shouldShow =
-      activeProviderFilter === "all" || provider === activeProviderFilter;
-
-    card.classList.toggle("is-hidden", !shouldShow);
+    const service = card.dataset.service;
+    card.classList.toggle("is-hidden", !activeServices.has(service));
   });
 
   updateTotals();
@@ -206,8 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document
-    .getElementById("cspFilter")
-    .addEventListener("change", updateProviderFilter);
+    .querySelectorAll('#servicePicker input[type="checkbox"]')
+    .forEach((input) => {
+      input.addEventListener("change", updateServiceSelection);
+    });
 
-  updateProviderFilter();
+  updateServiceSelection();
 });
