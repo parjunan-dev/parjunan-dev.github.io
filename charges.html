@@ -75,8 +75,9 @@
               <i class="fas fa-language"></i>
             </div>
             <p class="calc-description">
-              Estimate the monthly charge for translated text volume sold via an
-              SI as part of a broader Webex solution.
+              Text-only Google Cloud Translation pricing for standard NMT usage.
+              This calculator applies the free monthly allowance first, then
+              charges only the excess translated character volume.
             </p>
             <div class="field-grid">
               <label>
@@ -84,18 +85,26 @@
                 <input type="number" id="translateUsage" min="0" step="1000" value="2500000" />
               </label>
               <label>
-                Provider rate per 1M chars ($)
-                <input type="number" id="translateRate" min="0" step="0.01" value="20" />
+                Free characters per month
+                <input type="number" id="translateFreeTier" min="0" step="1000" value="500000" />
               </label>
               <label>
-                SI markup (%)
-                <input type="number" id="translateMarkup" min="0" step="0.1" value="15" />
+                Google rate per 1M billable chars ($)
+                <input type="number" id="translateRate" min="0" step="0.01" value="20" />
               </label>
+            </div>
+            <div class="sub-result">
+              <span>Billable characters</span>
+              <strong id="translateBillable">0</strong>
             </div>
             <div class="result-row">
               <span>Monthly estimate</span>
               <strong id="translateTotal">$0.00</strong>
             </div>
+            <p class="calc-footnote">
+              Google counts all characters sent for text translation, including
+              whitespace.
+            </p>
           </article>
 
           <article class="calc-card" data-service="speech">

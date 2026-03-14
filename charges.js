@@ -3,7 +3,7 @@ const calculators = [
     id: "translate",
     usageInput: "translateUsage",
     rateInput: "translateRate",
-    markupInput: "translateMarkup",
+    freeTierInput: "translateFreeTier",
     output: "translateTotal",
     quantityDivisor: 1000000,
   },
@@ -47,12 +47,29 @@ function formatCurrency(amount) {
   }).format(amount);
 }
 
+function formatNumber(value) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 function calculateServiceTotal(config) {
   const usage = getNumericValue(config.usageInput);
   const rate = getNumericValue(config.rateInput);
-  const markup = getNumericValue(config.markupInput) / 100;
+  const markup = config.markupInput
+    ? getNumericValue(config.markupInput) / 100
+    : 0;
+  const billableUsage = config.freeTierInput
+    ? Math.max(0, usage - getNumericValue(config.freeTierInput))
+    : usage;
 
-  const providerCost = (usage / config.quantityDivisor) * rate;
+  const providerCost = (billableUsage / config.quantityDivisor) * rate;
+
+  if (config.id === "translate") {
+    document.getElementById("translateBillable").textContent =
+      formatNumber(billableUsage);
+  }
+
   return providerCost * (1 + markup);
 }
 
@@ -71,8 +88,16 @@ function updateTotals() {
 document.addEventListener("DOMContentLoaded", () => {
   calculators.forEach((config) => {
     [config.usageInput, config.rateInput, config.markupInput].forEach((id) => {
-      document.getElementById(id).addEventListener("input", updateTotals);
+      if (id) {
+        document.getElementById(id).addEventListener("input", updateTotals);
+      }
     });
+
+    if (config.freeTierInput) {
+      document
+        .getElementById(config.freeTierInput)
+        .addEventListener("input", updateTotals);
+    }
   });
 
   updateTotals();

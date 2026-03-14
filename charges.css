@@ -235,6 +235,25 @@ main {
   color: #0b1f33;
 }
 
+.sub-result {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  color: #52606d;
+}
+
+.sub-result strong {
+  color: #0b1f33;
+}
+
+.calc-footnote {
+  margin: 14px 0 0;
+  font-size: 0.84rem;
+  color: #6a7682;
+}
+
 .notes-section {
   padding-top: 28px;
 }
