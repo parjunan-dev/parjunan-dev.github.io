@@ -61,40 +61,50 @@
         <div class="section-header">
           <div class="section-heading">
             <h2>Commonly used cloud services</h2>
-            <p>Choose the services you want to estimate, then toggle the free tier mode.</p>
+            <p>Choose the services you want to estimate, then toggle the free tier mode if needed.</p>
           </div>
           <div class="section-header-top">
-            <div>
-              <h2>Select the services to estimate</h2>
-              <p>
-                Start by choosing the services relevant to the solution. Only
-                the selected calculators will be shown and included in the total.
-              </p>
-            </div>
-          </div>
-          <div class="baseline-panel">
-            <h3>Baseline workload (USD)</h3>
-            <div class="baseline-grid">
-              <label>
-                Requests per month
-                <input type="number" id="baselineRequests" value="3000000" min="0" step="1000" />
-              </label>
-              <label>
-                Avg duration (seconds)
-                <input type="number" id="baselineDuration" value="0.4" min="0" step="0.01" />
-              </label>
-              <label>
-                Memory (MB)
-                <input type="number" id="baselineMemory" value="512" min="0" step="64" />
-              </label>
-              <label>
-                CPU (vCPU)
-                <input type="number" id="baselineCpu" value="0.25" min="0" step="0.05" />
-              </label>
-              <label>
-                Avg response (KB)
-                <input type="number" id="baselineResponse" value="5" min="0" step="0.1" />
-              </label>
+            <div class="baseline-panels">
+              <div class="baseline-panel" id="computeBaselinePanel">
+                <h3>Baseline compute workload</h3>
+                <p class="baseline-note">Feeds Cloud Run, AWS Lambda, and Azure Functions.</p>
+                <div class="baseline-grid">
+                  <label>
+                    Requests per month
+                    <input type="number" id="baselineRequests" value="3000000" min="0" step="1000" />
+                  </label>
+                  <label>
+                    Avg duration (seconds)
+                    <input type="number" id="baselineDuration" value="0.4" min="0" step="0.01" />
+                  </label>
+                  <label>
+                    Memory (MB)
+                    <input type="number" id="baselineMemory" value="512" min="0" step="64" />
+                  </label>
+                  <label>
+                    CPU (vCPU)
+                    <input type="number" id="baselineCpu" value="0.25" min="0" step="0.05" />
+                  </label>
+                  <label>
+                    Avg response (KB)
+                    <input type="number" id="baselineResponse" value="5" min="0" step="0.1" />
+                  </label>
+                </div>
+              </div>
+              <div class="baseline-panel" id="translateBaselinePanel">
+                <h3>Baseline translation workload</h3>
+                <p class="baseline-note">Feeds Google, AWS, and Azure translation APIs.</p>
+                <div class="baseline-grid">
+                  <label>
+                    Characters per month
+                    <input type="number" id="baselineCharacters" value="2500000" min="0" step="1000" />
+                  </label>
+                  <label>
+                    Free characters per month
+                    <input type="number" id="baselineFreeCharacters" value="2000000" min="0" step="1000" />
+                  </label>
+                </div>
+              </div>
             </div>
             <div class="free-tier-toggle">
               <label>
@@ -104,6 +114,7 @@
               <p class="free-tier-status" id="freeTierStatus">Free tier applied</p>
             </div>
           </div>
+        </div>
           <div class="service-picker" id="servicePicker">
             <label class="service-option">
               <input type="checkbox" value="translate" />

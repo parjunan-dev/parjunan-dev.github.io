@@ -193,6 +193,17 @@ main {
   gap: 12px;
 }
 
+.baseline-panels {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.baseline-panels .baseline-panel {
+  flex: 1 1 280px;
+}
+
 .baseline-grid label {
   font-size: 0.85rem;
   font-weight: 600;

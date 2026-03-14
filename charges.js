@@ -37,6 +37,9 @@ const calculators = [
   },
 ];
 
+const computeServices = new Set(["cloudrun", "awslambda", "azurefunctions"]);
+const translationServices = new Set(["translate", "awstranslate", "azuretranslate"]);
+
 function getBaselineWorkload() {
   const requests = getNumericValue("baselineRequests");
   const duration = getNumericValue("baselineDuration");
@@ -71,6 +74,26 @@ function syncComputeInputs() {
     { id: "azureFunctionsRequests", value: baseline.requests },
     { id: "azureFunctionsDuration", value: baseline.duration },
     { id: "azureFunctionsMemoryMb", value: baseline.memoryMb },
+  ];
+
+  mappings.forEach(({ id, value }) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.value = Number.isFinite(value) ? value : "";
+    }
+  });
+}
+
+function syncTranslationInputs() {
+  const charValue = getNumericValue("baselineCharacters");
+  const freeChars = getNumericValue("baselineFreeCharacters");
+  const mappings = [
+    { id: "translateUsage", value: charValue },
+    { id: "awsTranslateUsage", value: charValue },
+    { id: "azureTranslateUsage", value: charValue },
+    { id: "translateFreeTier", value: freeChars },
+    { id: "awsTranslateFreeTier", value: freeChars },
+    { id: "azureTranslateFreeTier", value: freeChars },
   ];
 
   mappings.forEach(({ id, value }) => {
@@ -260,7 +283,26 @@ function updateServiceSelection() {
     card.classList.toggle("is-hidden", !activeServices.has(service));
   });
 
+  updateBaselinePanels();
+
   updateTotals();
+}
+
+function updateBaselinePanels() {
+  const computePanel = document.getElementById("computeBaselinePanel");
+  const translatePanel = document.getElementById("translateBaselinePanel");
+  const showCompute = [...computeServices].some((service) =>
+    activeServices.has(service),
+  );
+  const showTranslate = [...translationServices].some((service) =>
+    activeServices.has(service),
+  );
+  if (computePanel) {
+    computePanel.style.display = showCompute ? "block" : "none";
+  }
+  if (translatePanel) {
+    translatePanel.style.display = showTranslate ? "block" : "none";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -276,6 +318,15 @@ document.addEventListener("DOMContentLoaded", () => {
       .getElementById(id)
       .addEventListener("input", () => {
         syncComputeInputs();
+        updateTotals();
+      });
+  });
+
+  ["baselineCharacters", "baselineFreeCharacters"].forEach((id) => {
+    document
+      .getElementById(id)
+      .addEventListener("input", () => {
+        syncTranslationInputs();
         updateTotals();
       });
   });
@@ -320,5 +371,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   syncComputeInputs();
+  syncTranslationInputs();
   updateServiceSelection();
 });
