@@ -132,35 +132,84 @@
             </div>
           </article>
 
-          <article class="calc-card" data-service="speech">
+          <article class="calc-card" data-service="cloudrun">
             <div class="calc-header">
               <div>
-                <span class="calc-tag">AI</span>
-                <h3>Speech-to-Text</h3>
+                <span class="calc-tag">Compute</span>
+                <h3>Google Cloud Run</h3>
               </div>
-              <i class="fas fa-wave-square"></i>
+              <i class="fas fa-cloud"></i>
             </div>
             <p class="calc-description">
-              Use this for transcription, call summarization pipelines, or
-              post-call analytics components that are billed by audio duration.
+              Use this for lightweight middleware, translation orchestration, or
+              custom API services that run alongside a Webex Contact Center
+              deployment. This calculator uses Google Cloud Run request-based
+              pricing with Singapore (`asia-southeast1`) as the baseline region.
             </p>
             <div class="field-grid">
               <label>
-                <span class="field-label-text">Audio minutes per month</span>
-                <input type="number" id="speechUsage" min="0" step="10" value="18000" />
+                <span class="field-label-text">vCPU-seconds per month</span>
+                <input type="number" id="cloudRunCpuUsage" min="0" step="100" value="250000" />
               </label>
               <label>
-                <span class="field-label-text">Provider rate per minute ($)</span>
-                <input type="number" id="speechRate" min="0" step="0.001" value="0.024" />
+                <span class="field-label-text">GiB-seconds per month</span>
+                <input type="number" id="cloudRunMemoryUsage" min="0" step="100" value="400000" />
               </label>
               <label>
-                <span class="field-label-text">SI markup (%)</span>
-                <input type="number" id="speechMarkup" min="0" step="0.1" value="12" />
+                <span class="field-label-text">Requests per month</span>
+                <input type="number" id="cloudRunRequestsUsage" min="0" step="1000" value="3000000" />
+              </label>
+              <label>
+                <span class="field-label-text">CPU price per vCPU-second ($)</span>
+                <input type="number" id="cloudRunCpuRate" min="0" step="0.000001" value="0.000024" />
+              </label>
+              <label>
+                <span class="field-label-text">Memory price per GiB-second ($)</span>
+                <input type="number" id="cloudRunMemoryRate" min="0" step="0.0000001" value="0.0000025" />
+              </label>
+              <label>
+                <span class="field-label-text">Requests price per 1M ($)</span>
+                <input type="number" id="cloudRunRequestRate" min="0" step="0.01" value="0.40" />
+              </label>
+              <label>
+                <span class="field-label-text">Free vCPU-seconds per month</span>
+                <input type="number" id="cloudRunCpuFreeTier" min="0" step="100" value="180000" />
+              </label>
+              <label>
+                <span class="field-label-text">Free GiB-seconds per month</span>
+                <input type="number" id="cloudRunMemoryFreeTier" min="0" step="100" value="360000" />
+              </label>
+              <label>
+                <span class="field-label-text">Free requests per month</span>
+                <input type="number" id="cloudRunRequestsFreeTier" min="0" step="1000" value="2000000" />
               </label>
             </div>
+            <div class="sub-result">
+              <span>Billable requests</span>
+              <strong id="cloudRunBillableRequests">0</strong>
+            </div>
             <div class="result-row">
-              <span>Monthly estimate</span>
-              <strong id="speechTotal">$0.00</strong>
+              <span>Estimated Google charges per month</span>
+              <strong id="cloudRunTotal">$0.00</strong>
+            </div>
+            <div class="calc-notes">
+              <p class="calc-footnote">
+                This model uses Cloud Run services with request-based billing,
+                not jobs or worker pools.
+              </p>
+              <p class="calc-footnote">
+                Singapore (`asia-southeast1`) is used as the baseline region for
+                this calculator because regional pricing tiers can differ.
+              </p>
+              <p class="calc-footnote">
+                Reference:
+                <a
+                  href="https://cloud.google.com/run/pricing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Google Cloud Run pricing</a
+                >
+              </p>
             </div>
           </article>
 
@@ -237,6 +286,10 @@
             <li>Values are simple planning estimates, not vendor quotes.</li>
             <li>Markup is applied on top of the provider cost only.</li>
             <li>Taxes, setup fees, and support retainers are not included yet.</li>
+            <li>
+              Where regional pricing applies, Singapore (`asia-southeast1`) is
+              used as the baseline for these calculators.
+            </li>
           </ul>
         </div>
       </section>

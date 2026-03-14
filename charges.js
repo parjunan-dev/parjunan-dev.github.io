@@ -8,12 +8,8 @@ const calculators = [
     quantityDivisor: 1000000,
   },
   {
-    id: "speech",
-    usageInput: "speechUsage",
-    rateInput: "speechRate",
-    markupInput: "speechMarkup",
-    output: "speechTotal",
-    quantityDivisor: 1,
+    id: "cloudrun",
+    output: "cloudRunTotal",
   },
   {
     id: "sms",
@@ -54,6 +50,31 @@ function formatNumber(value) {
 }
 
 function calculateServiceTotal(config) {
+  if (config.id === "cloudrun") {
+    const cpuUsage = getNumericValue("cloudRunCpuUsage");
+    const memoryUsage = getNumericValue("cloudRunMemoryUsage");
+    const requestUsage = getNumericValue("cloudRunRequestsUsage");
+    const cpuRate = getNumericValue("cloudRunCpuRate");
+    const memoryRate = getNumericValue("cloudRunMemoryRate");
+    const requestRate = getNumericValue("cloudRunRequestRate");
+    const cpuFreeTier = getNumericValue("cloudRunCpuFreeTier");
+    const memoryFreeTier = getNumericValue("cloudRunMemoryFreeTier");
+    const requestFreeTier = getNumericValue("cloudRunRequestsFreeTier");
+
+    const billableCpu = Math.max(0, cpuUsage - cpuFreeTier);
+    const billableMemory = Math.max(0, memoryUsage - memoryFreeTier);
+    const billableRequests = Math.max(0, requestUsage - requestFreeTier);
+
+    document.getElementById("cloudRunBillableRequests").textContent =
+      formatNumber(billableRequests);
+
+    return (
+      billableCpu * cpuRate +
+      billableMemory * memoryRate +
+      (billableRequests / 1000000) * requestRate
+    );
+  }
+
   const usage = getNumericValue(config.usageInput);
   const rate = getNumericValue(config.rateInput);
   const markup = config.markupInput
@@ -86,6 +107,20 @@ function updateTotals() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  [
+    "cloudRunCpuUsage",
+    "cloudRunMemoryUsage",
+    "cloudRunRequestsUsage",
+    "cloudRunCpuRate",
+    "cloudRunMemoryRate",
+    "cloudRunRequestRate",
+    "cloudRunCpuFreeTier",
+    "cloudRunMemoryFreeTier",
+    "cloudRunRequestsFreeTier",
+  ].forEach((id) => {
+    document.getElementById(id).addEventListener("input", updateTotals);
+  });
+
   calculators.forEach((config) => {
     [config.usageInput, config.rateInput, config.markupInput].forEach((id) => {
       if (id) {
