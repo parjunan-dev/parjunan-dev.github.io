@@ -40,17 +40,17 @@
             <span class="eyebrow">Cost Planning</span>
             <h1>Estimate recurring charges for partner-delivered services.</h1>
             <p>
-              This first cut focuses on simple monthly estimates. Adjust usage,
-              provider rates, and SI markup to get a quick planning number for
-              add-on services included around a Webex offer.
+              This first cut focuses on simple monthly estimates. Adjust usage
+              and provider rates to get a quick planning number for add-on
+              services included around a Webex offer.
             </p>
           </div>
           <div class="summary-card">
             <span class="summary-label">Estimated monthly total</span>
             <div class="summary-value" id="grandTotal">$0.00</div>
             <p class="summary-note">
-              Includes base provider rates and the SI markup values entered
-              below.
+              Includes the provider-rate assumptions entered across the
+              calculators below.
             </p>
           </div>
         </div>
@@ -225,67 +225,142 @@
             </div>
           </article>
 
-          <article class="calc-card" data-service="sms">
+          <article class="calc-card" data-service="awstranslate">
             <div class="calc-header">
               <div>
-                <span class="calc-tag">Messaging</span>
-                <h3>SMS Notifications</h3>
+                <span class="calc-tag">API</span>
+                <h3>Amazon Translate</h3>
               </div>
-              <i class="fas fa-comment-dots"></i>
+              <i class="fas fa-language"></i>
             </div>
             <p class="calc-description">
-              Estimate customer notification or workflow reminder traffic where
-              charges are applied per outbound message.
+              Use this for AWS-based text translation scenarios that sit
+              alongside Webex Contact Center integrations. This estimator covers
+              standard Amazon Translate character-based pricing with Singapore
+              as the account baseline.
             </p>
             <div class="field-grid">
               <label>
-                <span class="field-label-text">Outbound SMS per month</span>
-                <input type="number" id="smsUsage" min="0" step="100" value="12000" />
+                <span class="field-label-text">Characters per month</span>
+                <input type="number" id="awsTranslateUsage" min="0" step="1000" value="2500000" />
               </label>
               <label>
-                <span class="field-label-text">Provider rate per SMS ($)</span>
-                <input type="number" id="smsRate" min="0" step="0.001" value="0.05" />
+                <span class="field-label-text">Free characters per month*</span>
+                <input type="number" id="awsTranslateFreeTier" min="0" step="1000" value="2000000" />
               </label>
               <label>
-                <span class="field-label-text">SI markup (%)</span>
-                <input type="number" id="smsMarkup" min="0" step="0.1" value="10" />
+                <span class="field-label-text">Price per million chars ($)</span>
+                <input type="number" id="awsTranslateRate" min="0" step="0.01" value="15" />
               </label>
             </div>
+            <div class="sub-result">
+              <span>Billable characters</span>
+              <strong id="awsTranslateBillable">0</strong>
+            </div>
             <div class="result-row">
-              <span>Monthly estimate</span>
-              <strong id="smsTotal">$0.00</strong>
+              <span>Estimated AWS charges per month</span>
+              <strong id="awsTranslateTotal">$0.00</strong>
+            </div>
+            <div class="calc-notes">
+              <p class="calc-footnote">
+                Amazon Translate charges by processed character count, including
+                whitespace.
+              </p>
+              <p class="calc-footnote">
+                Singapore is the baseline account region for this calculator.
+                Amazon Translate pricing is generally service-level rather than
+                strongly region-differentiated, but taxes and account context
+                can still vary.
+              </p>
+              <p class="calc-footnote">
+                Reference:
+                <a
+                  href="https://aws.amazon.com/translate/pricing/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Amazon Translate pricing</a
+                >
+              </p>
+              <p class="calc-footnote">
+                * The AWS free tier for Amazon Translate is time-limited for new
+                usage. Set this to `0` if you want a conservative steady-state
+                estimate.
+              </p>
             </div>
           </article>
 
-          <article class="calc-card" data-service="whatsapp">
+          <article class="calc-card" data-service="awslambda">
             <div class="calc-header">
               <div>
-                <span class="calc-tag">Digital</span>
-                <h3>WhatsApp Conversations</h3>
+                <span class="calc-tag">Compute</span>
+                <h3>AWS Lambda</h3>
               </div>
-              <i class="fab fa-whatsapp"></i>
+              <i class="fas fa-bolt"></i>
             </div>
             <p class="calc-description">
-              Use this for paid conversation windows or packaged messaging
-              engagement costs layered into a Webex CX deployment.
+              Use this for lightweight middleware, token brokers, or utility
+              functions deployed on AWS instead of Cloud Run. This estimator
+              uses AWS Lambda request and duration pricing with Singapore as the
+              account baseline.
             </p>
             <div class="field-grid">
               <label>
-                <span class="field-label-text">Paid conversations per month</span>
-                <input type="number" id="whatsappUsage" min="0" step="10" value="3500" />
+                <span class="field-label-text">Requests per month</span>
+                <input type="number" id="awsLambdaRequests" min="0" step="1000" value="3000000" />
               </label>
               <label>
-                <span class="field-label-text">Provider rate per conversation ($)</span>
-                <input type="number" id="whatsappRate" min="0" step="0.01" value="0.14" />
+                <span class="field-label-text">Average duration (seconds)</span>
+                <input type="number" id="awsLambdaDuration" min="0" step="0.1" value="0.4" />
               </label>
               <label>
-                <span class="field-label-text">SI markup (%)</span>
-                <input type="number" id="whatsappMarkup" min="0" step="0.1" value="10" />
+                <span class="field-label-text">Memory allocated (MB)</span>
+                <input type="number" id="awsLambdaMemoryMb" min="0" step="64" value="512" />
+              </label>
+              <label>
+                <span class="field-label-text">Compute price per GB-second ($)</span>
+                <input type="number" id="awsLambdaComputeRate" min="0" step="0.0000001" value="0.0000166667" />
+              </label>
+              <label>
+                <span class="field-label-text">Requests price per 1M ($)</span>
+                <input type="number" id="awsLambdaRequestRate" min="0" step="0.01" value="0.20" />
+              </label>
+              <label>
+                <span class="field-label-text">Free GB-seconds per month</span>
+                <input type="number" id="awsLambdaFreeGbSeconds" min="0" step="100" value="400000" />
+              </label>
+              <label>
+                <span class="field-label-text">Free requests per month</span>
+                <input type="number" id="awsLambdaFreeRequests" min="0" step="1000" value="1000000" />
               </label>
             </div>
+            <div class="sub-result">
+              <span>Estimated GB-seconds</span>
+              <strong id="awsLambdaGbSeconds">0</strong>
+            </div>
             <div class="result-row">
-              <span>Monthly estimate</span>
-              <strong id="whatsappTotal">$0.00</strong>
+              <span>Estimated AWS charges per month</span>
+              <strong id="awsLambdaTotal">$0.00</strong>
+            </div>
+            <div class="calc-notes">
+              <p class="calc-footnote">
+                This model reflects Lambda request and duration pricing only. It
+                does not include provisioned concurrency, response streaming, or
+                extra ephemeral storage charges.
+              </p>
+              <p class="calc-footnote">
+                Singapore is the baseline account region for this calculator.
+                Use the current AWS regional rate card if your deployment will
+                be priced under a different account or commercial model.
+              </p>
+              <p class="calc-footnote">
+                Reference:
+                <a
+                  href="https://aws.amazon.com/lambda/pricing/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >AWS Lambda pricing</a
+                >
+              </p>
             </div>
           </article>
         </div>
@@ -296,11 +371,11 @@
           <h2>Notes</h2>
           <ul>
             <li>Values are simple planning estimates, not vendor quotes.</li>
-            <li>Markup is applied on top of the provider cost only.</li>
+            <li>These calculators cover usage-based service charges only.</li>
             <li>Taxes, setup fees, and support retainers are not included yet.</li>
             <li>
-              Where regional pricing applies, Singapore (`asia-southeast1`) is
-              used as the baseline for these calculators.
+              Where regional pricing applies, Singapore is used as the baseline
+              for these calculators.
             </li>
           </ul>
         </div>

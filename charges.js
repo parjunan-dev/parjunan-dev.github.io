@@ -12,20 +12,16 @@ const calculators = [
     output: "cloudRunTotal",
   },
   {
-    id: "sms",
-    usageInput: "smsUsage",
-    rateInput: "smsRate",
-    markupInput: "smsMarkup",
-    output: "smsTotal",
-    quantityDivisor: 1,
+    id: "awstranslate",
+    usageInput: "awsTranslateUsage",
+    rateInput: "awsTranslateRate",
+    freeTierInput: "awsTranslateFreeTier",
+    output: "awsTranslateTotal",
+    quantityDivisor: 1000000,
   },
   {
-    id: "whatsapp",
-    usageInput: "whatsappUsage",
-    rateInput: "whatsappRate",
-    markupInput: "whatsappMarkup",
-    output: "whatsappTotal",
-    quantityDivisor: 1,
+    id: "awslambda",
+    output: "awsLambdaTotal",
   },
 ];
 
@@ -86,6 +82,28 @@ function calculateServiceTotal(config) {
     return Math.max(0, grossEstimate - freeTierCredit);
   }
 
+  if (config.id === "awslambda") {
+    const requests = getNumericValue("awsLambdaRequests");
+    const duration = getNumericValue("awsLambdaDuration");
+    const memoryMb = getNumericValue("awsLambdaMemoryMb");
+    const computeRate = getNumericValue("awsLambdaComputeRate");
+    const requestRate = getNumericValue("awsLambdaRequestRate");
+    const freeGbSeconds = getNumericValue("awsLambdaFreeGbSeconds");
+    const freeRequests = getNumericValue("awsLambdaFreeRequests");
+
+    const gbSeconds = requests * duration * (memoryMb / 1024);
+    const billableGbSeconds = Math.max(0, gbSeconds - freeGbSeconds);
+    const billableRequests = Math.max(0, requests - freeRequests);
+
+    document.getElementById("awsLambdaGbSeconds").textContent =
+      formatNumber(gbSeconds);
+
+    return (
+      billableGbSeconds * computeRate +
+      (billableRequests / 1000000) * requestRate
+    );
+  }
+
   const usage = getNumericValue(config.usageInput);
   const rate = getNumericValue(config.rateInput);
   const markup = config.markupInput
@@ -99,6 +117,11 @@ function calculateServiceTotal(config) {
 
   if (config.id === "translate") {
     document.getElementById("translateBillable").textContent =
+      formatNumber(billableUsage);
+  }
+
+  if (config.id === "awstranslate") {
+    document.getElementById("awsTranslateBillable").textContent =
       formatNumber(billableUsage);
   }
 
@@ -128,6 +151,18 @@ document.addEventListener("DOMContentLoaded", () => {
     "cloudRunCpuIdleRate",
     "cloudRunMemoryRate",
     "cloudRunRequestRate",
+  ].forEach((id) => {
+    document.getElementById(id).addEventListener("input", updateTotals);
+  });
+
+  [
+    "awsLambdaRequests",
+    "awsLambdaDuration",
+    "awsLambdaMemoryMb",
+    "awsLambdaComputeRate",
+    "awsLambdaRequestRate",
+    "awsLambdaFreeGbSeconds",
+    "awsLambdaFreeRequests",
   ].forEach((id) => {
     document.getElementById(id).addEventListener("input", updateTotals);
   });
