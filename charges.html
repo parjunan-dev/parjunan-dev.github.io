@@ -58,15 +58,27 @@
 
       <section class="calculator-section">
         <div class="section-header">
-          <h2>Online service calculators</h2>
-          <p>
-            Default values are placeholders for discussion. Replace them with
-            your actual contracted rates later.
-          </p>
+          <div class="section-header-top">
+            <div>
+              <h2>Online service calculators</h2>
+              <p>
+                Default values are placeholders for discussion. Replace them
+                with your actual contracted rates later.
+              </p>
+            </div>
+            <label class="filter-control" for="cspFilter">
+              <span>CSP filter</span>
+              <select id="cspFilter">
+                <option value="all">All providers</option>
+                <option value="google">Google only</option>
+                <option value="aws">AWS only</option>
+              </select>
+            </label>
+          </div>
         </div>
 
         <div class="calculator-grid">
-          <article class="calc-card" data-service="translate">
+          <article class="calc-card" data-service="translate" data-provider="google">
             <div class="calc-header">
               <div>
                 <span class="calc-tag">API</span>
@@ -132,7 +144,7 @@
             </div>
           </article>
 
-          <article class="calc-card" data-service="cloudrun">
+          <article class="calc-card" data-service="cloudrun" data-provider="google">
             <div class="calc-header">
               <div>
                 <span class="calc-tag">Compute</span>
@@ -225,7 +237,7 @@
             </div>
           </article>
 
-          <article class="calc-card" data-service="awstranslate">
+          <article class="calc-card" data-service="awstranslate" data-provider="aws">
             <div class="calc-header">
               <div>
                 <span class="calc-tag">API</span>
@@ -289,7 +301,7 @@
             </div>
           </article>
 
-          <article class="calc-card" data-service="awslambda">
+          <article class="calc-card" data-service="awslambda" data-provider="aws">
             <div class="calc-header">
               <div>
                 <span class="calc-tag">Compute</span>

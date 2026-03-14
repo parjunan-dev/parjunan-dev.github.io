@@ -25,6 +25,8 @@ const calculators = [
   },
 ];
 
+let activeProviderFilter = "all";
+
 function getNumericValue(id) {
   const value = Number.parseFloat(document.getElementById(id).value);
   return Number.isFinite(value) && value >= 0 ? value : 0;
@@ -133,11 +135,33 @@ function updateTotals() {
 
   calculators.forEach((config) => {
     const total = calculateServiceTotal(config);
-    grandTotal += total;
     document.getElementById(config.output).textContent = formatCurrency(total);
+
+    const card = document.querySelector(`[data-service="${config.id}"]`);
+    const provider = card?.dataset.provider || "all";
+    const isVisible =
+      activeProviderFilter === "all" || provider === activeProviderFilter;
+
+    if (isVisible) {
+      grandTotal += total;
+    }
   });
 
   document.getElementById("grandTotal").textContent = formatCurrency(grandTotal);
+}
+
+function updateProviderFilter() {
+  activeProviderFilter = document.getElementById("cspFilter").value;
+
+  document.querySelectorAll(".calc-card").forEach((card) => {
+    const provider = card.dataset.provider || "all";
+    const shouldShow =
+      activeProviderFilter === "all" || provider === activeProviderFilter;
+
+    card.classList.toggle("is-hidden", !shouldShow);
+  });
+
+  updateTotals();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -181,5 +205,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  updateTotals();
+  document
+    .getElementById("cspFilter")
+    .addEventListener("change", updateProviderFilter);
+
+  updateProviderFilter();
 });
