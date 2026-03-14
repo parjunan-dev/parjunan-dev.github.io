@@ -35,10 +35,56 @@ const calculators = [
     id: "azurefunctions",
     output: "azureFunctionsTotal",
   },
+  {
+    id: "s3",
+    output: "s3Total",
+  },
+  {
+    id: "gcsstorage",
+    output: "gcsStorageTotal",
+  },
+  {
+    id: "azureblob",
+    output: "azureBlobTotal",
+  },
 ];
 
 const computeServices = new Set(["cloudrun", "awslambda", "azurefunctions"]);
 const translationServices = new Set(["translate", "awstranslate", "azuretranslate"]);
+const storageServices = new Set(["s3", "gcsstorage", "azureblob"]);
+
+const storagePricing = {
+  s3: {
+    storageRateInput: "s3StorageRate",
+    putRateInput: "s3PutRate",
+    getRateInput: "s3GetRate",
+    egressRateInput: "s3EgressRate",
+    freeStorageGb: 5,
+    freeGetRequests: 20000,
+    freePutRequests: 2000,
+    billableStorageOutput: "s3BillableStorage",
+  },
+  gcsstorage: {
+    storageRateInput: "gcsStorageRate",
+    putRateInput: "gcsPutRate",
+    getRateInput: "gcsGetRate",
+    egressRateInput: "gcsEgressRate",
+    freeStorageGb: 5,
+    freeGetRequests: 0,
+    freePutRequests: 0,
+    billableStorageOutput: "gcsBillableStorage",
+  },
+  azureblob: {
+    storageRateInput: "azureBlobStorageRate",
+    putRateInput: "azureBlobPutRate",
+    getRateInput: "azureBlobGetRate",
+    egressRateInput: "azureBlobEgressRate",
+    freeStorageGb: 5,
+    freeGetRequests: 0,
+    freePutRequests: 0,
+    billableStorageOutput: "azureBlobBillableStorage",
+  },
+};
 
 function getBaselineWorkload() {
   const requests = getNumericValue("baselineRequests");
@@ -90,6 +136,42 @@ function syncTranslationInputs() {
     { id: "translateUsage", value: charValue },
     { id: "awsTranslateUsage", value: charValue },
     { id: "azureTranslateUsage", value: charValue },
+  ];
+
+  mappings.forEach(({ id, value }) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.value = Number.isFinite(value) ? value : "";
+    }
+  });
+}
+
+function getStorageBaselineWorkload() {
+  return {
+    storageGb: getNumericValue("baselineStorageGb"),
+    objectSizeMb: getNumericValue("baselineObjectSizeMb"),
+    objectsCount: getNumericValue("baselineObjectsCount"),
+    getRequests: getNumericValue("baselineGetRequests"),
+    putRequests: getNumericValue("baselinePutRequests"),
+    egressGb: getNumericValue("baselineEgressGb"),
+  };
+}
+
+function syncStorageInputs() {
+  const baseline = getStorageBaselineWorkload();
+  const mappings = [
+    { id: "s3StorageGb", value: baseline.storageGb },
+    { id: "s3GetRequests", value: baseline.getRequests },
+    { id: "s3PutRequests", value: baseline.putRequests },
+    { id: "s3EgressGb", value: baseline.egressGb },
+    { id: "gcsStorageGb", value: baseline.storageGb },
+    { id: "gcsGetRequests", value: baseline.getRequests },
+    { id: "gcsPutRequests", value: baseline.putRequests },
+    { id: "gcsEgressGb", value: baseline.egressGb },
+    { id: "azureBlobStorageGb", value: baseline.storageGb },
+    { id: "azureBlobGetRequests", value: baseline.getRequests },
+    { id: "azureBlobPutRequests", value: baseline.putRequests },
+    { id: "azureBlobEgressGb", value: baseline.egressGb },
   ];
 
   mappings.forEach(({ id, value }) => {
@@ -204,6 +286,36 @@ function calculateServiceTotal(config) {
     );
   }
 
+  if (storagePricing[config.id]) {
+    const baseline = getStorageBaselineWorkload();
+    const pricing = storagePricing[config.id];
+    const billableStorageGb = applyFreeTier(
+      baseline.storageGb,
+      pricing.freeStorageGb,
+    );
+    const billableGetRequests = applyFreeTier(
+      baseline.getRequests,
+      pricing.freeGetRequests,
+    );
+    const billablePutRequests = applyFreeTier(
+      baseline.putRequests,
+      pricing.freePutRequests,
+    );
+    const storageCost =
+      billableStorageGb * getNumericValue(pricing.storageRateInput);
+    const putCost =
+      (billablePutRequests / 1000) * getNumericValue(pricing.putRateInput);
+    const getCost =
+      (billableGetRequests / 1000) * getNumericValue(pricing.getRateInput);
+    const egressCost =
+      baseline.egressGb * getNumericValue(pricing.egressRateInput);
+
+    document.getElementById(pricing.billableStorageOutput).textContent =
+      formatNumber(billableStorageGb);
+
+    return storageCost + putCost + getCost + egressCost;
+  }
+
   const usage = getNumericValue(config.usageInput);
   const rate = getNumericValue(config.rateInput);
   const markup = config.markupInput
@@ -287,10 +399,14 @@ function updateServiceSelection() {
 function updateBaselinePanels() {
   const computePanel = document.getElementById("computeBaselinePanel");
   const translatePanel = document.getElementById("translateBaselinePanel");
+  const storagePanel = document.getElementById("storageBaselinePanel");
   const showCompute = [...computeServices].some((service) =>
     activeServices.has(service),
   );
   const showTranslate = [...translationServices].some((service) =>
+    activeServices.has(service),
+  );
+  const showStorage = [...storageServices].some((service) =>
     activeServices.has(service),
   );
   if (computePanel) {
@@ -298,6 +414,9 @@ function updateBaselinePanels() {
   }
   if (translatePanel) {
     translatePanel.style.display = showTranslate ? "block" : "none";
+  }
+  if (storagePanel) {
+    storagePanel.style.display = showStorage ? "block" : "none";
   }
 }
 
@@ -328,6 +447,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   [
+    "baselineStorageGb",
+    "baselineObjectSizeMb",
+    "baselineObjectsCount",
+    "baselineGetRequests",
+    "baselinePutRequests",
+    "baselineEgressGb",
+  ].forEach((id) => {
+    document
+      .getElementById(id)
+      .addEventListener("input", () => {
+        syncStorageInputs();
+        updateTotals();
+      });
+  });
+
+  [
     "cloudRunFreeCpuSeconds",
     "cloudRunFreeMemorySeconds",
     "cloudRunFreeRequests",
@@ -335,6 +470,18 @@ document.addEventListener("DOMContentLoaded", () => {
     "awsLambdaFreeRequests",
     "azureFunctionsFreeGbSeconds",
     "azureFunctionsFreeRequests",
+    "s3StorageRate",
+    "s3PutRate",
+    "s3GetRate",
+    "s3EgressRate",
+    "gcsStorageRate",
+    "gcsPutRate",
+    "gcsGetRate",
+    "gcsEgressRate",
+    "azureBlobStorageRate",
+    "azureBlobPutRate",
+    "azureBlobGetRate",
+    "azureBlobEgressRate",
   ].forEach((id) => {
     document.getElementById(id).addEventListener("input", updateTotals);
   });
@@ -368,5 +515,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   syncComputeInputs();
   syncTranslationInputs();
+  syncStorageInputs();
   updateServiceSelection();
 });

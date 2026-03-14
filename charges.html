@@ -101,6 +101,36 @@
                   </label>
                 </div>
               </div>
+              <div class="baseline-panel" id="storageBaselinePanel">
+                <h3>Baseline storage workload</h3>
+                <p class="baseline-note">Feeds AWS S3, Google Cloud Storage, and Azure Blob Storage.</p>
+                <div class="baseline-grid">
+                  <label>
+                    Storage (GB)
+                    <input type="number" id="baselineStorageGb" value="10" min="0" step="1" />
+                  </label>
+                  <label>
+                    Avg object size (MB)
+                    <input type="number" id="baselineObjectSizeMb" value="1" min="0" step="0.1" />
+                  </label>
+                  <label>
+                    Objects count
+                    <input type="number" id="baselineObjectsCount" value="10000" min="0" step="1" />
+                  </label>
+                  <label>
+                    GET requests / month
+                    <input type="number" id="baselineGetRequests" value="1000000" min="0" step="1000" />
+                  </label>
+                  <label>
+                    PUT requests / month
+                    <input type="number" id="baselinePutRequests" value="100000" min="0" step="1000" />
+                  </label>
+                  <label>
+                    Data egress (GB)
+                    <input type="number" id="baselineEgressGb" value="5" min="0" step="0.1" />
+                  </label>
+                </div>
+              </div>
             </div>
             <div class="free-tier-toggle">
               <label>
@@ -110,7 +140,6 @@
               <p class="free-tier-status" id="freeTierStatus">Free tier applied</p>
             </div>
           </div>
-        </div>
           <div class="service-picker" id="servicePicker">
             <label class="service-option">
               <input type="checkbox" value="translate" />
@@ -136,10 +165,22 @@
               <input type="checkbox" value="azurefunctions" />
               <span>Azure Functions</span>
             </label>
+            <label class="service-option">
+              <input type="checkbox" value="s3" />
+              <span>AWS S3</span>
+            </label>
+            <label class="service-option">
+              <input type="checkbox" value="gcsstorage" />
+              <span>Google Cloud Storage</span>
+            </label>
+            <label class="service-option">
+              <input type="checkbox" value="azureblob" />
+              <span>Azure Blob Storage</span>
+            </label>
           </div>
         </div>
 
-            <div class="calculator-grid">
+        <div class="calculator-grid">
           <article class="calc-card" data-service="translate" data-provider="google">
             <div class="calc-header">
               <div>
@@ -589,6 +630,183 @@
                   >Azure Functions pricing</a
                 >
               </p>
+            </div>
+          </article>
+
+          <article class="calc-card" data-service="s3" data-provider="aws">
+            <div class="calc-header">
+              <div>
+                <span class="calc-tag">Storage</span>
+                <h3>AWS S3</h3>
+              </div>
+              <i class="fas fa-database"></i>
+            </div>
+            <p class="calc-description">
+              Public object storage estimate for Amazon S3 Standard in Singapore using the shared storage workload assumptions.
+            </p>
+            <div class="field-grid">
+              <label>
+                <span class="field-label-text">Storage (GB)</span>
+                <input type="number" id="s3StorageGb" value="10" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">GET requests / month</span>
+                <input type="number" id="s3GetRequests" value="1000000" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">PUT requests / month</span>
+                <input type="number" id="s3PutRequests" value="100000" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">Data egress (GB)</span>
+                <input type="number" id="s3EgressGb" value="5" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">Storage price per GB ($)</span>
+                <input type="number" id="s3StorageRate" value="0.023" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">PUT price per 1K ($)</span>
+                <input type="number" id="s3PutRate" value="0.005" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">GET price per 1K ($)</span>
+                <input type="number" id="s3GetRate" value="0.0004" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">Egress price per GB ($)</span>
+                <input type="number" id="s3EgressRate" value="0.09" step="0.001" />
+              </label>
+            </div>
+            <div class="sub-result">
+              <span>Billable storage (GB)</span>
+              <strong id="s3BillableStorage">0</strong>
+            </div>
+            <div class="result-row">
+              <span>Estimated AWS charges per month</span>
+              <strong id="s3Total">$0.00</strong>
+            </div>
+            <div class="result-note" data-free-note="s3">Free tier applied</div>
+            <div class="calc-notes">
+              <p class="calc-footnote">Uses S3 Standard pricing only. No lifecycle, infrequent access, or intelligent tiering assumptions are included.</p>
+            </div>
+          </article>
+
+          <article class="calc-card" data-service="gcsstorage" data-provider="google">
+            <div class="calc-header">
+              <div>
+                <span class="calc-tag">Storage</span>
+                <h3>Google Cloud Storage</h3>
+              </div>
+              <i class="fas fa-database"></i>
+            </div>
+            <p class="calc-description">
+              Public object storage estimate for Google Cloud Storage Standard in Singapore using the shared storage workload assumptions.
+            </p>
+            <div class="field-grid">
+              <label>
+                <span class="field-label-text">Storage (GB)</span>
+                <input type="number" id="gcsStorageGb" value="10" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">GET requests / month</span>
+                <input type="number" id="gcsGetRequests" value="1000000" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">PUT requests / month</span>
+                <input type="number" id="gcsPutRequests" value="100000" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">Data egress (GB)</span>
+                <input type="number" id="gcsEgressGb" value="5" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">Storage price per GB ($)</span>
+                <input type="number" id="gcsStorageRate" value="0.020" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">PUT price per 1K ($)</span>
+                <input type="number" id="gcsPutRate" value="0.005" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">GET price per 1K ($)</span>
+                <input type="number" id="gcsGetRate" value="0.0004" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">Egress price per GB ($)</span>
+                <input type="number" id="gcsEgressRate" value="0.12" step="0.001" />
+              </label>
+            </div>
+            <div class="sub-result">
+              <span>Billable storage (GB)</span>
+              <strong id="gcsBillableStorage">0</strong>
+            </div>
+            <div class="result-row">
+              <span>Estimated Google charges per month</span>
+              <strong id="gcsStorageTotal">$0.00</strong>
+            </div>
+            <div class="result-note" data-free-note="gcsstorage">Free tier applied</div>
+            <div class="calc-notes">
+              <p class="calc-footnote">Uses Standard object storage only. No archive tiers, replication premiums, or lifecycle transitions are included.</p>
+            </div>
+          </article>
+
+          <article class="calc-card" data-service="azureblob" data-provider="microsoft">
+            <div class="calc-header">
+              <div>
+                <span class="calc-tag">Storage</span>
+                <h3>Azure Blob Storage</h3>
+              </div>
+              <i class="fas fa-database"></i>
+            </div>
+            <p class="calc-description">
+              Public object storage estimate for Azure Blob Storage Hot tier in Singapore using the shared storage workload assumptions.
+            </p>
+            <div class="field-grid">
+              <label>
+                <span class="field-label-text">Storage (GB)</span>
+                <input type="number" id="azureBlobStorageGb" value="10" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">GET requests / month</span>
+                <input type="number" id="azureBlobGetRequests" value="1000000" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">PUT requests / month</span>
+                <input type="number" id="azureBlobPutRequests" value="100000" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">Data egress (GB)</span>
+                <input type="number" id="azureBlobEgressGb" value="5" readonly />
+              </label>
+              <label>
+                <span class="field-label-text">Storage price per GB ($)</span>
+                <input type="number" id="azureBlobStorageRate" value="0.0184" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">PUT price per 1K ($)</span>
+                <input type="number" id="azureBlobPutRate" value="0.005" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">GET price per 1K ($)</span>
+                <input type="number" id="azureBlobGetRate" value="0.0004" step="0.0001" />
+              </label>
+              <label>
+                <span class="field-label-text">Egress price per GB ($)</span>
+                <input type="number" id="azureBlobEgressRate" value="0.087" step="0.001" />
+              </label>
+            </div>
+            <div class="sub-result">
+              <span>Billable storage (GB)</span>
+              <strong id="azureBlobBillableStorage">0</strong>
+            </div>
+            <div class="result-row">
+              <span>Estimated Microsoft charges per month</span>
+              <strong id="azureBlobTotal">$0.00</strong>
+            </div>
+            <div class="result-note" data-free-note="azureblob">Free tier applied</div>
+            <div class="calc-notes">
+              <p class="calc-footnote">Uses Blob Storage Hot tier only. No cool/archive tiers, redundancy uplifts, or lifecycle rules are included.</p>
             </div>
           </article>
         </div>
