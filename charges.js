@@ -65,35 +65,27 @@ function calculateServiceTotal(config) {
     const averageDuration = getNumericValue("cloudRunAverageDuration");
     const vcpuPerInstance = getNumericValue("cloudRunVcpuPerInstance");
     const memoryPerInstance = getNumericValue("cloudRunMemoryPerInstance");
-    const idleHours = getNumericValue("cloudRunIdleHours");
-    const cpuActiveRate = getNumericValue("cloudRunCpuActiveRate");
-    const cpuIdleRate = getNumericValue("cloudRunCpuIdleRate");
+    const cpuRate = getNumericValue("cloudRunCpuActiveRate");
     const memoryRate = getNumericValue("cloudRunMemoryRate");
     const requestRate = getNumericValue("cloudRunRequestRate");
-    const activeCpuSeconds = requestUsage * averageDuration * vcpuPerInstance;
-    const activeMemorySeconds =
+    const freeCpuSeconds = getNumericValue("cloudRunFreeCpuSeconds");
+    const freeMemorySeconds = getNumericValue("cloudRunFreeMemorySeconds");
+    const freeRequests = getNumericValue("cloudRunFreeRequests");
+    const cpuSeconds = requestUsage * averageDuration * vcpuPerInstance;
+    const memorySeconds =
       requestUsage * averageDuration * memoryPerInstance;
-    const idleSeconds = idleHours * 3600;
-    const idleCpuSeconds = idleSeconds * vcpuPerInstance;
-    const idleMemorySeconds = idleSeconds * memoryPerInstance;
+    const billableCpuSeconds = Math.max(0, cpuSeconds - freeCpuSeconds);
+    const billableMemorySeconds = Math.max(0, memorySeconds - freeMemorySeconds);
+    const billableRequests = Math.max(0, requestUsage - freeRequests);
 
-    const grossEstimate =
-      activeCpuSeconds * cpuActiveRate +
-      idleCpuSeconds * cpuIdleRate +
-      activeMemorySeconds * memoryRate +
-      idleMemorySeconds * memoryRate +
-      (requestUsage / 1000000) * requestRate;
+    document.getElementById("cloudRunCpuSeconds").textContent =
+      formatNumber(cpuSeconds);
 
-    // Google documents Cloud Run's free tier as a spending-based discount
-    // derived from its published baseline pricing.
-    const freeTierCredit = 6.02;
-
-    document.getElementById("cloudRunActiveCpuSeconds").textContent =
-      formatNumber(activeCpuSeconds);
-    document.getElementById("cloudRunFreeTierCredit").textContent =
-      formatCurrency(freeTierCredit);
-
-    return Math.max(0, grossEstimate - freeTierCredit);
+    return (
+      billableCpuSeconds * cpuRate +
+      billableMemorySeconds * memoryRate +
+      (billableRequests / 1000000) * requestRate
+    );
   }
 
   if (config.id === "awslambda") {
@@ -212,11 +204,12 @@ document.addEventListener("DOMContentLoaded", () => {
     "cloudRunAverageDuration",
     "cloudRunVcpuPerInstance",
     "cloudRunMemoryPerInstance",
-    "cloudRunIdleHours",
     "cloudRunCpuActiveRate",
-    "cloudRunCpuIdleRate",
     "cloudRunMemoryRate",
     "cloudRunRequestRate",
+    "cloudRunFreeCpuSeconds",
+    "cloudRunFreeMemorySeconds",
+    "cloudRunFreeRequests",
   ].forEach((id) => {
     document.getElementById(id).addEventListener("input", updateTotals);
   });

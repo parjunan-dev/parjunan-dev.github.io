@@ -174,9 +174,10 @@
             <p class="calc-description">
               Use this for small middleware services such as token brokers,
               translation orchestration layers, or lightweight APIs deployed
-              alongside Webex Contact Center. This estimator uses
-              request-based Cloud Run assumptions with Singapore
-              (`asia-southeast1`) as the baseline region.
+              alongside Webex Contact Center. This estimator uses an
+              event-driven Cloud Run model so it is easier to compare with AWS
+              Lambda and Azure Functions. Singapore (`asia-southeast1`) is the
+              baseline region.
             </p>
             <div class="field-grid">
               <label>
@@ -188,41 +189,41 @@
                 <input type="number" id="cloudRunAverageDuration" min="0" step="0.1" value="0.4" />
               </label>
               <label>
-                <span class="field-label-text">vCPU allocated per instance</span>
+                <span class="field-label-text">vCPU allocated per request</span>
                 <input type="number" id="cloudRunVcpuPerInstance" min="0" step="0.1" value="1" />
               </label>
               <label>
-                <span class="field-label-text">Memory allocated per instance (GiB)</span>
+                <span class="field-label-text">Memory allocated per request (GiB)</span>
                 <input type="number" id="cloudRunMemoryPerInstance" min="0" step="0.1" value="0.5" />
               </label>
               <label>
-                <span class="field-label-text">Warm idle instance hours per month</span>
-                <input type="number" id="cloudRunIdleHours" min="0" step="1" value="730" />
+                <span class="field-label-text">CPU price per vCPU-second ($)</span>
+                <input type="number" id="cloudRunCpuActiveRate" min="0" step="0.0000001" value="0.000024" />
               </label>
               <label>
-                <span class="field-label-text">Singapore active CPU rate ($/vCPU-sec)</span>
-                <input type="number" id="cloudRunCpuActiveRate" min="0" step="0.0000001" value="0.0000336" />
+                <span class="field-label-text">Memory price per GiB-second ($)</span>
+                <input type="number" id="cloudRunMemoryRate" min="0" step="0.0000001" value="0.0000025" />
               </label>
               <label>
-                <span class="field-label-text">Singapore idle CPU rate ($/vCPU-sec)</span>
-                <input type="number" id="cloudRunCpuIdleRate" min="0" step="0.0000001" value="0.0000035" />
+                <span class="field-label-text">Requests price per 1M ($)</span>
+                <input type="number" id="cloudRunRequestRate" min="0" step="0.01" value="0.40" />
               </label>
               <label>
-                <span class="field-label-text">Singapore memory rate ($/GiB-sec)</span>
-                <input type="number" id="cloudRunMemoryRate" min="0" step="0.0000001" value="0.0000035" />
+                <span class="field-label-text">Free vCPU-seconds per month</span>
+                <input type="number" id="cloudRunFreeCpuSeconds" min="0" step="100" value="180000" />
               </label>
               <label>
-                <span class="field-label-text">Singapore requests price per 1M ($)</span>
-                <input type="number" id="cloudRunRequestRate" min="0" step="0.01" value="0.56" />
+                <span class="field-label-text">Free GiB-seconds per month</span>
+                <input type="number" id="cloudRunFreeMemorySeconds" min="0" step="100" value="360000" />
+              </label>
+              <label>
+                <span class="field-label-text">Free requests per month</span>
+                <input type="number" id="cloudRunFreeRequests" min="0" step="1000" value="2000000" />
               </label>
             </div>
             <div class="sub-result">
-              <span>Estimated active vCPU-seconds</span>
-              <strong id="cloudRunActiveCpuSeconds">0</strong>
-            </div>
-            <div class="sub-result">
-              <span>Google free-tier credit applied</span>
-              <strong id="cloudRunFreeTierCredit">$0.00</strong>
+              <span>Estimated vCPU-seconds</span>
+              <strong id="cloudRunCpuSeconds">0</strong>
             </div>
             <div class="result-row">
               <span>Estimated Google charges per month</span>
@@ -230,19 +231,19 @@
             </div>
             <div class="calc-notes">
               <p class="calc-footnote">
-                This is a planning model for small partner-deployed Cloud Run
-                services using request-based billing, not jobs or worker pools.
+                This model reflects event-driven Cloud Run request, CPU, and
+                memory pricing only. It does not include always-on warm
+                instances, jobs, GPUs, or networking-linked charges.
               </p>
               <p class="calc-footnote">
-                Singapore (`asia-southeast1`) is used as the baseline region
-                because regional pricing can differ. The active, idle, memory,
-                and request defaults here are estimated Singapore rates intended
-                for quick partner sizing.
+                Singapore (`asia-southeast1`) is used as the baseline region.
+                The calculator intentionally excludes idle baseline behavior so
+                the comparison stays closer to AWS Lambda and Azure Functions
+                Consumption.
               </p>
               <p class="calc-footnote">
-                The free tier is represented here as a monthly dollar credit
-                based on Google’s published Cloud Run free-tier allowances,
-                applied after the gross estimate.
+                The free tier is applied directly as free vCPU-seconds, free
+                GiB-seconds, and free requests.
               </p>
               <p class="calc-footnote">
                 Reference:
