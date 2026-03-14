@@ -261,6 +261,19 @@ main {
   color: #6a7682;
 }
 
+.calc-notes {
+  margin-top: 14px;
+}
+
+.calc-notes a {
+  color: #0057b8;
+  text-decoration: none;
+}
+
+.calc-notes a:hover {
+  text-decoration: underline;
+}
+
 .notes-section {
   padding-top: 28px;
 }

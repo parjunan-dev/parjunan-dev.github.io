@@ -89,7 +89,7 @@
                 <input type="number" id="translateFreeTier" min="0" step="1000" value="500000" />
               </label>
               <label>
-                <span class="field-label-text">Google rate per 1M billable chars ($)</span>
+                <span class="field-label-text">Price per million chars* ($)</span>
                 <input type="number" id="translateRate" min="0" step="0.01" value="20" />
               </label>
             </div>
@@ -98,13 +98,35 @@
               <strong id="translateBillable">0</strong>
             </div>
             <div class="result-row">
-              <span>Monthly estimate</span>
+              <span>Estimated Google charges per month</span>
               <strong id="translateTotal">$0.00</strong>
             </div>
-            <p class="calc-footnote">
-              Google counts all characters sent for text translation, including
-              whitespace.
-            </p>
+            <div class="calc-notes">
+              <p class="calc-footnote">
+                <strong>NMT</strong> stands for Neural Machine Translation,
+                Google’s machine learning-based translation model for natural
+                text translation.
+              </p>
+              <p class="calc-footnote">
+                If you do not specify a source language for the translate
+                method, Cloud Translation detects the source language for you.
+                You are only charged for the text that you provide; there is no
+                additional charge for language detection on top of translation.
+              </p>
+              <p class="calc-footnote">
+                Reference:
+                <a
+                  href="https://cloud.google.com/translate/pricing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Google Cloud Translation pricing</a
+                >
+              </p>
+              <p class="calc-footnote">
+                * Price is per character sent to the API for processing. For
+                details about counted characters, see Charged characters.
+              </p>
+            </div>
           </article>
 
           <article class="calc-card" data-service="speech">
