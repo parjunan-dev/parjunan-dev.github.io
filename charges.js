@@ -23,6 +23,18 @@ const calculators = [
     id: "awslambda",
     output: "awsLambdaTotal",
   },
+  {
+    id: "azuretranslate",
+    usageInput: "azureTranslateUsage",
+    rateInput: "azureTranslateRate",
+    freeTierInput: "azureTranslateFreeTier",
+    output: "azureTranslateTotal",
+    quantityDivisor: 1000000,
+  },
+  {
+    id: "azurefunctions",
+    output: "azureFunctionsTotal",
+  },
 ];
 
 let activeServices = new Set();
@@ -106,6 +118,28 @@ function calculateServiceTotal(config) {
     );
   }
 
+  if (config.id === "azurefunctions") {
+    const requests = getNumericValue("azureFunctionsRequests");
+    const duration = getNumericValue("azureFunctionsDuration");
+    const memoryMb = getNumericValue("azureFunctionsMemoryMb");
+    const computeRate = getNumericValue("azureFunctionsComputeRate");
+    const requestRate = getNumericValue("azureFunctionsRequestRate");
+    const freeGbSeconds = getNumericValue("azureFunctionsFreeGbSeconds");
+    const freeRequests = getNumericValue("azureFunctionsFreeRequests");
+
+    const gbSeconds = requests * duration * (memoryMb / 1024);
+    const billableGbSeconds = Math.max(0, gbSeconds - freeGbSeconds);
+    const billableRequests = Math.max(0, requests - freeRequests);
+
+    document.getElementById("azureFunctionsGbSeconds").textContent =
+      formatNumber(gbSeconds);
+
+    return (
+      billableGbSeconds * computeRate +
+      (billableRequests / 1000000) * requestRate
+    );
+  }
+
   const usage = getNumericValue(config.usageInput);
   const rate = getNumericValue(config.rateInput);
   const markup = config.markupInput
@@ -124,6 +158,11 @@ function calculateServiceTotal(config) {
 
   if (config.id === "awstranslate") {
     document.getElementById("awsTranslateBillable").textContent =
+      formatNumber(billableUsage);
+  }
+
+  if (config.id === "azuretranslate") {
+    document.getElementById("azureTranslateBillable").textContent =
       formatNumber(billableUsage);
   }
 
@@ -190,6 +229,18 @@ document.addEventListener("DOMContentLoaded", () => {
     "awsLambdaRequestRate",
     "awsLambdaFreeGbSeconds",
     "awsLambdaFreeRequests",
+  ].forEach((id) => {
+    document.getElementById(id).addEventListener("input", updateTotals);
+  });
+
+  [
+    "azureFunctionsRequests",
+    "azureFunctionsDuration",
+    "azureFunctionsMemoryMb",
+    "azureFunctionsComputeRate",
+    "azureFunctionsRequestRate",
+    "azureFunctionsFreeGbSeconds",
+    "azureFunctionsFreeRequests",
   ].forEach((id) => {
     document.getElementById(id).addEventListener("input", updateTotals);
   });

@@ -84,6 +84,14 @@
               <input type="checkbox" value="awslambda" />
               <span>AWS Lambda</span>
             </label>
+            <label class="service-option">
+              <input type="checkbox" value="azuretranslate" />
+              <span>Azure AI Translator</span>
+            </label>
+            <label class="service-option">
+              <input type="checkbox" value="azurefunctions" />
+              <span>Azure Functions</span>
+            </label>
           </div>
         </div>
 
@@ -381,6 +389,140 @@
                   target="_blank"
                   rel="noopener noreferrer"
                   >AWS Lambda pricing</a
+                >
+              </p>
+            </div>
+          </article>
+
+          <article class="calc-card" data-service="azuretranslate" data-provider="microsoft">
+            <div class="calc-header">
+              <div>
+                <span class="calc-tag">API</span>
+                <h3>Azure AI Translator</h3>
+              </div>
+              <i class="fas fa-language"></i>
+            </div>
+            <p class="calc-description">
+              Use this for Microsoft-based text translation scenarios that sit
+              alongside a Webex Contact Center integration. This estimator covers
+              standard text translation with Singapore as the baseline billing
+              context.
+            </p>
+            <div class="field-grid">
+              <label>
+                <span class="field-label-text">Characters per month</span>
+                <input type="number" id="azureTranslateUsage" min="0" step="1000" value="2500000" />
+              </label>
+              <label>
+                <span class="field-label-text">Free characters per month</span>
+                <input type="number" id="azureTranslateFreeTier" min="0" step="1000" value="2000000" />
+              </label>
+              <label>
+                <span class="field-label-text">Price per million chars ($)</span>
+                <input type="number" id="azureTranslateRate" min="0" step="0.01" value="10" />
+              </label>
+            </div>
+            <div class="sub-result">
+              <span>Billable characters</span>
+              <strong id="azureTranslateBillable">0</strong>
+            </div>
+            <div class="result-row">
+              <span>Estimated Microsoft charges per month</span>
+              <strong id="azureTranslateTotal">$0.00</strong>
+            </div>
+            <div class="calc-notes">
+              <p class="calc-footnote">
+                Azure AI Translator pricing is shown by Microsoft as a
+                consumption-based estimate and actual pricing can vary by
+                agreement and billing context.
+              </p>
+              <p class="calc-footnote">
+                Singapore is the baseline for this calculator. Translator is
+                generally treated as a non-regional resource, but account
+                pricing and currency treatment can still vary.
+              </p>
+              <p class="calc-footnote">
+                Reference:
+                <a
+                  href="https://azure.microsoft.com/pricing/details/cognitive-services/translator/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Azure AI Translator pricing</a
+                >
+              </p>
+            </div>
+          </article>
+
+          <article class="calc-card" data-service="azurefunctions" data-provider="microsoft">
+            <div class="calc-header">
+              <div>
+                <span class="calc-tag">Compute</span>
+                <h3>Azure Functions</h3>
+              </div>
+              <i class="fas fa-bolt"></i>
+            </div>
+            <p class="calc-description">
+              Use this for lightweight middleware, broker services, or utility
+              functions deployed on Microsoft Azure instead of Cloud Run or AWS
+              Lambda. This estimator uses a Consumption plan style model with
+              Singapore as the baseline billing context.
+            </p>
+            <div class="field-grid">
+              <label>
+                <span class="field-label-text">Requests per month</span>
+                <input type="number" id="azureFunctionsRequests" min="0" step="1000" value="3000000" />
+              </label>
+              <label>
+                <span class="field-label-text">Average duration (seconds)</span>
+                <input type="number" id="azureFunctionsDuration" min="0" step="0.1" value="0.4" />
+              </label>
+              <label>
+                <span class="field-label-text">Memory allocated (MB)</span>
+                <input type="number" id="azureFunctionsMemoryMb" min="0" step="64" value="512" />
+              </label>
+              <label>
+                <span class="field-label-text">Compute price per GB-second ($)</span>
+                <input type="number" id="azureFunctionsComputeRate" min="0" step="0.0000001" value="0.000016" />
+              </label>
+              <label>
+                <span class="field-label-text">Requests price per 1M ($)</span>
+                <input type="number" id="azureFunctionsRequestRate" min="0" step="0.01" value="0.20" />
+              </label>
+              <label>
+                <span class="field-label-text">Free GB-seconds per month</span>
+                <input type="number" id="azureFunctionsFreeGbSeconds" min="0" step="100" value="400000" />
+              </label>
+              <label>
+                <span class="field-label-text">Free requests per month</span>
+                <input type="number" id="azureFunctionsFreeRequests" min="0" step="1000" value="1000000" />
+              </label>
+            </div>
+            <div class="sub-result">
+              <span>Estimated GB-seconds</span>
+              <strong id="azureFunctionsGbSeconds">0</strong>
+            </div>
+            <div class="result-row">
+              <span>Estimated Microsoft charges per month</span>
+              <strong id="azureFunctionsTotal">$0.00</strong>
+            </div>
+            <div class="calc-notes">
+              <p class="calc-footnote">
+                This model reflects Azure Functions request and execution-time
+                pricing only. It does not include premium plans, networking, or
+                storage-linked charges.
+              </p>
+              <p class="calc-footnote">
+                Singapore is the baseline billing context for this calculator.
+                The default rates here are editable planning values aligned to a
+                Consumption-style model.
+              </p>
+              <p class="calc-footnote">
+                Reference:
+                <a
+                  href="https://azure.microsoft.com/pricing/details/functions/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Azure Functions pricing</a
                 >
               </p>
             </div>
