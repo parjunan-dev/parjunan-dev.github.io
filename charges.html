@@ -141,52 +141,57 @@
               <i class="fas fa-cloud"></i>
             </div>
             <p class="calc-description">
-              Use this for lightweight middleware, translation orchestration, or
-              custom API services that run alongside a Webex Contact Center
-              deployment. This calculator uses Google Cloud Run request-based
-              pricing with Singapore (`asia-southeast1`) as the baseline region.
+              Use this for small middleware services such as token brokers,
+              translation orchestration layers, or lightweight APIs deployed
+              alongside Webex Contact Center. This estimator uses
+              request-based Cloud Run assumptions with Singapore
+              (`asia-southeast1`) as the baseline region.
             </p>
             <div class="field-grid">
-              <label>
-                <span class="field-label-text">vCPU-seconds per month</span>
-                <input type="number" id="cloudRunCpuUsage" min="0" step="100" value="250000" />
-              </label>
-              <label>
-                <span class="field-label-text">GiB-seconds per month</span>
-                <input type="number" id="cloudRunMemoryUsage" min="0" step="100" value="400000" />
-              </label>
               <label>
                 <span class="field-label-text">Requests per month</span>
                 <input type="number" id="cloudRunRequestsUsage" min="0" step="1000" value="3000000" />
               </label>
               <label>
-                <span class="field-label-text">CPU price per vCPU-second ($)</span>
-                <input type="number" id="cloudRunCpuRate" min="0" step="0.000001" value="0.000024" />
+                <span class="field-label-text">Average request duration (seconds)</span>
+                <input type="number" id="cloudRunAverageDuration" min="0" step="0.1" value="0.4" />
               </label>
               <label>
-                <span class="field-label-text">Memory price per GiB-second ($)</span>
-                <input type="number" id="cloudRunMemoryRate" min="0" step="0.0000001" value="0.0000025" />
+                <span class="field-label-text">vCPU allocated per instance</span>
+                <input type="number" id="cloudRunVcpuPerInstance" min="0" step="0.1" value="1" />
               </label>
               <label>
-                <span class="field-label-text">Requests price per 1M ($)</span>
-                <input type="number" id="cloudRunRequestRate" min="0" step="0.01" value="0.40" />
+                <span class="field-label-text">Memory allocated per instance (GiB)</span>
+                <input type="number" id="cloudRunMemoryPerInstance" min="0" step="0.1" value="0.5" />
               </label>
               <label>
-                <span class="field-label-text">Free vCPU-seconds per month</span>
-                <input type="number" id="cloudRunCpuFreeTier" min="0" step="100" value="180000" />
+                <span class="field-label-text">Warm idle instance hours per month</span>
+                <input type="number" id="cloudRunIdleHours" min="0" step="1" value="730" />
               </label>
               <label>
-                <span class="field-label-text">Free GiB-seconds per month</span>
-                <input type="number" id="cloudRunMemoryFreeTier" min="0" step="100" value="360000" />
+                <span class="field-label-text">Singapore active CPU rate ($/vCPU-sec)</span>
+                <input type="number" id="cloudRunCpuActiveRate" min="0" step="0.0000001" value="0.0000336" />
               </label>
               <label>
-                <span class="field-label-text">Free requests per month</span>
-                <input type="number" id="cloudRunRequestsFreeTier" min="0" step="1000" value="2000000" />
+                <span class="field-label-text">Singapore idle CPU rate ($/vCPU-sec)</span>
+                <input type="number" id="cloudRunCpuIdleRate" min="0" step="0.0000001" value="0.0000035" />
+              </label>
+              <label>
+                <span class="field-label-text">Singapore memory rate ($/GiB-sec)</span>
+                <input type="number" id="cloudRunMemoryRate" min="0" step="0.0000001" value="0.0000035" />
+              </label>
+              <label>
+                <span class="field-label-text">Singapore requests price per 1M ($)</span>
+                <input type="number" id="cloudRunRequestRate" min="0" step="0.01" value="0.56" />
               </label>
             </div>
             <div class="sub-result">
-              <span>Billable requests</span>
-              <strong id="cloudRunBillableRequests">0</strong>
+              <span>Estimated active vCPU-seconds</span>
+              <strong id="cloudRunActiveCpuSeconds">0</strong>
+            </div>
+            <div class="sub-result">
+              <span>Google free-tier credit applied</span>
+              <strong id="cloudRunFreeTierCredit">$0.00</strong>
             </div>
             <div class="result-row">
               <span>Estimated Google charges per month</span>
@@ -194,12 +199,19 @@
             </div>
             <div class="calc-notes">
               <p class="calc-footnote">
-                This model uses Cloud Run services with request-based billing,
-                not jobs or worker pools.
+                This is a planning model for small partner-deployed Cloud Run
+                services using request-based billing, not jobs or worker pools.
               </p>
               <p class="calc-footnote">
-                Singapore (`asia-southeast1`) is used as the baseline region for
-                this calculator because regional pricing tiers can differ.
+                Singapore (`asia-southeast1`) is used as the baseline region
+                because regional pricing can differ. The active, idle, memory,
+                and request defaults here are estimated Singapore rates intended
+                for quick partner sizing.
+              </p>
+              <p class="calc-footnote">
+                The free tier is represented here as a monthly dollar credit
+                based on Google’s published Cloud Run free-tier allowances,
+                applied after the gross estimate.
               </p>
               <p class="calc-footnote">
                 Reference:

@@ -51,28 +51,39 @@ function formatNumber(value) {
 
 function calculateServiceTotal(config) {
   if (config.id === "cloudrun") {
-    const cpuUsage = getNumericValue("cloudRunCpuUsage");
-    const memoryUsage = getNumericValue("cloudRunMemoryUsage");
     const requestUsage = getNumericValue("cloudRunRequestsUsage");
-    const cpuRate = getNumericValue("cloudRunCpuRate");
+    const averageDuration = getNumericValue("cloudRunAverageDuration");
+    const vcpuPerInstance = getNumericValue("cloudRunVcpuPerInstance");
+    const memoryPerInstance = getNumericValue("cloudRunMemoryPerInstance");
+    const idleHours = getNumericValue("cloudRunIdleHours");
+    const cpuActiveRate = getNumericValue("cloudRunCpuActiveRate");
+    const cpuIdleRate = getNumericValue("cloudRunCpuIdleRate");
     const memoryRate = getNumericValue("cloudRunMemoryRate");
     const requestRate = getNumericValue("cloudRunRequestRate");
-    const cpuFreeTier = getNumericValue("cloudRunCpuFreeTier");
-    const memoryFreeTier = getNumericValue("cloudRunMemoryFreeTier");
-    const requestFreeTier = getNumericValue("cloudRunRequestsFreeTier");
+    const activeCpuSeconds = requestUsage * averageDuration * vcpuPerInstance;
+    const activeMemorySeconds =
+      requestUsage * averageDuration * memoryPerInstance;
+    const idleSeconds = idleHours * 3600;
+    const idleCpuSeconds = idleSeconds * vcpuPerInstance;
+    const idleMemorySeconds = idleSeconds * memoryPerInstance;
 
-    const billableCpu = Math.max(0, cpuUsage - cpuFreeTier);
-    const billableMemory = Math.max(0, memoryUsage - memoryFreeTier);
-    const billableRequests = Math.max(0, requestUsage - requestFreeTier);
+    const grossEstimate =
+      activeCpuSeconds * cpuActiveRate +
+      idleCpuSeconds * cpuIdleRate +
+      activeMemorySeconds * memoryRate +
+      idleMemorySeconds * memoryRate +
+      (requestUsage / 1000000) * requestRate;
 
-    document.getElementById("cloudRunBillableRequests").textContent =
-      formatNumber(billableRequests);
+    // Google documents Cloud Run's free tier as a spending-based discount
+    // derived from its published baseline pricing.
+    const freeTierCredit = 6.02;
 
-    return (
-      billableCpu * cpuRate +
-      billableMemory * memoryRate +
-      (billableRequests / 1000000) * requestRate
-    );
+    document.getElementById("cloudRunActiveCpuSeconds").textContent =
+      formatNumber(activeCpuSeconds);
+    document.getElementById("cloudRunFreeTierCredit").textContent =
+      formatCurrency(freeTierCredit);
+
+    return Math.max(0, grossEstimate - freeTierCredit);
   }
 
   const usage = getNumericValue(config.usageInput);
@@ -108,15 +119,15 @@ function updateTotals() {
 
 document.addEventListener("DOMContentLoaded", () => {
   [
-    "cloudRunCpuUsage",
-    "cloudRunMemoryUsage",
     "cloudRunRequestsUsage",
-    "cloudRunCpuRate",
+    "cloudRunAverageDuration",
+    "cloudRunVcpuPerInstance",
+    "cloudRunMemoryPerInstance",
+    "cloudRunIdleHours",
+    "cloudRunCpuActiveRate",
+    "cloudRunCpuIdleRate",
     "cloudRunMemoryRate",
     "cloudRunRequestRate",
-    "cloudRunCpuFreeTier",
-    "cloudRunMemoryFreeTier",
-    "cloudRunRequestsFreeTier",
   ].forEach((id) => {
     document.getElementById(id).addEventListener("input", updateTotals);
   });
