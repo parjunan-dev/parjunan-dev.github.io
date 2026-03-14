@@ -68,6 +68,31 @@
               </p>
             </div>
           </div>
+          <div class="baseline-panel">
+            <h3>Baseline workload (USD)</h3>
+            <div class="baseline-grid">
+              <label>
+                Requests per month
+                <input type="number" id="baselineRequests" value="3000000" min="0" step="1000" />
+              </label>
+              <label>
+                Avg duration (seconds)
+                <input type="number" id="baselineDuration" value="0.4" min="0" step="0.01" />
+              </label>
+              <label>
+                Memory (MB)
+                <input type="number" id="baselineMemory" value="512" min="0" step="64" />
+              </label>
+              <label>
+                CPU (vCPU)
+                <input type="number" id="baselineCpu" value="0.25" min="0" step="0.05" />
+              </label>
+              <label>
+                Avg response (KB)
+                <input type="number" id="baselineResponse" value="5" min="0" step="0.1" />
+              </label>
+            </div>
+          </div>
           <div class="service-picker" id="servicePicker">
             <label class="service-option">
               <input type="checkbox" value="translate" />
@@ -182,19 +207,19 @@
             <div class="field-grid">
               <label>
                 <span class="field-label-text">Requests per month</span>
-                <input type="number" id="cloudRunRequestsUsage" min="0" step="1000" value="3000000" />
+                <input type="number" id="cloudRunRequestsUsage" min="0" step="1000" value="3000000" readonly />
               </label>
               <label>
                 <span class="field-label-text">Average request duration (seconds)</span>
-                <input type="number" id="cloudRunAverageDuration" min="0" step="0.1" value="0.4" />
+                <input type="number" id="cloudRunAverageDuration" min="0" step="0.1" value="0.4" readonly />
               </label>
               <label>
                 <span class="field-label-text">vCPU allocated per request</span>
-                <input type="number" id="cloudRunVcpuPerInstance" min="0" step="0.1" value="1" />
+                <input type="number" id="cloudRunVcpuPerInstance" min="0" step="0.1" value="1" readonly />
               </label>
               <label>
                 <span class="field-label-text">Memory allocated per request (GiB)</span>
-                <input type="number" id="cloudRunMemoryPerInstance" min="0" step="0.1" value="0.5" />
+                <input type="number" id="cloudRunMemoryPerInstance" min="0" step="0.1" value="0.5" readonly />
               </label>
               <label>
                 <span class="field-label-text">CPU price per vCPU-second ($)</span>
@@ -338,15 +363,15 @@
             <div class="field-grid">
               <label>
                 <span class="field-label-text">Requests per month</span>
-                <input type="number" id="awsLambdaRequests" min="0" step="1000" value="3000000" />
+                <input type="number" id="awsLambdaRequests" min="0" step="1000" value="3000000" readonly />
               </label>
               <label>
                 <span class="field-label-text">Average duration (seconds)</span>
-                <input type="number" id="awsLambdaDuration" min="0" step="0.1" value="0.4" />
+                <input type="number" id="awsLambdaDuration" min="0" step="0.1" value="0.4" readonly />
               </label>
               <label>
                 <span class="field-label-text">Memory allocated (MB)</span>
-                <input type="number" id="awsLambdaMemoryMb" min="0" step="64" value="512" />
+                <input type="number" id="awsLambdaMemoryMb" min="0" step="64" value="512" readonly />
               </label>
               <label>
                 <span class="field-label-text">Compute price per GB-second ($)</span>
@@ -473,15 +498,15 @@
             <div class="field-grid">
               <label>
                 <span class="field-label-text">Requests per month</span>
-                <input type="number" id="azureFunctionsRequests" min="0" step="1000" value="3000000" />
+                <input type="number" id="azureFunctionsRequests" min="0" step="1000" value="3000000" readonly />
               </label>
               <label>
                 <span class="field-label-text">Average duration (seconds)</span>
-                <input type="number" id="azureFunctionsDuration" min="0" step="0.1" value="0.4" />
+                <input type="number" id="azureFunctionsDuration" min="0" step="0.1" value="0.4" readonly />
               </label>
               <label>
                 <span class="field-label-text">Memory allocated (MB)</span>
-                <input type="number" id="azureFunctionsMemoryMb" min="0" step="64" value="512" />
+                <input type="number" id="azureFunctionsMemoryMb" min="0" step="64" value="512" readonly />
               </label>
               <label>
                 <span class="field-label-text">Compute price per GB-second ($)</span>

@@ -37,6 +37,50 @@ const calculators = [
   },
 ];
 
+function getBaselineWorkload() {
+  const requests = getNumericValue("baselineRequests");
+  const duration = getNumericValue("baselineDuration");
+  const memoryMb = getNumericValue("baselineMemory");
+  const cpuVcpu = getNumericValue("baselineCpu");
+  const responseKb = getNumericValue("baselineResponse");
+  const memoryGb = memoryMb / 1024;
+  const gbSeconds = memoryGb * duration * requests;
+  const vcpuSeconds = cpuVcpu * duration * requests;
+  return {
+    requests,
+    duration,
+    memoryMb,
+    cpuVcpu,
+    responseKb,
+    memoryGb,
+    gbSeconds,
+    vcpuSeconds,
+  };
+}
+
+function syncComputeInputs() {
+  const baseline = getBaselineWorkload();
+  const mappings = [
+    { id: "cloudRunRequestsUsage", value: baseline.requests },
+    { id: "cloudRunAverageDuration", value: baseline.duration },
+    { id: "cloudRunVcpuPerInstance", value: baseline.cpuVcpu },
+    { id: "cloudRunMemoryPerInstance", value: baseline.memoryGb },
+    { id: "awsLambdaRequests", value: baseline.requests },
+    { id: "awsLambdaDuration", value: baseline.duration },
+    { id: "awsLambdaMemoryMb", value: baseline.memoryMb },
+    { id: "azureFunctionsRequests", value: baseline.requests },
+    { id: "azureFunctionsDuration", value: baseline.duration },
+    { id: "azureFunctionsMemoryMb", value: baseline.memoryMb },
+  ];
+
+  mappings.forEach(({ id, value }) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.value = Number.isFinite(value) ? value : "";
+    }
+  });
+}
+
 let activeServices = new Set();
 
 function getNumericValue(id) {
@@ -61,74 +105,53 @@ function formatNumber(value) {
 
 function calculateServiceTotal(config) {
   if (config.id === "cloudrun") {
-    const requestUsage = getNumericValue("cloudRunRequestsUsage");
-    const averageDuration = getNumericValue("cloudRunAverageDuration");
-    const vcpuPerInstance = getNumericValue("cloudRunVcpuPerInstance");
-    const memoryPerInstance = getNumericValue("cloudRunMemoryPerInstance");
-    const cpuRate = getNumericValue("cloudRunCpuActiveRate");
-    const memoryRate = getNumericValue("cloudRunMemoryRate");
-    const requestRate = getNumericValue("cloudRunRequestRate");
-    const freeCpuSeconds = getNumericValue("cloudRunFreeCpuSeconds");
-    const freeMemorySeconds = getNumericValue("cloudRunFreeMemorySeconds");
-    const freeRequests = getNumericValue("cloudRunFreeRequests");
-    const cpuSeconds = requestUsage * averageDuration * vcpuPerInstance;
-    const memorySeconds =
-      requestUsage * averageDuration * memoryPerInstance;
-    const billableCpuSeconds = Math.max(0, cpuSeconds - freeCpuSeconds);
-    const billableMemorySeconds = Math.max(0, memorySeconds - freeMemorySeconds);
-    const billableRequests = Math.max(0, requestUsage - freeRequests);
+    const baseline = getBaselineWorkload();
+    const cpuSeconds = baseline.vcpuSeconds;
+    const memorySeconds = baseline.gbSeconds;
+    const requests = baseline.requests;
+    const billableCpuSeconds = Math.max(0, cpuSeconds - 180000);
+    const billableMemorySeconds = Math.max(0, memorySeconds - 360000);
+    const billableRequests = Math.max(0, requests - 2000000);
 
     document.getElementById("cloudRunCpuSeconds").textContent =
       formatNumber(cpuSeconds);
 
     return (
-      billableCpuSeconds * cpuRate +
-      billableMemorySeconds * memoryRate +
-      (billableRequests / 1000000) * requestRate
+      billableCpuSeconds * 0.000024 +
+      billableMemorySeconds * 0.0000025 +
+      (billableRequests / 1000000) * 0.40
     );
   }
 
   if (config.id === "awslambda") {
-    const requests = getNumericValue("awsLambdaRequests");
-    const duration = getNumericValue("awsLambdaDuration");
-    const memoryMb = getNumericValue("awsLambdaMemoryMb");
-    const computeRate = getNumericValue("awsLambdaComputeRate");
-    const requestRate = getNumericValue("awsLambdaRequestRate");
-    const freeGbSeconds = getNumericValue("awsLambdaFreeGbSeconds");
-    const freeRequests = getNumericValue("awsLambdaFreeRequests");
-
-    const gbSeconds = requests * duration * (memoryMb / 1024);
-    const billableGbSeconds = Math.max(0, gbSeconds - freeGbSeconds);
-    const billableRequests = Math.max(0, requests - freeRequests);
+    const baseline = getBaselineWorkload();
+    const gbSeconds = baseline.gbSeconds;
+    const requests = baseline.requests;
+    const billableGbSeconds = Math.max(0, gbSeconds - 400000);
+    const billableRequests = Math.max(0, requests - 1000000);
 
     document.getElementById("awsLambdaGbSeconds").textContent =
       formatNumber(gbSeconds);
 
     return (
-      billableGbSeconds * computeRate +
-      (billableRequests / 1000000) * requestRate
+      billableGbSeconds * 0.0000166667 +
+      (billableRequests / 1000000) * 0.20
     );
   }
 
   if (config.id === "azurefunctions") {
-    const requests = getNumericValue("azureFunctionsRequests");
-    const duration = getNumericValue("azureFunctionsDuration");
-    const memoryMb = getNumericValue("azureFunctionsMemoryMb");
-    const computeRate = getNumericValue("azureFunctionsComputeRate");
-    const requestRate = getNumericValue("azureFunctionsRequestRate");
-    const freeGbSeconds = getNumericValue("azureFunctionsFreeGbSeconds");
-    const freeRequests = getNumericValue("azureFunctionsFreeRequests");
-
-    const gbSeconds = requests * duration * (memoryMb / 1024);
-    const billableGbSeconds = Math.max(0, gbSeconds - freeGbSeconds);
-    const billableRequests = Math.max(0, requests - freeRequests);
+    const baseline = getBaselineWorkload();
+    const gbSeconds = baseline.gbSeconds;
+    const requests = baseline.requests;
+    const billableGbSeconds = Math.max(0, gbSeconds - 400000);
+    const billableRequests = Math.max(0, requests - 1000000);
 
     document.getElementById("azureFunctionsGbSeconds").textContent =
       formatNumber(gbSeconds);
 
     return (
-      billableGbSeconds * computeRate +
-      (billableRequests / 1000000) * requestRate
+      billableGbSeconds * 0.000016 +
+      (billableRequests / 1000000) * 0.20
     );
   }
 
@@ -199,39 +222,28 @@ function updateServiceSelection() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const baselineInputs = [
+    "baselineRequests",
+    "baselineDuration",
+    "baselineMemory",
+    "baselineCpu",
+    "baselineResponse",
+  ];
+  baselineInputs.forEach((id) => {
+    document
+      .getElementById(id)
+      .addEventListener("input", () => {
+        syncComputeInputs();
+        updateTotals();
+      });
+  });
+
   [
-    "cloudRunRequestsUsage",
-    "cloudRunAverageDuration",
-    "cloudRunVcpuPerInstance",
-    "cloudRunMemoryPerInstance",
-    "cloudRunCpuActiveRate",
-    "cloudRunMemoryRate",
-    "cloudRunRequestRate",
     "cloudRunFreeCpuSeconds",
     "cloudRunFreeMemorySeconds",
     "cloudRunFreeRequests",
-  ].forEach((id) => {
-    document.getElementById(id).addEventListener("input", updateTotals);
-  });
-
-  [
-    "awsLambdaRequests",
-    "awsLambdaDuration",
-    "awsLambdaMemoryMb",
-    "awsLambdaComputeRate",
-    "awsLambdaRequestRate",
     "awsLambdaFreeGbSeconds",
     "awsLambdaFreeRequests",
-  ].forEach((id) => {
-    document.getElementById(id).addEventListener("input", updateTotals);
-  });
-
-  [
-    "azureFunctionsRequests",
-    "azureFunctionsDuration",
-    "azureFunctionsMemoryMb",
-    "azureFunctionsComputeRate",
-    "azureFunctionsRequestRate",
     "azureFunctionsFreeGbSeconds",
     "azureFunctionsFreeRequests",
   ].forEach((id) => {
@@ -258,5 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
       input.addEventListener("change", updateServiceSelection);
     });
 
+  syncComputeInputs();
   updateServiceSelection();
 });
