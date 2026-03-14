@@ -92,6 +92,13 @@
                 <input type="number" id="baselineResponse" value="5" min="0" step="0.1" />
               </label>
             </div>
+            <div class="free-tier-toggle">
+              <label>
+                <input type="checkbox" id="includeFreeTier" checked />
+                Include Free Tier allowances
+              </label>
+              <p class="free-tier-status" id="freeTierStatus">Free tier applied</p>
+            </div>
           </div>
           <div class="service-picker" id="servicePicker">
             <label class="service-option">
@@ -121,7 +128,7 @@
           </div>
         </div>
 
-        <div class="calculator-grid">
+            <div class="calculator-grid">
           <article class="calc-card" data-service="translate" data-provider="google">
             <div class="calc-header">
               <div>
@@ -159,6 +166,9 @@
             <div class="result-row">
               <span>Estimated Google charges per month</span>
               <strong id="translateTotal">$0.00</strong>
+            </div>
+            <div class="result-note" data-free-note="translate">
+              Free tier applied
             </div>
             <div class="calc-notes">
               <p class="calc-footnote">
@@ -254,6 +264,9 @@
               <span>Estimated Google charges per month</span>
               <strong id="cloudRunTotal">$0.00</strong>
             </div>
+            <div class="result-note" data-free-note="cloudrun">
+              Free tier applied
+            </div>
             <div class="calc-notes">
               <p class="calc-footnote">
                 This model reflects event-driven Cloud Run request, CPU, and
@@ -317,6 +330,9 @@
             <div class="result-row">
               <span>Estimated AWS charges per month</span>
               <strong id="awsTranslateTotal">$0.00</strong>
+            </div>
+            <div class="result-note" data-free-note="awstranslate">
+              Free tier applied
             </div>
             <div class="calc-notes">
               <p class="calc-footnote">
@@ -398,6 +414,9 @@
               <span>Estimated AWS charges per month</span>
               <strong id="awsLambdaTotal">$0.00</strong>
             </div>
+            <div class="result-note" data-free-note="awslambda">
+              Free tier applied
+            </div>
             <div class="calc-notes">
               <p class="calc-footnote">
                 This model reflects Lambda request and duration pricing only. It
@@ -456,6 +475,9 @@
             <div class="result-row">
               <span>Estimated Microsoft charges per month</span>
               <strong id="azureTranslateTotal">$0.00</strong>
+            </div>
+            <div class="result-note" data-free-note="azuretranslate">
+              Free tier applied
             </div>
             <div class="calc-notes">
               <p class="calc-footnote">
@@ -532,6 +554,9 @@
             <div class="result-row">
               <span>Estimated Microsoft charges per month</span>
               <strong id="azureFunctionsTotal">$0.00</strong>
+            </div>
+            <div class="result-note" data-free-note="azurefunctions">
+              Free tier applied
             </div>
             <div class="calc-notes">
               <p class="calc-footnote">

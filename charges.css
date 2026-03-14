@@ -220,6 +220,41 @@ main {
   margin: 0;
 }
 
+.free-tier-toggle {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: #253443;
+}
+
+.free-tier-toggle label {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.free-tier-toggle input {
+  width: 18px;
+  height: 18px;
+}
+
+.free-tier-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #0b1f33;
+  font-weight: 600;
+}
+
+.result-note {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #0057b8;
+  font-weight: 600;
+}
+
 .empty-state {
   margin: 20px 0 0;
   color: #6a7682;

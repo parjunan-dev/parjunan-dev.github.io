@@ -103,16 +103,34 @@ function formatNumber(value) {
   }).format(value);
 }
 
+let includeFreeTier = true;
+
+function getConditionalFree(value) {
+  return includeFreeTier ? value : 0;
+}
+
+function applyFreeTier(usage, freeTier) {
+  return Math.max(0, usage - getConditionalFree(freeTier));
+}
+
 function calculateServiceTotal(config) {
   if (config.id === "cloudrun") {
     const baseline = getBaselineWorkload();
     const cpuSeconds = baseline.vcpuSeconds;
     const memorySeconds = baseline.gbSeconds;
     const requests = baseline.requests;
-    const billableCpuSeconds = Math.max(0, cpuSeconds - 180000);
-    const billableMemorySeconds = Math.max(0, memorySeconds - 360000);
-    const billableRequests = Math.max(0, requests - 2000000);
-
+    const billableCpuSeconds = Math.max(
+      0,
+      cpuSeconds - getConditionalFree(180000),
+    );
+    const billableMemorySeconds = Math.max(
+      0,
+      memorySeconds - getConditionalFree(360000),
+    );
+    const billableRequests = Math.max(
+      0,
+      requests - getConditionalFree(2000000),
+    );
     document.getElementById("cloudRunCpuSeconds").textContent =
       formatNumber(cpuSeconds);
 
@@ -127,8 +145,14 @@ function calculateServiceTotal(config) {
     const baseline = getBaselineWorkload();
     const gbSeconds = baseline.gbSeconds;
     const requests = baseline.requests;
-    const billableGbSeconds = Math.max(0, gbSeconds - 400000);
-    const billableRequests = Math.max(0, requests - 1000000);
+    const billableGbSeconds = Math.max(
+      0,
+      gbSeconds - getConditionalFree(400000),
+    );
+    const billableRequests = Math.max(
+      0,
+      requests - getConditionalFree(1000000),
+    );
 
     document.getElementById("awsLambdaGbSeconds").textContent =
       formatNumber(gbSeconds);
@@ -143,8 +167,14 @@ function calculateServiceTotal(config) {
     const baseline = getBaselineWorkload();
     const gbSeconds = baseline.gbSeconds;
     const requests = baseline.requests;
-    const billableGbSeconds = Math.max(0, gbSeconds - 400000);
-    const billableRequests = Math.max(0, requests - 1000000);
+    const billableGbSeconds = Math.max(
+      0,
+      gbSeconds - getConditionalFree(400000),
+    );
+    const billableRequests = Math.max(
+      0,
+      requests - getConditionalFree(1000000),
+    );
 
     document.getElementById("azureFunctionsGbSeconds").textContent =
       formatNumber(gbSeconds);
@@ -160,9 +190,10 @@ function calculateServiceTotal(config) {
   const markup = config.markupInput
     ? getNumericValue(config.markupInput) / 100
     : 0;
-  const billableUsage = config.freeTierInput
-    ? Math.max(0, usage - getNumericValue(config.freeTierInput))
-    : usage;
+  const freeTier = config.freeTierInput
+    ? getNumericValue(config.freeTierInput)
+    : 0;
+  const billableUsage = applyFreeTier(usage, freeTier);
 
   const providerCost = (billableUsage / config.quantityDivisor) * rate;
 
@@ -203,6 +234,17 @@ function updateTotals() {
   document.getElementById("grandTotal").textContent = formatCurrency(grandTotal);
   document.getElementById("calculatorEmptyState").style.display =
     visibleCount === 0 ? "block" : "none";
+  updateFreeTierNotes();
+}
+
+function updateFreeTierNotes() {
+  const text = includeFreeTier
+    ? "Free tier applied"
+    : "Production estimate (free tier excluded)";
+  document.getElementById("freeTierStatus").textContent = text;
+  document.querySelectorAll(".result-note").forEach((note) => {
+    note.textContent = text;
+  });
 }
 
 function updateServiceSelection() {
@@ -268,6 +310,13 @@ document.addEventListener("DOMContentLoaded", () => {
     .querySelectorAll('#servicePicker input[type="checkbox"]')
     .forEach((input) => {
       input.addEventListener("change", updateServiceSelection);
+    });
+
+  document
+    .getElementById("includeFreeTier")
+    .addEventListener("change", (event) => {
+      includeFreeTier = event.target.checked;
+      updateTotals();
     });
 
   syncComputeInputs();
