@@ -240,6 +240,144 @@ Allowed actions:
       <section class="library-section">
         <div class="section-header">
           <div class="section-heading">
+            <h2>Use Case Families To Add Next</h2>
+            <p>
+              One useful pattern from broader agent libraries is to organize
+              templates by business motion, not just by channel or model type.
+              That makes it easier to map an agent to a real operational need.
+            </p>
+          </div>
+        </div>
+
+        <div class="practice-grid practice-grid-wide">
+          <article class="practice-card">
+            <h3>Order, case, and status management</h3>
+            <p>
+              Good candidates include order status, shipment updates, returns,
+              refund guidance, case status, and application progress checks.
+              These are strong starting points because the user intent is clear
+              and the action path can usually be structured.
+            </p>
+          </article>
+          <article class="practice-card">
+            <h3>Technical support and troubleshooting</h3>
+            <p>
+              Add templates for login help, API troubleshooting, setup
+              assistance, service disruption messaging, and guided resolution
+              steps. These work well when the agent can retrieve known fixes
+              and decide when to escalate.
+            </p>
+          </article>
+          <article class="practice-card">
+            <h3>Knowledge and content assistance</h3>
+            <p>
+              Add templates for FAQ response, knowledge retrieval, answer
+              drafting, article summarization, and internal content creation.
+              These are useful for both customer-facing assistants and internal
+              copilots.
+            </p>
+          </article>
+          <article class="practice-card">
+            <h3>Account and membership workflows</h3>
+            <p>
+              Useful patterns include account updates, password help, access
+              issues, renewals, entitlement checks, and membership guidance.
+              These templates should be explicit about identity and
+              authorization rules.
+            </p>
+          </article>
+          <article class="practice-card">
+            <h3>Scheduling and appointment handling</h3>
+            <p>
+              Consider templates for booking, rescheduling, canceling, reminder
+              workflows, and meeting coordination. These are strong candidates
+              for structured actions tied to calendars or workflow systems.
+            </p>
+          </article>
+          <article class="practice-card">
+            <h3>Escalation and exception handling</h3>
+            <p>
+              Add dedicated templates for human handoff, sentiment-driven
+              escalation, safety or risk-related routing, and supervisor review.
+              This is where many agent designs fail if the failure path is only
+              implied instead of specified.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="library-section">
+        <div class="section-header">
+          <div class="section-heading">
+            <h2>Template Fields Worth Capturing</h2>
+            <p>
+              These fields make a template easier to reuse across teams,
+              channels, and platforms.
+            </p>
+          </div>
+        </div>
+
+        <div class="template-grid compact-grid">
+          <article class="template-card">
+            <div class="template-header">
+              <span class="template-tag">Design</span>
+              <button class="copy-btn" data-copy-target="templateFieldBlock">Copy</button>
+            </div>
+            <p class="template-intro">
+              Consider adding this metadata block above each detailed action or
+              agent template.
+            </p>
+            <pre id="templateFieldBlock" class="template-code">Template metadata:
+- Business function: Service / Sales / Operations / IT / Marketing
+- Primary use case: [short label]
+- User type: Customer / Agent / Supervisor / Employee / Partner
+- Channel: Web chat / Voice / WhatsApp / Email / Internal desktop
+- Trigger: User-initiated / Event-driven / Scheduled / Case-stage based
+- Systems touched: CRM / knowledge base / ticketing / policy store / workflow engine
+- Human handoff rule: [when to escalate]
+- Success metric: containment / CSAT / handle time / resolution / conversion
+- Risk notes: identity / policy / financial / legal / compliance</pre>
+          </article>
+
+          <article class="template-card">
+            <div class="template-header">
+              <span class="template-tag">Journey</span>
+              <button class="copy-btn" data-copy-target="journeyFieldBlock">Copy</button>
+            </div>
+            <p class="template-intro">
+              Another strong pattern is to define where the template sits in the
+              user journey, not just what the agent does.
+            </p>
+            <pre id="journeyFieldBlock" class="template-code">Journey framing:
+- Stage: Discover / Onboard / Use / Support / Renew / Recover
+- User intent: [what the user is trying to achieve]
+- Agent responsibility: answer / guide / retrieve / validate / summarize / route
+- Allowed resolution level: read-only / draft-only / transactional / approval-required
+- End state: self-service success / agent assist / supervisor review / fallback queue</pre>
+          </article>
+
+          <article class="template-card">
+            <div class="template-header">
+              <span class="template-tag">Evaluation</span>
+              <button class="copy-btn" data-copy-target="evaluationFieldBlock">Copy</button>
+            </div>
+            <p class="template-intro">
+              Templates become more useful when they include a simple test lens
+              from the start.
+            </p>
+            <pre id="evaluationFieldBlock" class="template-code">Evaluation starter:
+- What should the agent do correctly every time?
+- What should it never do?
+- Which edge cases should be tested first?
+- What signals indicate the handoff happened too late?
+- What user outcome matters most for this template?</pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="library-section">
+        <div class="section-header">
+          <div class="section-heading">
             <h2>Best Practices</h2>
             <p>
               Most weak agent behavior comes from vague goals, loose
