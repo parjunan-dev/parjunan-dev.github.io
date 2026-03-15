@@ -1,0 +1,267 @@
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  background: #f6f8fb;
+  color: #111;
+}
+
+header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  gap: 24px;
+}
+
+.cxhacks-logo {
+  height: 40px;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+
+.blog-logo {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.page-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.page-nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.page-nav a:hover,
+.page-nav a.is-active {
+  border-bottom-color: #333;
+}
+
+main {
+  padding-bottom: 48px;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #f7fbff 0%, #eef4ff 52%, #ffffff 100%);
+  border-bottom: 1px solid #e3e8ef;
+}
+
+.hero-panel,
+.library-section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.hero-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.9fr);
+  gap: 24px;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  align-items: stretch;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0057b8;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
+  margin: 0 0 16px;
+  max-width: 760px;
+}
+
+.hero-copy p,
+.section-heading p,
+.template-intro,
+.practice-card p,
+.summary-list,
+.checklist {
+  color: #52606d;
+  line-height: 1.6;
+}
+
+.summary-card,
+.template-card,
+.practice-card,
+.checklist-card {
+  background: #ffffff;
+  border: 1px solid #dce3eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.summary-card {
+  padding: 24px;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6a7682;
+}
+
+.summary-list {
+  margin: 16px 0 0;
+  padding-left: 18px;
+}
+
+.library-section {
+  padding-top: 40px;
+}
+
+.section-header {
+  margin-bottom: 24px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.section-heading p {
+  margin: 8px 0 0;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.compact-grid {
+  align-items: start;
+}
+
+.template-card,
+.practice-card,
+.checklist-card {
+  padding: 24px;
+}
+
+.template-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.template-header h3 {
+  margin: 8px 0 0;
+  font-size: 1.15rem;
+}
+
+.template-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0057b8;
+}
+
+.copy-btn {
+  border: 1px solid #cfd8e3;
+  background: #f7fafc;
+  color: #0b1f33;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  background: #eef4ff;
+  border-color: #9cb8db;
+}
+
+.template-code {
+  margin: 16px 0 0;
+  padding: 16px;
+  background: #0b1f33;
+  color: #eff6ff;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  min-height: 220px;
+}
+
+.practice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.practice-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+
+.checklist {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.checklist li + li {
+  margin-top: 10px;
+}
+
+@media (max-width: 1100px) {
+  .hero-panel,
+  .template-grid,
+  .practice-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-nav {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+  }
+}
