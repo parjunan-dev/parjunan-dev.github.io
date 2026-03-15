@@ -70,6 +70,11 @@
               Start with these baseline sections before adapting the template to
               a specific workflow or channel.
             </p>
+            <p>
+              The wording below is aligned to Webex AI Agent guidance for
+              autonomous agents, especially around short goals, structured
+              instructions, and simple deterministic actions.
+            </p>
           </div>
         </div>
 
@@ -80,19 +85,25 @@
               <button class="copy-btn" data-copy-target="goalTemplate">Copy</button>
             </div>
             <p class="template-intro">
-              A goal should define the business outcome, the user outcome, and
-              the boundaries of the task.
+              In Webex guidance, the goal should stay short, clear, and focused
+              on the overall purpose or user outcome rather than implementation
+              detail.
             </p>
             <pre id="goalTemplate" class="template-code">Goal:
-Help the user complete [business task] accurately and efficiently.
+Help users with [use case] quickly and accurately.
 
-Primary outcome:
-- Resolve the request in as few steps as possible.
+Writing guidance:
+- Keep the goal short and concise.
+- Focus on the overall function or purpose of the agent.
+- Describe the end result or benefit for the user.
+- Use clear language.
+- Make sure the goal matches the enabled actions and knowledge.
 
-Success conditions:
-- The user receives a correct and complete answer.
-- The answer stays within approved product, policy, and workflow rules.
-- The agent escalates when confidence or authority is insufficient.</pre>
+Avoid:
+- Specific user details, dates, or locations
+- Technical implementation detail
+- Multiple unrelated goals
+- Vague or ambiguous wording</pre>
           </article>
 
           <article class="template-card">
@@ -101,16 +112,41 @@ Success conditions:
               <button class="copy-btn" data-copy-target="instructionTemplate">Copy</button>
             </div>
             <p class="template-intro">
-              Instructions should define tone, evidence standards, tool usage,
-              and escalation conditions.
+              Webex recommends adding instructions after actions and knowledge
+              are in place and tested. The most useful pattern is a markdown
+              structure covering identity, context, task, response style,
+              fallback handling, guardrails, and examples.
             </p>
-            <pre id="instructionTemplate" class="template-code">Instructions:
-- Be concise, accurate, and action-oriented.
-- Ask follow-up questions only when required to avoid a wrong action.
-- Prefer approved knowledge sources over assumptions.
-- Never invent policy, pricing, eligibility, or status information.
-- If a request is out of scope, explain that clearly and route correctly.
-- If confidence is low, stop and escalate instead of guessing.</pre>
+            <pre id="instructionTemplate" class="template-code">## 1. Identity
+- Role definition: You are a helpful [business role] supporting [use case].
+- Tone and demeanor: Clear, concise, professional, and easy to follow.
+
+## 2. Context
+- Background information: This conversation is about [business context].
+- Environment details: [voice / digital / channel constraints if relevant]
+
+## 3. Task
+- Break the task into clear steps.
+- Reference the actions to use at each step.
+- Preserve context from earlier in the conversation.
+
+## 4. Response Guidelines
+- Use simple language.
+- Use markdown headings or lists when helpful.
+- Keep responses within the goal and available knowledge.
+
+## 5. Error Handling and Fallbacks
+- Ask a clarification question if input is unclear.
+- If an action fails, explain the issue and continue with the next safe step.
+- If the request is out of scope, hand off correctly.
+
+## 6. Guardrails
+- Respond only in the context of the goal.
+- Do not invent information.
+- Use only enabled actions and approved knowledge.
+
+## 7. Examples
+- Add sample prompts or mini conversations where needed.</pre>
           </article>
 
           <article class="template-card">
@@ -119,20 +155,24 @@ Success conditions:
               <button class="copy-btn" data-copy-target="actionTemplate">Copy</button>
             </div>
             <p class="template-intro">
-              Actions should be explicit. Define what the agent may do and what
-              must stay human-approved.
+              Webex guidance is to keep actions simple, describe them clearly,
+              define entities accurately, avoid contradictory actions, and push
+              deterministic logic into Connect flows instead of the LLM.
             </p>
-            <pre id="actionTemplate" class="template-code">Allowed actions:
-- Search approved knowledge sources
-- Summarize relevant findings
-- Draft a recommended response
-- Trigger approved read-only lookups
+            <pre id="actionTemplate" class="template-code">Action design checklist:
+- Clearly define the objective of each action in the description.
+- Keep each action simple and narrow in scope.
+- Describe every input entity / slot accurately.
+- Avoid overlapping or contradictory actions.
+- Put deterministic decision logic in the Webex Connect flow.
 
-Disallowed actions:
-- Commit financial, legal, or policy decisions without approval
-- Invent or overwrite customer data
-- Execute unsupported tool actions
-- Continue when required identifiers or authorizations are missing</pre>
+Action template:
+- Action name: [short verb-based name]
+- Objective: What this action does for the user journey
+- Required inputs: [entities / slots]
+- Success output: What the agent receives back
+- Failure output: What happens if the action cannot complete
+- Connect guidance: Use deterministic flow logic wherever possible</pre>
           </article>
         </div>
       </section>
