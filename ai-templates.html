@@ -106,6 +106,32 @@ Avoid:
 - Vague or ambiguous wording</pre>
           </article>
 
+          <article class="template-card core-half">
+            <div class="template-header">
+              <span class="template-tag">Actions</span>
+              <button class="copy-btn" data-copy-target="actionTemplate">Copy</button>
+            </div>
+            <p class="template-intro">
+              Webex guidance is to keep actions simple, describe them clearly,
+              define entities accurately, avoid contradictory actions, and push
+              deterministic logic into Connect flows instead of the LLM.
+            </p>
+            <pre id="actionTemplate" class="template-code">Action design checklist:
+- Clearly define the objective of each action in the description.
+- Keep each action simple and narrow in scope.
+- Describe every input entity / slot accurately.
+- Avoid overlapping or contradictory actions.
+- Put deterministic decision logic in the Webex Connect flow.
+
+Action template:
+- Action name: [short verb-based name]
+- Objective: What this action does for the user journey
+- Required inputs: [entities / slots]
+- Success output: What the agent receives back
+- Failure output: What happens if the action cannot complete
+- Connect guidance: Use deterministic flow logic wherever possible</pre>
+          </article>
+
           <article class="template-card core-full">
             <div class="template-header">
               <span class="template-tag">Instructions</span>
@@ -147,32 +173,6 @@ Avoid:
 
 ## 7. Examples
 - Add sample prompts or mini conversations where needed.</pre>
-          </article>
-
-          <article class="template-card core-half">
-            <div class="template-header">
-              <span class="template-tag">Actions</span>
-              <button class="copy-btn" data-copy-target="actionTemplate">Copy</button>
-            </div>
-            <p class="template-intro">
-              Webex guidance is to keep actions simple, describe them clearly,
-              define entities accurately, avoid contradictory actions, and push
-              deterministic logic into Connect flows instead of the LLM.
-            </p>
-            <pre id="actionTemplate" class="template-code">Action design checklist:
-- Clearly define the objective of each action in the description.
-- Keep each action simple and narrow in scope.
-- Describe every input entity / slot accurately.
-- Avoid overlapping or contradictory actions.
-- Put deterministic decision logic in the Webex Connect flow.
-
-Action template:
-- Action name: [short verb-based name]
-- Objective: What this action does for the user journey
-- Required inputs: [entities / slots]
-- Success output: What the agent receives back
-- Failure output: What happens if the action cannot complete
-- Connect guidance: Use deterministic flow logic wherever possible</pre>
           </article>
         </div>
       </section>
