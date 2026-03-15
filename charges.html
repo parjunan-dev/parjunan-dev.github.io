@@ -17,7 +17,7 @@
       rel="stylesheet"
     />
     <link rel="icon" type="image/png" href="/images/webex-favicon.png" />
-    <link rel="stylesheet" href="charges.css?v=20260314b" />
+    <link rel="stylesheet" href="charges.css?v=20260315a" />
   </head>
   <body>
     <header>
@@ -160,6 +160,10 @@
             <label class="service-option">
               <input type="checkbox" value="azuretranslate" />
               <span>Azure AI Translator</span>
+            </label>
+            <label class="service-option">
+              <input type="checkbox" value="openaitranslate" />
+              <span>OpenAI API Translation</span>
             </label>
             <label class="service-option">
               <input type="checkbox" value="azurefunctions" />
@@ -554,6 +558,95 @@
             </div>
           </article>
 
+          <article class="calc-card" data-service="openaitranslate" data-provider="openai">
+            <div class="calc-header">
+              <div>
+                <span class="calc-tag">API</span>
+                <h3>OpenAI API Translation</h3>
+              </div>
+              <i class="fas fa-brain"></i>
+            </div>
+            <p class="calc-description">
+              Use this when a developer wants to handle translation through a
+              general-purpose OpenAI model instead of a dedicated cloud
+              translation API. This version is intentionally standalone for
+              now, using token-based pricing rather than character-based
+              pricing.
+            </p>
+            <div class="field-grid">
+              <label>
+                <span class="field-label-text">Model</span>
+                <input type="text" id="openAiTranslateModel" value="gpt-5 mini" />
+              </label>
+              <label>
+                <span class="field-label-text">Input tokens per month</span>
+                <input type="number" id="openAiTranslateInputTokens" min="0" step="1000" value="625000" />
+              </label>
+              <label>
+                <span class="field-label-text">Output tokens per month</span>
+                <input type="number" id="openAiTranslateOutputTokens" min="0" step="1000" value="625000" />
+              </label>
+              <label>
+                <span class="field-label-text">Input price per 1M tokens ($)</span>
+                <input type="number" id="openAiTranslateInputRate" min="0" step="0.001" value="0.25" />
+              </label>
+              <label>
+                <span class="field-label-text">Output price per 1M tokens ($)</span>
+                <input type="number" id="openAiTranslateOutputRate" min="0" step="0.001" value="2.00" />
+              </label>
+              <label>
+                <span class="field-label-text">Cached input price per 1M tokens ($)</span>
+                <input type="number" id="openAiTranslateCachedRate" min="0" step="0.001" value="0.025" />
+              </label>
+              <label>
+                <span class="field-label-text">Cached input share (%)</span>
+                <input type="number" id="openAiTranslateCachedShare" min="0" max="100" step="1" value="0" />
+              </label>
+            </div>
+            <div class="sub-result">
+              <span>Billable uncached input tokens</span>
+              <strong id="openAiTranslateBillableInput">0</strong>
+            </div>
+            <div class="sub-result">
+              <span>Billable cached input tokens</span>
+              <strong id="openAiTranslateCachedInput">0</strong>
+            </div>
+            <div class="result-row">
+              <span>Estimated OpenAI charges per month</span>
+              <strong id="openAiTranslateTotal">$0.00</strong>
+            </div>
+            <div class="result-note result-note-static" data-free-note="openaitranslate">
+              No free tier used in this estimate
+            </div>
+            <div class="calc-notes">
+              <p class="calc-footnote">
+                This default uses <strong>GPT-5 mini</strong> pricing as a
+                lightweight text-processing baseline. You can overwrite the
+                model label and token rates if you plan to use a different
+                OpenAI model.
+              </p>
+              <p class="calc-footnote">
+                OpenAI pricing is token-based rather than character-based, so
+                this estimate should be treated separately from the Google,
+                AWS, and Azure translation calculators for now.
+              </p>
+              <p class="calc-footnote">
+                Cached input pricing is optional. Leave cached share at
+                <strong>0%</strong> if you expect each translation request to
+                be unique.
+              </p>
+              <p class="calc-footnote">
+                Reference:
+                <a
+                  href="https://openai.com/api/pricing/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >OpenAI API pricing</a
+                >
+              </p>
+            </div>
+          </article>
+
           <article class="calc-card" data-service="azurefunctions" data-provider="microsoft">
             <div class="calc-header">
               <div>
@@ -831,6 +924,6 @@
       </section>
     </main>
 
-    <script src="charges.js?v=20260314b"></script>
+    <script src="charges.js?v=20260315a"></script>
   </body>
 </html>

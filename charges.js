@@ -32,6 +32,10 @@ const calculators = [
     quantityDivisor: 1000000,
   },
   {
+    id: "openaitranslate",
+    output: "openAiTranslateTotal",
+  },
+  {
     id: "azurefunctions",
     output: "azureFunctionsTotal",
   },
@@ -215,6 +219,31 @@ function applyFreeTier(usage, freeTier) {
 }
 
 function calculateServiceTotal(config) {
+  if (config.id === "openaitranslate") {
+    const inputTokens = getNumericValue("openAiTranslateInputTokens");
+    const outputTokens = getNumericValue("openAiTranslateOutputTokens");
+    const inputRate = getNumericValue("openAiTranslateInputRate");
+    const outputRate = getNumericValue("openAiTranslateOutputRate");
+    const cachedRate = getNumericValue("openAiTranslateCachedRate");
+    const cachedShare = Math.min(
+      100,
+      Math.max(0, getNumericValue("openAiTranslateCachedShare")),
+    );
+    const cachedInputTokens = inputTokens * (cachedShare / 100);
+    const uncachedInputTokens = Math.max(0, inputTokens - cachedInputTokens);
+
+    document.getElementById("openAiTranslateBillableInput").textContent =
+      formatNumber(uncachedInputTokens);
+    document.getElementById("openAiTranslateCachedInput").textContent =
+      formatNumber(cachedInputTokens);
+
+    return (
+      (uncachedInputTokens / 1000000) * inputRate +
+      (cachedInputTokens / 1000000) * cachedRate +
+      (outputTokens / 1000000) * outputRate
+    );
+  }
+
   if (config.id === "cloudrun") {
     const baseline = getBaselineWorkload();
     const cpuSeconds = baseline.vcpuSeconds;
@@ -374,6 +403,9 @@ function updateFreeTierNotes() {
     : "Production estimate (free tier excluded)";
   document.getElementById("freeTierStatus").textContent = text;
   document.querySelectorAll(".result-note").forEach((note) => {
+    if (note.classList.contains("result-note-static")) {
+      return;
+    }
     note.textContent = text;
   });
 }
@@ -482,6 +514,12 @@ document.addEventListener("DOMContentLoaded", () => {
     "azureBlobPutRate",
     "azureBlobGetRate",
     "azureBlobEgressRate",
+    "openAiTranslateInputTokens",
+    "openAiTranslateOutputTokens",
+    "openAiTranslateInputRate",
+    "openAiTranslateOutputRate",
+    "openAiTranslateCachedRate",
+    "openAiTranslateCachedShare",
   ].forEach((id) => {
     document.getElementById(id).addEventListener("input", updateTotals);
   });
