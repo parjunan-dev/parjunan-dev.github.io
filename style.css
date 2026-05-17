@@ -29,7 +29,8 @@ header {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  row-gap: 8px;
   max-width: 1440px;
   margin: 0 auto;
   padding: 16px 24px;
@@ -80,9 +81,12 @@ header {
 /* Adjusting the main-nav to align to the right */
 .main-nav {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 12px 20px;
   margin-left: 20px;
   padding: 6px 0;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .main-nav a {
