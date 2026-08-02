@@ -3,726 +3,987 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Webex AI</title>
-    <!-- Bootstrap CSS -->
+    <title>Webex Contact Center | Singapore</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="1.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link
-      rel="icon"
-      type="image/png"
-      href="https://cdn.glitch.global/2d94eea5-40ec-43ed-834c-cf15879e5dce/download.jpeg?v=1750917307788"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
     />
+    <link rel="icon" type="image/png" href="/images/webex-favicon.png" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- Header -->
-    <header class="demo-header">
-      <div class="header-container">
-        <div class="logo">
-          <a href="index.html">
-            <img src="/images/webex-favicon.png" alt="Home" class="home-icon" />
-          </a>
-        </div>
-      </div>
-    </header>
-
-    <!---------------------------------------------------->
-    <!----------------------  Tab1  ---------------------->
-    <!---------------------------------------------------->
-
-    <div class="tab-content active" id="tab1" data-top-position="30px">
-      <!-- Background Image placeholder -->
-      <div class="wrapperImage">
-        <img id="bgImage" />
-      </div>
-    </div>
-
-    <!-- Contact Button -->
-    <button
-      id="contactButton"
-      class="btn-center"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#contactMenu"
-    >
-      Contact Us
-    </button>
-
-    <!-- Offcanvas Menu -->
-    <div
-      class="offcanvas offcanvas-end rounded-start"
-      tabindex="-1"
-      id="contactMenu"
-    >
-      <div class="offcanvas-body">
-        <div class="list-group list-group-flush">
-          <!-- Offcanvas Header -->
-          <div class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
-              <h1 class="display-6">Need Help?</h1>
-              <button
-                type="button"
-                class="btn-close mt-3"
-                data-bs-dismiss="offcanvas"
-              ></button>
-            </div>
+    <div class="page-container">
+      <!-- Header -->
+      <header>
+        <div class="header-inner">
+          <div class="cxhacks-logo">
+            <img
+              src="/images/CiscoWebex-Logo_black.png"
+              alt="Home"
+              class="blog-logo"
+            />
           </div>
 
-          <!-- Offcanvas Expert Advisor -->
-          <div class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
-              <img id="agent" class="me-4" width="112" height="112" />
-              <div class="vstack align-self-center fs-4 lh-1">
-                <p>Expert Advisor</p>
-                <p>We're here to help</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Offcanvas Call Us -->
-          <a
-            href="#"
-            id="callLink"
-            class="list-group-item list-group-item-action"
-            data-bs-toggle="modal"
-            data-bs-target="#callModal"
+          <nav class="main-nav">
+            <a href="/index.html">Home</a>
+            <a href="/videos.html">Videos</a>
+            <a href="/customer.html">Demo</a>
+            <a href="/charges.html">Calculators</a>
+            <a href="/ai-templates.html">AI Templates</a>
+            <a href="/1.html">One</a>
+            <a href="/2.html">Two</a>
+            <a href="/3.html">Three</a>
+            <a href="/5.html">Five</a>
+          </nav>
+          <button
+            class="mobile-nav-toggle"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            aria-controls="mobileNavMenu"
           >
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                Call Us - <span class="h6 wait-time">8 min wait time</span>
-              </h5>
-            </div>
-            <p class="mb-1 text-muted">Talk with an expert now</p>
-          </a>
-
-          <!-- Offcanvas Callback -->
-          <a
-            href="#"
-            id="callbackLink"
-            class="list-group-item list-group-item-action"
-            data-bs-toggle="modal"
-            data-bs-target="#callbackModal"
-          >
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                Callback - <span class="h6 wait-time">8 minute wait time</span>
-              </h5>
-            </div>
-            <p class="mb-1 text-muted">Don't wait in queue, we will call you</p>
-          </a>
-
-          <!-- Offcanvas Email an Expert -->
-          <a
-            href="#"
-            id="emailLink"
-            class="list-group-item list-group-item-action"
-            data-bs-toggle="modal"
-            data-bs-target="#emailModal"
-          >
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                Email us! -
-                <span class="h6 wait-time">12-24 hour wait time</span>
-              </h5>
-            </div>
-            <p class="mb-1 text-muted">An expert will respond to your email</p>
-          </a>
-
-          <!-- Offcanvas Start SMS -->
-          <a
-            href="#"
-            id="smsLink"
-            class="list-group-item list-group-item-action"
-            data-bs-toggle="modal"
-            data-bs-target="#smsModal"
-          >
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                SMS us! - <span class="h6 wait-time">2 minute wait time</span>
-              </h5>
-            </div>
-            <p class="mb-1 text-muted">Text message with an expert</p>
-          </a>
-
-          <!-- Offcanvas Start WhatsApp -->
-          <a
-            href="#"
-            id="whatsappLink"
-            class="list-group-item list-group-item-action"
-            data-bs-toggle="modal"
-            data-bs-target="#whatsappModal"
-          >
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                WhatsApp us! -
-                <span class="h6 wait-time">2 minute wait time</span>
-              </h5>
-            </div>
-            <p class="mb-1 text-muted">WhatsApp message with an expert</p>
-          </a>
-
-          <!-- Offcanvas Start Apple Messaging for Business -->
-          <a
-            href="#"
-            id="ambLink"
-            class="list-group-item list-group-item-action"
-            data-bs-toggle="modal"
-            data-bs-target="#ambModal"
-          >
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                iMessage us! -
-                <span class="h6 wait-time">2 minute wait time</span>
-              </h5>
-            </div>
-            <p class="mb-1 text-muted">iMessage with an expert</p>
-          </a>
-
-          <!-- Offcanvas Start Coffee Demo -->
-          <a
-            href="#"
-            id="coffeeDemoLink"
-            class="list-group-item list-group-item-action"
-            data-bs-toggle="modal"
-            data-bs-target="#coffeeDemoModal"
-          >
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">
-                Coffee Demo -
-                <span class="h6 wait-time">real time experience</span>
-              </h5>
-            </div>
-            <p class="mb-1 text-muted">Try the coffee ordering demo</p>
-          </a>
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Call US Modal -->
-    <div class="modal fade" id="callModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header custom-modal-header">
-            <div class="container">
-              <div class="row">
-                <h5 class="col-auto me-auto custom-modal-title">
-                  Give us a Call
-                </h5>
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
-                <p class="col text-primary fw-light mb-0">
-                  Less than 8 minute wait time
+        <div class="mobile-nav-menu" id="mobileNavMenu">
+          <a href="/index.html">Home</a>
+          <a href="/videos.html">Videos</a>
+          <a href="/customer.html">Demo</a>
+          <a href="/charges.html">Calculators</a>
+          <a href="/ai-templates.html">AI Templates</a>
+          <a href="/1.html">One</a>
+          <a href="/2.html">Two</a>
+          <a href="/3.html">Three</a>
+          <a href="/5.html">Five</a>
+        </div>
+      </header>
+      <main>
+        <!-- Hero Section -->
+        <div class="hero-section">
+          <div class="hero-content">
+            <div class="hero-flex-container">
+              <div class="hero-text">
+                <h2>Webex AI</h2>
+                <h4>AI that works for you</h4>
+                <p>
+                  Transform experiences with AI built for your customers, your
+                  employees, and your business. When you have the most advanced
+                  AI platform, every interaction is enhanced, every decision is
+                  informed, and every moment is amplified.
                 </p>
+                <div class="hero-buttons">
+                  <button
+                    class="btn-white-outline"
+                    onclick="
+                      window.open(
+                        'https://blog.webex.com/customer-experience/webex-ai-action-real-world-benefits-customer-employee-experiences/',
+                        '_blank',
+                      )
+                    "
+                    aria-label="Learn more about Webex AI"
+                  >
+                    Learn More <span class="icon-arrow"></span>
+                  </button>
+                  <button
+                    class="btn-white-outline"
+                    onclick="window.location.href = '/charges.html'"
+                    aria-label="Open service charge estimator"
+                  >
+                    Open Charge Estimator <span class="icon-arrow"></span>
+                  </button>
+                </div>
+              </div>
+              <div class="hero-video">
+                <video-js
+                  id="VideoOverlayPlayer"
+                  data-video-id="6363624396112"
+                  data-account="1384193102001"
+                  data-player="vlhQwNR1SU"
+                  data-embed="default"
+                  class="video-js"
+                  controls
+                  preload="metadata"
+                  poster="https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1384193102001/ddbf5a50-0d87-4374-8b69-9f088ae154af/main/1280x720/30s805ms/match/image.jpg"
+                  aria-label="Webex AI in action video"
+                >
+                </video-js>
               </div>
             </div>
           </div>
-          <div class="modal-body custom-modal-body">
-            <a
-              id="telephone"
-              class="btn btn-outline-primary"
-              href="tel:+6582004000"
-              >+65 8200 4000</a
-            >
-          </div>
-          <div class="modal-footer custom-modal-footer">
+        </div>
+        <!-- Brightcove Player Script -->
+        <script src="https://players.brightcove.net/1384193102001/vlhQwNR1SU_default/index.min.js"></script>
+
+        <section class="top-actions">
+          <button class="action-btn">Automation Scenarios</button>
+          <div class="action-tiles">
             <button
-              type="button"
-              class="btn btn2-primary"
-              data-bs-dismiss="modal"
+              class="tile"
+              id="track-order-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#trackOrderModal"
             >
-              Web Call
+              <img src="/images/track.png" alt="Track order" />
+              <span>Check Application Status</span>
+            </button>
+            <button
+              class="tile"
+              id="make-changes-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#makeChangesModal"
+            >
+              <img
+                src="/images/change.png"
+                style="width: 15%; height: 50%"
+                alt="Make changes"
+              />
+              <span>Book RM Appointment</span>
+            </button>
+            <button
+              class="tile"
+              id="report-issue-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#reportIssueModal"
+            >
+              <img src="/images/alert.png" alt="Report issue" />
+              <span>Raise Service Request</span>
             </button>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Callback Modal -->
-    <div class="modal fade" id="callbackModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-light">
-            <div class="container">
-              <div class="row">
-                <h5 class="col-auto me-auto custom-modal-title">
-                  Receive a callback
-                </h5>
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
-                <p class="col text-primary fw-light mb-0">
-                  Less than 8 minute wait time
+        </section>
+        <section class="info-section">
+          <h2>Try out our omnichannel demos</h2>
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="info-card-text">
+                <h3><i class="fab fa-whatsapp"></i> Appointments</h3>
+                <p>
+                  Scan the QR code and click send to send the message and start
+                  the demo.
                 </p>
               </div>
-            </div>
-          </div>
-          <div class="modal-body">
-            <form id="callbackForm" class="needs-validation" novalidate>
-              <div class="mb-3">
-                <div class="form-text mb-2">
-                  Dont waste time waiting in queue, our experts will call you
-                </div>
-                <label for="callbackName" class="custom-form-label">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="callbackName"
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="callbackNumber" class="custom-form-label"
-                  >Phone Number</label
-                >
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="callbackNumber"
-                  pattern="^\+[1-9]\d{1,14}$"
-                  placeholder="Enter your callback number (e.g., +6512345678)"
-                  required
-                />
-                <div class="invalid-feedback">
-                  Enter a valid international phone number starting with +
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="callbackDepartment" class="custom-form-label"
-                  >Callback Reason</label
-                >
-                <select class="form-select" id="callbackDepartment" required>
-                  <option value="">--Please choose an option--</option>
-                  <option value="Sales">Sales Questions</option>
-                  <option value="Billing">Billing Issues</option>
-                  <option value="Appointment">Appointments</option>
-                  <option value="Tech Support">Technical Support</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="callbackReason" class="custom-form-label"
-                  >Message</label
-                >
-                <textarea
-                  class="form-control"
-                  id="callbackReason"
-                  rows="2"
-                  required
-                ></textarea>
-              </div>
-              <div class="mb-3">
-                <div class="form-check">
-                  <input
-                    class="custom-form-check-input"
-                    type="radio"
-                    id="immediateCallback"
-                    name="callbackRaido"
-                    checked
-                  />
-                  <label class="custom-form-check-label" for="immediateCallback"
-                    >Immediate Callback</label
-                  >
-                </div>
-                <div class="form-check">
-                  <input
-                    class="custom-form-check-input"
-                    type="radio"
-                    id="delayCallback"
-                    name="callbackRaido"
-                  />
-                  <label class="custom-form-check-label" for="delayCallback"
-                    >Delay Callback for</label
-                  >
-                  <input
-                    class="ms-1"
-                    id="delayCallbackMinutes"
-                    type="number"
-                    placeholder="5"
-                    size="8"
-                    min="5"
-                    max="60"
-                    step="5"
-                  />
-                  <label
-                    class="custom-form-check-label"
-                    for="delayCallbackMinutes"
-                    >minutes</label
-                  >
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <button id="sendCallbackBtn" type="button" class="btn btn-primary">
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Email Modal -->
-    <div class="modal fade" id="emailModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-light">
-            <div class="container">
-              <div class="row">
-                <h5 class="col-auto me-auto custom-modal-title">
-                  An expert will respond to your email
-                </h5>
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
-                <p class="col text-primary fw-light mb-0">
-                  12-24 hour wait time
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-body">
-            <form id="emailForm" class="needs-validation" novalidate>
-              <div class="mb-3">
-                <div class="form-text mb-2">
-                  Send us your question and one of our experts will email you
-                  back.
-                </div>
-                <label for="emailName" class="custom-form-label">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="emailName"
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="emailAddress" class="custom-form-label"
-                  >Email Address</label
-                >
-                <input
-                  type="email"
-                  class="form-control"
-                  id="emailAddress"
-                  placeholder="Enter your email address"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="emailSubject" class="custom-form-label"
-                  >Subject</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="emailSubject"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="emailMessage" class="custom-form-label"
-                  >Message</label
-                >
-                <textarea
-                  class="form-control"
-                  id="emailMessage"
-                  rows="3"
-                  required
-                ></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <button id="sendEmailBtn" type="button" class="btn btn-primary">
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SMS Modal -->
-    <div class="modal fade" id="smsModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-light">
-            <div class="container">
-              <div class="row">
-                <h5 class="col-auto me-auto custom-modal-title">
-                  Text message with an expert
-                </h5>
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
-                <p class="col text-primary fw-light mb-0">
-                  Less than 2 minute wait time
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-body">
-            <form id="smsForm" class="needs-validation" novalidate>
-              <div class="mb-3">
-                <label for="smsName" class="custom-form-label">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="smsName"
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="smsNumber" class="custom-form-label"
-                  >Mobile Number</label
-                >
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="smsNumber"
-                  pattern="^\+[1-9]\d{1,14}$"
-                  placeholder="Enter your mobile number (e.g., +6512345678)"
-                  required
-                />
-                <div class="invalid-feedback">
-                  Enter a valid international mobile number starting with +
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <button id="sendSmsBtn" type="button" class="btn btn-primary">
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- WhatsApp Modal -->
-    <div class="modal fade" id="whatsappModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-light">
-            <div class="container">
-              <div class="row">
-                <h5 class="col-auto me-auto custom-modal-title">
-                  WhatsApp message with an expert
-                </h5>
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
-                <p class="col text-primary fw-light mb-0">
-                  Less than 2 minute wait time
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-body text-center">
-            <img id="whatsappQR" width="300" height="300" />
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <p class="custom-me-auto">
-              Scan this QR Code with your mobile phone
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Apple Messaging for Business Modal -->
-    <div class="modal fade" id="ambModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-light">
-            <div class="container">
-              <div class="row">
-                <h5 class="col-auto me-auto custom-modal-title">
-                  iMessage with an expert
-                </h5>
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
-                <p class="col text-primary fw-light mb-0">
-                  Less than 2 minute wait time
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-body text-center">
-            <img id="ambQR" width="300" height="300" />
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <p class="custom-me-auto">
-              Scan this QR Code with your mobile phone
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Coffee Demo for Business Modal -->
-    <div class="modal fade" id="coffeeDemoModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-light">
-            <div class="container">
-              <div class="row">
-                <h5 class="col-auto me-auto custom-modal-title">
-                  Experience the Coffee Shop demo
-                </h5>
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
-                <p class="col text-primary fw-light mb-0">
-                  Less than 2 minute wait time
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-body text-center">
-            <img id="coffeeDemoQR" width="300" height="300" />
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <p class="custom-me-auto">
-              Scan this QR Code with your mobile phone
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-success">
-            <div class="container">
-              <div class="row">
-                <button
-                  type="button"
-                  class="col-auto btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div class="row">
+              <div class="info-card-image">
                 <img
-                  id="successImg"
-                  src="images/success.svg"
-                  width="100"
-                  height="100"
+                  src="/images/wcp_wa_appt.png"
+                  alt="General Questions Icon"
+                />
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-text">
+                <h3>
+                  <img
+                    class="info-card-icon"
+                    src="/images/493150.webp"
+                    alt="Promise to Pay"
+                  />Promise to Pay
+                </h3>
+                <p>
+                  Smart reminders across preferred channels — enable payments,
+                  Promise to Pay, and instant help.
+                </p>
+              </div>
+              <div class="info-card-image">
+                <img src="/images/wcp_amb_prom.png" alt="Promise to Pay" />
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-text">
+                <h3><i class="fas fa-robot"></i> Test AI Agent</h3>
+                <p>
+                  Try our AI agent! Featured at the Webex CX Innovation Tour, it
+                  can chat about the event, logistics and Webex CX solutions.
+                </p>
+              </div>
+              <div class="info-card-image">
+                <img
+                  src="/images/webex_ai_whatsapp_qr.png"
+                  alt="AI Agent Icon"
+                  style="width: 70%; height: 70%"
+                />
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-text">
+                <h3>
+                  <i
+                    class="fab fa-facebook-messenger"
+                    style="color: #0084ff"
+                  ></i>
+                  Facebook Messenger
+                </h3>
+                <p>
+                  Interact with us on Facebook Messenger. Use self-service,
+                  leave a feedback, or chat with an agent.
+                </p>
+              </div>
+              <div class="info-card-image">
+                <img
+                  src="/images/fbmmain.png"
+                  alt="My Orders Icon"
+                  style="width: 60%; height: 60%"
+                />
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-text">
+                <h3>
+                  <img
+                    class="info-card-icon"
+                    src="/images/493150.webp"
+                    alt="Webex Coffee Bar"
+                  />Webex Coffee Bar
+                </h3>
+                <p>
+                  Try the
+                  <a
+                    href="https://orders.webexconnectsolutions.com/"
+                    target="_blank"
+                    >Webex Coffee Bar</a
+                  >
+                  demo and discover how CPaaS automates every step of the retail
+                  journey.
+                </p>
+              </div>
+              <div class="info-card-image">
+                <img src="/images/coffee.png" alt="Webex Coffee Bar" />
+              </div>
+            </div>
+            <div class="info-card" id="emailCard">
+              <div class="info-card-text">
+                <h3>
+                  <i
+                    class="fas fa-envelope"
+                    style="color: #00bcf2; margin-right: 0.5em"
+                  ></i
+                  >Send us an email
+                </h3>
+                <p>
+                  Receive AI Agent generated responses. Escalate for human
+                  assistance.
+                </p>
+              </div>
+              <div class="info-card-image">
+                <img
+                  src="/images/emailmain.png"
+                  alt="Email Us"
+                  style="width: 60%; height: 60%"
                 />
               </div>
             </div>
           </div>
-          <div class="modal-body">
-            <p class="text-center fs-1 text-secondary">Success!</p>
-            <p id="successMessage" class="text-center fs-5 text-secondary"></p>
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              OK
-            </button>
+        </section>
+
+        <!-- Email Modal -->
+        <div
+          class="modal fade"
+          id="emailModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="emailModalLabel"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header bg-light">
+                <div class="container">
+                  <div class="row">
+                    <h5
+                      class="col-auto me-auto modal-title"
+                      id="emailModalLabel"
+                    >
+                      An expert will respond to your email
+                    </h5>
+                    <button
+                      type="button"
+                      class="col-auto btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="row">
+                    <p class="col text-primary fw-light mb-0">
+                      12-24 hour wait time
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-body">
+                <form id="emailForm" class="needs-validation" novalidate>
+                  <div class="mb-3">
+                    <div class="form-text mb-2">
+                      Send us your question and one of our experts will email
+                      you back.
+                    </div>
+                    <label for="emailName" class="form-label">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="emailName"
+                      placeholder="Enter your full name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="emailAddress" class="form-label"
+                      >Email Address</label
+                    >
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="emailAddress"
+                      placeholder="Enter your email address"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="emailSubject" class="form-label">Subject</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="emailSubject"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="emailMessage" class="form-label">Message</label>
+                    <textarea
+                      class="form-control"
+                      id="emailMessage"
+                      rows="3"
+                      required
+                    ></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary">Close</button>
+                <button id="sendEmailBtn" type="button" class="btn btn-primary">
+                  Send
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Failure Modal -->
-    <div class="modal fade" id="failureModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-danger">
-            <div class="container">
-              <div class="row">
+        <!-- Success Modal -->
+        <div
+          class="modal fade"
+          id="successModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="successModalLabel"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Success</h5>
                 <button
                   type="button"
-                  class="col-auto btn-close"
+                  class="btn-close"
                   data-bs-dismiss="modal"
+                  aria-label="Close"
                 ></button>
               </div>
-              <div class="row">
-                <img
-                  id="failureImg"
-                  src="images/failure.svg"
-                  width="100"
-                  height="100"
-                />
+              <div class="modal-body">
+                <p id="successMessage">
+                  Your email has been sent successfully!
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="closeSuccessBtn"
+                  data-bs-dismiss="modal"
+                >
+                  OK
+                </button>
               </div>
             </div>
           </div>
-          <div class="modal-body">
-            <p class="text-center fs-1 text-secondary">Ooops!</p>
-            <p class="text-center fs-5 text-secondary">
-              Something went wrong. Please go back and try again.
-            </p>
-          </div>
-          <div class="custom-modal-footer bg-light">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              OK
-            </button>
+        </div>
+
+        <!-- Failure Modal -->
+        <div
+          class="modal fade"
+          id="failureModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="failureModalLabel"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="failureModalLabel">Error</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p id="failureMessage">
+                  Something went wrong. Please try again later.
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="closeFailureBtn"
+                  data-bs-dismiss="modal"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Footer -->
-    <footer>
-      <div class="footer-container">
-        <p>© 2025 Your Company Name. All rights reserved.</p>
-        <ul>
-          <li><a href="#privacy">Privacy Policy</a></li>
-          <li><a href="#terms">Terms of Service</a></li>
-          <li><a href="#support">Support</a></li>
-        </ul>
-      </div>
-    </footer>
+        <!-- Track Order Modal -->
+        <div
+          class="modal fade"
+          id="trackOrderModal"
+          tabindex="-1"
+          aria-labelledby="trackOrderModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="trackOrderModalLabel">
+                  Check Application Status
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="contact-form">
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number:</label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      placeholder="e.g., 6598765432"
+                      id="phone"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="to-orderId" class="form-label"
+                      >Application Number:</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="to-orderId"
+                      required
+                    />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  form="contact-form"
+                  class="btn btn-primary"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Make Changes Modal -->
+        <div
+          class="modal fade"
+          id="makeChangesModal"
+          tabindex="-1"
+          aria-labelledby="makeChangesModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="makeChangesModalLabel">
+                  Book an appointment
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="make-changes-form">
+                  <div class="mb-3">
+                    <label for="mc-name" class="form-label">Name:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="mc-name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="mc-phone" class="form-label"
+                      >Phone Number:</label
+                    >
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="mc-phone"
+                      placeholder="e.g., 6598765432"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="mc-email" class="form-label">Email:</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="mc-email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="mc-orderId" class="form-label"
+                      >Acccount Number (Optional):</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="mc-orderId"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="mc-changes" class="form-label">Details:</label>
+                    <textarea
+                      class="form-control"
+                      id="mc-changes"
+                      rows="3"
+                      required
+                    ></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  form="make-changes-form"
+                  class="btn btn-primary"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Issue Modal -->
+        <div
+          class="modal fade"
+          id="reportIssueModal"
+          tabindex="-1"
+          aria-labelledby="reportIssueModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="reportIssueModalLabel">
+                  Raise a Service Request
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="report-issue-form">
+                  <div class="mb-3">
+                    <label for="ri-name" class="form-label">Name:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="ri-name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="ri-phone" class="form-label"
+                      >Phone Number:</label
+                    >
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="ri-phone"
+                      placeholder="e.g., 6598765432"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="ri-email" class="form-label">Email:</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="ri-email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="ri-orderId" class="form-label"
+                      >Acccount Number (Optional):</label
+                    >
+                    <input type="text" class="form-control" id="ri-orderId" />
+                  </div>
+                  <div class="mb-3">
+                    <label for="ri-issue" class="form-label"
+                      >Describe the request:</label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="ri-issue"
+                      rows="3"
+                      required
+                    ></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  form="report-issue-form"
+                  class="btn btn-primary"
+                >
+                  Submit Report
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Try it Out Section -->
+        <section class="hero-section hero-section--text-large">
+          <div class="hero-content">
+            <div class="hero-flex-container">
+              <!-- Left Text Content -->
+              <div class="hero-text">
+                <h2>Webex AI Agent</h2>
+                <p>
+                  Webex AI Agent delivers a true self-service experience by
+                  combining conversational intelligence across voice and digital
+                  channels with real-time automation for more authentic,
+                  human-like interactions. With Webex AI Agent, you can quickly
+                  set up and use AI agents to tackle customer inquiries.
+                </p>
+                <div class="hero-buttons">
+                  <button
+                    class="btn-white-outline"
+                    onclick="
+                      window.open('https://your-demo-link-here', '_blank')
+                    "
+                    aria-label="Launch demo"
+                  >
+                    Learn more <span class="icon-arrow"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right YouTube Video Embed -->
+              <div class="hero-video">
+                <iframe
+                  width="560"
+                  height="315"
+                  src="https://www.youtube.com/embed/ncGZWqCKWrE"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="
+                    accelerometer;
+                    autoplay;
+                    clipboard-write;
+                    encrypted-media;
+                    gyroscope;
+                    picture-in-picture;
+                  "
+                  allowfullscreen
+                  style="border-radius: 0.5rem; width: 100%; height: 100%"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- INSERT NEW SECTIONS HERE -->
+        <!-- AI Agent Types Section -->
+        <section class="agent-types-section">
+          <div class="agent-types-container">
+            <h2 class="section-title">Understand AI Agent types</h2>
+            <div class="agent-types-grid">
+              <!-- Autonomous Agent -->
+              <div class="agent-type-card">
+                <div class="agent-type-icon">
+                  <img
+                    src="/images/ai-agent-automation.svg?v=1747735457473"
+                    alt="Autonomous Agent Icon"
+                  />
+                </div>
+                <h3>Autonomous Agent</h3>
+                <ul>
+                  <li>
+                    <img
+                      src="/images/check.svg"
+                      alt="Checkmark"
+                      class="list-checkmark"
+                    />
+                    Make informed choices based on available info and predefined
+                    rules. Automate repetitive or time-consuming tasks.
+                  </li>
+                  <li>
+                    <img
+                      src="/images/check.svg"
+                      alt="Checkmark"
+                      class="list-checkmark"
+                    />
+                    Access and use a knowledge repository to provide informative
+                    and accurate answers to user queries.
+                  </li>
+                </ul>
+                <button
+                  class="btn-white-outline"
+                  onclick="
+                    window.open(
+                      'https://help.webex.com/en-us/article/ncs9r37/Webex-AI-Agent-Studio-Administration-guide#concept-template_14de745a-0b7b-467b-8d22-3c12249c96cc',
+                      '_blank',
+                    )
+                  "
+                >
+                  Learn more →
+                </button>
+              </div>
+
+              <!-- Scripted Agent -->
+              <div class="agent-type-card">
+                <div class="agent-type-icon">
+                  <img
+                    src="/images/ai-agent-save-transcript.svg"
+                    alt="Scripted Agent Icon"
+                  />
+                </div>
+                <h3>Scripted Agent</h3>
+                <ul>
+                  <li>
+                    <img
+                      src="/images/check.svg"
+                      alt="Checkmark"
+                      class="list-checkmark"
+                    />
+                    Perform specific tasks that are clearly defined and
+                    structured. Train AI Agent based on a user-created training
+                    corpus and predefined rules.
+                  </li>
+                  <li>
+                    <img
+                      src="/images/check.svg"
+                      alt="Checkmark"
+                      class="list-checkmark"
+                    />
+                    Respond to questions based on a user-created training
+                    corpus, which is a collection of examples and answers.
+                  </li>
+                </ul>
+                <button
+                  class="btn-white-outline"
+                  onclick="
+                    window.open(
+                      'https://help.webex.com/en-us/article/ncs9r37/Webex-AI-Agent-Studio-Administration-guide#concept-template_14de745a-0b7b-467b-8d22-3c12249c96cc',
+                      '_blank',
+                    )
+                  "
+                >
+                  Learn more →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- See it in Action Section -->
+        <section class="hero-section hero-section--text-large">
+          <div class="hero-content">
+            <div class="hero-flex-container">
+              <!-- Left YouTube Video Embed (Swapped) -->
+              <div class="hero-video">
+                <iframe
+                  width="560"
+                  height="315"
+                  src="https://www.youtube.com/embed/OS1buTmHsDo"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="
+                    accelerometer;
+                    autoplay;
+                    clipboard-write;
+                    encrypted-media;
+                    gyroscope;
+                    picture-in-picture;
+                  "
+                  allowfullscreen
+                  style="border-radius: 0.5rem; width: 100%; height: 100%"
+                ></iframe>
+              </div>
+
+              <!-- Right Text Content (Swapped) -->
+              <div class="hero-text">
+                <h2>Journey Data</h2>
+                <p>
+                  Customer Journey Data service (CJDS) is a next-generation
+                  customer journey management service empowering organizations
+                  to go from Data to Insights to Action. CJDS enables businesses
+                  to capture customer journeys across any channels/application,
+                  identify insights and take real-time actions to provide an
+                  excellent customer experience.
+                </p>
+                <div class="hero-buttons">
+                  <button
+                    class="btn-white-outline"
+                    onclick="
+                      window.open(
+                        'https://developer.webex.com/docs/journey-data-service',
+                        '_blank',
+                      )
+                    "
+                    aria-label="Watch demo"
+                  >
+                    Learn More <span class="icon-arrow"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+          <div class="faq-container">
+            <div class="faq-left">
+              <h2 class="faq-title">Frequently Asked Questions</h2>
+              <p>Find answers to common questions about Webex Contact Center</p>
+              <a
+                href="https://help.webex.com/en-us/article/n2re5jy/Webex-Contact-Center-Documentation"
+                target="_blank"
+                class="btn-white-outline"
+                >View All FAQs <span class="icon-arrow"></span
+              ></a>
+            </div>
+            <div class="faq-right">
+              <div class="faq-item">
+                <div class="faq-question">
+                  <h4>What is Webex Contact Center?</h4>
+                  <span class="chevron">›</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Webex Contact Center is a cloud-native contact center
+                    solution that enables businesses to deliver exceptional
+                    customer experiences across multiple channels.
+                  </p>
+                </div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">
+                  <h4>What channels does it support?</h4>
+                  <span class="chevron">›</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Webex Contact Center supports voice, email, chat, social
+                    media, and SMS, providing a unified platform for all
+                    customer interactions.
+                  </p>
+                </div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">
+                  <h4>Is it suitable for my business size?</h4>
+                  <span class="chevron">›</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Yes, Webex Contact Center is scalable and suitable for
+                    businesses of all sizes, from small teams to large
+                    enterprises.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <!-- Footer Section -->
+      <footer>
+        <div class="footer-container">
+          <p>
+            © 2025 cxhacks.cc. All rights reserved.
+            <a href="https://cxhacks.cc/pages/disclaimer.html">Disclaimer</a>
+          </p>
+        </div>
+      </footer>
+    </div>
 
     <!---------------------------------------------------->
     <!--  Paste in IMI Webschat code below this comment -->
@@ -735,26 +996,6 @@
       data-guid="c69d9b4e-81da-4052-9d50-cf1109d6254d"
     ></div>
     <script>
-      var cookieConsentWidgetOptions = {
-        buttonType: "type1",
-        widgetColor: "#0F0F0F",
-        logoPath: "",
-        displayName: "Display Name",
-        greetingMessage: "",
-        bylineText:
-          "Byline text, this is usually used to write a small description or company tagline max chat limit 100",
-        cookiePreferencesHeaderText: "Cookie Preferences",
-        privacyPolicyText: "Privacy Policy",
-        privacyPolicyUrl: "",
-        acceptButtonText: "Accept Cookies",
-        rejectButtonText: "Reject",
-        cookieConsentMessage:
-          "We use cookies to help secure, provide, and improve our services. You agree to consent to cookies to continue using LiveChat. If you reject cookies, you'll no longer be able to use LiveChat for support or continue any interactions. You can manage cookie preferences at any time.",
-        rejectConfirmationMessage:
-          "By not accepting cookies you won't be able to get support via this widget. You can change preferences at any time and consent to continue.",
-        rejectRevokeButtonText: "Cookie preferences",
-        continueAcceptingCookiesText: "Continue",
-      };
       var i = {
         t: function () {
           try {
@@ -807,42 +1048,8 @@
       i.t();
     </script>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="1.js"></script>
-
-    <!-- Surfly Screen Sharing Script -->
-    <script>
-      (function (s, u, r, f, l, y) {
-        s[f] = s[f] || {
-          init: function () {
-            s[f].q = arguments;
-          },
-        };
-        l = u.createElement(r);
-        y = u.getElementsByTagName(r)[0];
-        l.async = 1;
-        l.src = "https://surfly.com/surfly.js";
-        y.parentNode.insertBefore(l, y);
-      })(window, document, "script", "Surfly");
-
-      var settings = {
-        // Surfly session options can be set here, or at the Company/Plan levels.
-        widget_key: "b2ecec0c7bf34ac69c972562a35cb554",
-        private_session: true, // to make sure only logged in agents can join the call
-        require_password: false,
-      };
-
-      Surfly.init(settings, function (initResult) {
-        if (initResult.success) {
-          // API calls can now be made!
-          if (!Surfly.isInsideSession) {
-            Surfly.button();
-          }
-        } else {
-          console.log("Surfly was unable to initialize properly.");
-        }
-      });
-    </script>
+    <!-- Optional Webex widget can go here -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
